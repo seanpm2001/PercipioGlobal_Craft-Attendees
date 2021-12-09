@@ -1,0 +1,41 @@
+{
+    "name": "percipiolondon/craft-attendees",
+    "description": "A plugin to manage attendees",
+    "type": "craft-plugin",
+    "version": "0.1.0",
+    "keywords": [
+        "craft",
+        "cms",
+        "craftcms",
+        "craft-plugin",
+        "craft-attendees"
+    ],
+    "support": {
+        "docs": "https://github.com/percipioglobal/craft-attendees/blob/master/README.md",
+        "issues": "https://github.com/percipioglobal/craft-attendees/issues"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Percipio.London",
+            "homepage": "https://percipio.london"
+        }
+    ],
+    "require": {
+        "craftcms/cms": "^3.0.0"
+    },
+    "autoload": {
+        "psr-4": {
+          "percipiolondon\\craftattendees\\": "src/"
+        }
+    },
+    "extra": {
+        "name": "Attendees",
+        "handle": "craft-attendees",
+        "developer": "Percipio.London",
+        "developerUrl": "https://percipio.london",
+        "documentationUrl": "https://github.com/percipioglobal/craft-attendees/blob/master/README.md",
+        "changelogUrl": "https://raw.githubusercontent.com/percipioglobal/craft-attendees/master/CHANGELOG.md",
+        "class": "percipiolondon\\craftattendees\\Craftattendees"
+    }
+}

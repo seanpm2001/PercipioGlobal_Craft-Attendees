@@ -1,0 +1,48 @@
+{# @var craft \craft\web\twig\variables\CraftVariable #}
+{#
+/**
+ * staff-management plugin for Craft CMS 3.x
+ *
+ * staff-management Settings.twig
+ *
+ * @author    Percipio
+ * @copyright Copyright (c) 2021 Percipio
+ * @link      http://percipio.london
+ * @package   Craftstaff
+ * @since     1.0.0-alpha.1
+ */
+#}
+
+{% import "_includes/forms" as forms %}
+
+{% do view.registerAssetBundle("percipiolondon\\craftattendees\\assetbundles\\craftattendees\\CraftattendeesAsset") %}
+
+{% set dropdownValues = craft.app.sections.allSections()|map(s => {value: s.handle, label: s.name}) %}
+
+{#{{ forms.autosuggestField({#}
+{#    label: 'Staffology API key',#}
+{#    instructions: 'Enter the Staffology API key here',#}
+{#    id: 'staffologyApiKey',#}
+{#    name: 'staffologyApiKey',#}
+{#    suggestEnvVars: true,#}
+{#    value: settings['staffologyApiKey']})#}
+{#}}#}
+
+{{ forms.textField({
+    first: true,
+    label: 'Plugin Name' | t('craft-attendees'),
+    instructions: 'Plugin name for the end user.' | t('craft-attendees'),
+    id: 'pluginName',
+    name: 'pluginName',
+    value: settings['pluginName'],
+    autofocus: true,
+}) }}
+
+{{ forms.selectField({
+    label: 'Select event channel'|t('craft-attendees'),
+    name: 'eventSection',
+    options: dropdownValues,
+    value: settings['eventSection'] ?: null,
+    instructions: 'Select the section where the events are created'|t('craft-attendees'),
+    toggle: true,
+}) }}

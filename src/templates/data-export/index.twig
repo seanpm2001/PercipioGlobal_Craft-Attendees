@@ -1,0 +1,57 @@
+{# @var craft \craft\web\twig\variables\CraftVariable #}
+{#
+/**
+ * craft-attendees plugin for Craft CMS 3.x
+ *
+ * craft-attendees index.twig
+ *
+ * @author    Percipio.London
+ * @copyright Copyright (c) 2021 Percipio.London
+ * @link      https://percipio.london
+ * @package   Craftattendees
+ * @since     0.1.0
+ */
+#}
+
+{% extends "_layouts/cp" %}
+{% import "_includes/forms" as forms %}
+
+{% do view.registerAssetBundle("percipiolondon\\craftattendees\\assetbundles\\craftattendees\\CraftattendeesAsset") %}
+{% do view.registerAssetBundle("percipiolondon\\craftattendees\\assetbundles\\dataexportcpsection\\DataExportCPSectionAsset") %}
+
+{# Link for the ? icon at the bottom of the page #}
+{% set docsUrl = "https://github.com/percipioglobal/craft-attendees/blob/master/README.md" %}
+
+{# The title of this CP section #}
+{% set title = "Attendees | DataExport" %}
+
+{# The URL to this plugin's base CP section #}
+{% set pluginCpUrl = url('craft-attendees') %}
+
+{# Get a URL to an image in our AssetBundle #}
+{% set iconUrl = view.getAssetManager().getPublishedUrl('@percipiolondon/craftattendees/assetbundles/dataexportcpsection/dist', true) ~ '/img/DataExport-icon.svg' %}
+
+{% set subnav = {
+    "dashboard": { label: "Dashboard"|t('craft-attendees'), url: url(pluginCpUrl ~ '/dashboard') },
+    "trainings": { label: "Trainings"|t('craft-attendees'), url: url(pluginCpUrl ~ '/trainings') },
+    "data-export": { label: "DataExport"|t('craft-attendees'), url: url(pluginCpUrl ~ '/data-export') },
+
+} %}
+{% set selectedSubnavItem = 'data-export' %}
+
+{% set crumbs = [
+    { label: "craft-attendees", url: url(pluginCpUrl) },
+    { label: "DataExport"|t('craft-attendees'), url: url(pluginCpUrl ~ '/data-export') },
+] %}
+
+{# Content that should appear in the page header#}
+{% block actionButton %}
+    <a href="{{ pluginCpUrl }}" class="btn submit add icon">{{ "Click Me!"|t('craft-attendees') }}</a>
+{% endblock %}
+
+{# The content of the CP Section#}
+{% set content %}
+    <h2>{{ "DataExport CP Section body goes here"|t('craft-attendees') }}</h2>
+    <img src="{{ iconUrl }}" height="64" width="64" />
+    <p class="textline"></p>
+{% endset %}
