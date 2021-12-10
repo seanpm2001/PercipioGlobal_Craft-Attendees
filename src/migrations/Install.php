@@ -4,6 +4,7 @@ namespace percipiolondon\craftattendees\migrations;
 
 use Craft;
 use craft\db\Migration;
+use craft\helpers\MigrationHelper;
 use percipiolondon\craftattendees\db\Table;
 
 /**
@@ -34,7 +35,11 @@ class Install extends Migration
      */
     public function safeDown()
     {
-        // Place uninstallation code here...
+        $this->driver = Craft::$app->getConfig()->getDb()->driver;
+        $this->dropForeignKeys();
+        $this->removeTables();
+
+        return true;
     }
 
 
@@ -72,6 +77,7 @@ class Install extends Migration
                     'days' => $this->integer()->notNull(),
                     'newsletter' => $this->boolean()->defaultValue(0),
                     'siteId' => $this->integer()->notNull(),
+                    'eventId' => $this->integer()->notNull(),
                 ]
             );
         }
@@ -85,6 +91,7 @@ class Install extends Migration
     protected function addForeignKeys()
     {
         $this->addForeignKey(null, Table::ATTENDEES, ['siteId'], '{{%sites}}', ['id'], 'CASCADE', 'CASCADE');
+        $this->addForeignKey(null, Table::ATTENDEES, ['eventId'], '{{%entries}}', ['id'], 'CASCADE', 'CASCADE');
     }
 
     protected function dropForeignKeys()

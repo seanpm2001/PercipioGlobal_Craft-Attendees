@@ -10,7 +10,9 @@
 
 namespace percipiolondon\craftattendees;
 
+use craft\events\RegisterUrlRulesEvent;
 use craft\web\twig\variables\CraftVariable;
+use craft\web\UrlManager;
 use percipiolondon\craftattendees\behaviors\AttendeeBehavior;
 use percipiolondon\craftattendees\elements\Attendee as AttendeesElement;
 
@@ -95,8 +97,9 @@ class Craftattendees extends Plugin
         parent::init();
         self::$plugin = $this;
 
-        $this->_registerElementTypes();
+        $this->_registerCpRoutes();
         $this->_registerCraftVariables();
+        $this->_registerElementTypes();
 
         Craft::info(
             Craft::t(
@@ -178,16 +181,13 @@ class Craftattendees extends Plugin
     // Private Methods
     // =========================================================================
 
-    /**
-     * @inheritdoc
-     */
-    private function _registerElementTypes()
+    private function _registerCpRoutes()
     {
         Event::on(
-            Elements::class,
-            Elements::EVENT_REGISTER_ELEMENT_TYPES,
-            function (RegisterComponentTypesEvent $event) {
-                $event->types[] = AttendeesElement::class;
+            UrlManager::class,
+            UrlManager::EVENT_REGISTER_CP_URL_RULES,
+            function (RegisterUrlRulesEvent $event) {
+                $event->rules['craft-attendees/trainings/<eventId:\d+>'] = 'craft-attendees/training/detail';
             }
         );
     }
@@ -203,6 +203,17 @@ class Craftattendees extends Plugin
                 $variable->attachBehaviors([
                     AttendeeBehavior::class,
                 ]);
+            }
+        );
+    }
+
+    private function _registerElementTypes()
+    {
+        Event::on(
+            Elements::class,
+            Elements::EVENT_REGISTER_ELEMENT_TYPES,
+            function (RegisterComponentTypesEvent $event) {
+                $event->types[] = AttendeesElement::class;
             }
         );
     }

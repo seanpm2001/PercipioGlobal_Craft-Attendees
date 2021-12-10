@@ -13,39 +13,27 @@
  */
 #}
 
-{% extends "_layouts/cp" %}
+{% extends "craft-attendees/_layouts/_cp" %}
 {% import "_includes/forms" as forms %}
 
-{% do view.registerAssetBundle("percipiolondon\\craftattendees\\assetbundles\\craftattendees\\CraftattendeesAsset") %}
+
 {% do view.registerAssetBundle("percipiolondon\\craftattendees\\assetbundles\\trainingscpsection\\TrainingsCPSectionAsset") %}
 
-{# Link for the ? icon at the bottom of the page #}
-{% set docsUrl = "https://github.com/percipioglobal/craft-attendees/blob/master/README.md" %}
-
-{# The title of this CP section #}
-{% set title = "Trainings" %}
-
-{# The URL to this plugin's base CP section #}
 {% set pluginCpUrl = url('craft-attendees') %}
-
-{# Get a URL to an image in our AssetBundle #}
-{% set iconUrl = view.getAssetManager().getPublishedUrl('@percipiolondon/craftattendees/assetbundles/trainingscpsection/dist', true) ~ '/img/Trainings-icon.svg' %}
-
-{% set subnav = {
-    "dashboard": { label: "Dashboard"|t('craft-attendees'), url: url(pluginCpUrl ~ '/dashboard') },
-    "trainings": { label: "Trainings"|t('craft-attendees'), url: url(pluginCpUrl ~ '/trainings') },
-    "data-export": { label: "DataExport"|t('craft-attendees'), url: url(pluginCpUrl ~ '/data-export') },
-
-} %}
-{% set selectedSubnavItem = 'trainings' %}
 {% set selectedSite = craft.app.request.getQueryParam('site')|default('main') %}
+{% set settings = craft.app.getPlugins().getPlugin('craft-attendees').getSettings() %}
+{% set title = "Trainings" %}
+{% set selectedSubnavItem = 'trainings' %}
 
 {% set crumbs = [
     { label: "Attendees", url: url(pluginCpUrl) },
     { label: "Trainings"|t('craft-attendees'), url: url(pluginCpUrl ~ '/trainings') },
 ] %}
 
-{% set settings = craft.app.getPlugins().getPlugin('craft-attendees').getSettings() %}
+{% set events = craft.entries.section(settings.eventSection)
+    .anyStatus()
+    .all()
+%}
 
 {# Content that should appear in the page header#}
 {% block actionButton %}
@@ -56,12 +44,6 @@
         currentSiteName:  currentSite.name
     } %}
 {% endblock %}
-
-{% set events = craft.entries.section(settings.eventSection)
-    .site(selectedSite)
-    .anyStatus()
-    .all()
-%}
 
 {# The content of the CP Section#}
 {% set content %}
@@ -84,7 +66,7 @@
                     {% if event.type == 'onlineEvent' %}
                         {% set eventTimetable = event.eventDatesTimeOnline.inReverse().one() %}
                     {% else %}
-                        {% set eventTimetable = event.eventDatesTime.inReverse().one() %}
+                        {% set eventTimetable = event.eventDatesTime ? event.eventDatesTime.inReverse().one() : null %}
                     {% endif %}
 
                     {% set eventDate = eventTimetable.startDateTime ?? '' %}
@@ -109,7 +91,7 @@
                                 <span class="status {{ event.enabled ? 'enabled' : 'disabled' }}"></span>
                                 <div class="label">
                                     <span class="title">
-                                        <a href="/cp/entries/pages/{{event.id}}-events?site={{selectedSite}}#tab-data-engagement">{{ event.title }}</a>
+                                        <a href="{{ pluginCpUrl ~ '/' ~ selectedSubnavItem ~ '/' ~ event.id }}">{{ event.title }}</a>
                                     </span>
                                 </div>
                             </div>
@@ -127,17 +109,17 @@
                             <span>{{ dataEngagement|length }} </span>
                         </td>
                         <td>
-            {#                <div class="progress">#}
-            {#                    <div class="meter bg-red" title="Engaged {{ dataEnganged }}%">#}
-            {#                        <span style="width: {{ dataEnganged }}%"></span>#}
-            {#                    </div>#}
-            {#                    <div class="meter bg-orange" title="Sustained {{ dataSustained }}%">#}
-            {#                        <span style="width: {{ dataSustained }}%"></span>#}
-            {#                    </div>#}
-            {#                    <div class="meter bg-blue" title="Embedded {{ dataEmbedded }}%">#}
-            {#                        <span style="width: {{ dataEmbedded }}%"></span>#}
-            {#                    </div>#}
-            {#                </div>#}
+                            <div class="progress">
+                                <div class="meter bg-red" title="Engaged {{ dataEnganged }}%">
+                                    <span style="width: {{ dataEnganged }}%"></span>
+                                </div>
+                                <div class="meter bg-orange" title="Sustained {{ dataSustained }}%">
+                                    <span style="width: {{ dataSustained }}%"></span>
+                                </div>
+                                <div class="meter bg-blue" title="Embedded {{ dataEmbedded }}%">
+                                    <span style="width: {{ dataEmbedded }}%"></span>
+                                </div>
+                            </div>
                         </td>
                     </tr>
                 {% endfor %}
@@ -146,9 +128,4 @@
     </div>
 
 {#    {{ dump(craft.attendees()) }}#}
-
-
-{#    <h2>{{ "Trainings CP Section body goes here"|t('craft-attendees') }}</h2>#}
-{#    <img src="{{ iconUrl }}" height="64" width="64" />#}
-{#    <p class="textline"></p>#}
 {% endset %}

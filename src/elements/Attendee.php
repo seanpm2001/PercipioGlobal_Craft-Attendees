@@ -281,23 +281,33 @@ class Attendee extends Element
      */
     public function getEditorHtml(): string
     {
-        $html = Craft::$app->getView()->renderTemplateMacro('_includes/forms', 'textField', [
-            [
-                'label' => Craft::t('app', 'Title'),
-                'siteId' => $this->siteId,
-                'id' => 'title',
-                'name' => 'title',
-                'value' => $this->title,
-                'errors' => $this->getErrors('title'),
-                'first' => true,
-                'autofocus' => true,
-                'required' => true
-            ]
-        ]);
+//        $html = Craft::$app->getView()->renderTemplateMacro('_includes/forms', 'textField', [
+//            [
+//                'label' => Craft::t('app', 'Title'),
+//                'siteId' => $this->siteId,
+//                'id' => 'title',
+//                'name' => 'title',
+//                'value' => $this->title,
+//                'errors' => $this->getErrors('title'),
+//                'first' => true,
+//                'autofocus' => true,
+//                'required' => true
+//            ]
+//        ]);
+
+        $html = Craft::$app->getView()->renderTemplateMacro('craft-attendees/trainings/detail', 'general', [$this]);
 
         $html .= parent::getEditorHtml();
 
         return $html;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCpEditUrl()
+    {
+        return 'craft-attendees/trainings/'.$this->id;
     }
 
     // Events

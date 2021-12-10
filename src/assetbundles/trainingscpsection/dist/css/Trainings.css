@@ -9,3 +9,18 @@
  * @package   Craftattendees
  * @since     0.1.0
  */
+
+.training h1{
+    margin-bottom:0;
+}
+
+.training .event-meta{
+    margin-bottom: 24px;
+    color: #6d747b;
+}
+
+.training .event-actions{
+    width: 100%;
+    text-align: right;
+    margin-bottom: 14px;
+}
