@@ -26,7 +26,7 @@
     },
     "autoload": {
         "psr-4": {
-          "percipiolondon\\craftattendees\\": "src/"
+          "percipiolondon\\attendees\\": "src/"
         }
     },
     "extra": {
@@ -36,6 +36,6 @@
         "developerUrl": "https://percipio.london",
         "documentationUrl": "https://github.com/percipioglobal/craft-attendees/blob/master/README.md",
         "changelogUrl": "https://raw.githubusercontent.com/percipioglobal/craft-attendees/master/CHANGELOG.md",
-        "class": "percipiolondon\\craftattendees\\Craftattendees"
+        "class": "percipiolondon\\attendees\\Attendees"
     }
 }

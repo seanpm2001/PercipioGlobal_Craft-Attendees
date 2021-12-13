@@ -1,9 +1,9 @@
 <?php
 
-namespace percipiolondon\craftattendees\behaviors;
+namespace percipiolondon\attendees\behaviors;
 
-use percipiolondon\craftattendees\elements\Attendee;
-use percipiolondon\craftattendees\elements\db\AttendeeQuery;
+use percipiolondon\attendees\elements\Attendee;
+use percipiolondon\attendees\elements\db\AttendeeQuery;
 use yii\base\Behavior;
 
 class AttendeeBehavior extends Behavior

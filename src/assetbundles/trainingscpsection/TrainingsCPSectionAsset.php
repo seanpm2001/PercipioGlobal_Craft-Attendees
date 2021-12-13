@@ -8,7 +8,7 @@
  * @copyright Copyright (c) 2021 Percipio.London
  */
 
-namespace percipiolondon\craftattendees\assetbundles\trainingscpsection;
+namespace percipiolondon\attendees\assetbundles\trainingscpsection;
 
 use Craft;
 use craft\web\AssetBundle;

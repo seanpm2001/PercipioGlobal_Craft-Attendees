@@ -1,8 +1,8 @@
 <?php
 
-namespace percipiolondon\craftattendees\records;
+namespace percipiolondon\attendees\records;
 
-use percipiolondon\craftattendees\db\Table;
+use percipiolondon\attendees\db\Table;
 use yii\db\ActiveRecord;
 
 /**

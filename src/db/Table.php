@@ -1,6 +1,6 @@
 <?php
 
-namespace percipiolondon\craftattendees\db;
+namespace percipiolondon\attendees\db;
 
 abstract class Table
 {

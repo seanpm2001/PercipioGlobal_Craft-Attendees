@@ -8,16 +8,16 @@
  * @copyright Copyright (c) 2021 Percipio.London
  */
 
-namespace percipiolondon\craftattendees\elements;
+namespace percipiolondon\attendees\elements;
 
-use percipiolondon\craftattendees\Craftattendees;
+use percipiolondon\attendees\Attendees;
 
 use Craft;
 use craft\base\Element;
 use craft\elements\db\ElementQuery;
 use craft\elements\db\ElementQueryInterface;
-use percipiolondon\craftattendees\db\Table;
-use percipiolondon\craftattendees\elements\db\AttendeeQuery;
+use percipiolondon\attendees\db\Table;
+use percipiolondon\attendees\elements\db\AttendeeQuery;
 use yii\db\Query;
 
 /**

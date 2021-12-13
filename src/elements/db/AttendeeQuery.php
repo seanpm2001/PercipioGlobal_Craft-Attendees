@@ -1,6 +1,6 @@
 <?php
 
-namespace percipiolondon\craftattendees\elements\db;
+namespace percipiolondon\attendees\elements\db;
 
 use craft\elements\db\ElementQuery;
 

@@ -1,11 +1,11 @@
 <?php
 
-namespace percipiolondon\craftattendees\migrations;
+namespace percipiolondon\attendees\migrations;
 
 use Craft;
 use craft\db\Migration;
 use craft\helpers\MigrationHelper;
-use percipiolondon\craftattendees\db\Table;
+use percipiolondon\attendees\db\Table;
 
 /**
  * Install migration.

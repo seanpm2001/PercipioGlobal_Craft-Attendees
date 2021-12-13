@@ -1,6 +1,6 @@
 <?php
 
-namespace percipiolondon\craftattendees\controllers;
+namespace percipiolondon\attendees\controllers;
 
 use craft\elements\Entry;
 use craft\web\Controller;

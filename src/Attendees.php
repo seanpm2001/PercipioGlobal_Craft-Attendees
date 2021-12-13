@@ -8,22 +8,20 @@
  * @copyright Copyright (c) 2021 Percipio.London
  */
 
-namespace percipiolondon\craftattendees;
+namespace percipiolondon\attendees;
 
 use craft\events\RegisterUrlRulesEvent;
 use craft\web\twig\variables\CraftVariable;
 use craft\web\UrlManager;
-use percipiolondon\craftattendees\behaviors\AttendeeBehavior;
-use percipiolondon\craftattendees\elements\Attendee as AttendeesElement;
+use percipiolondon\attendees\behaviors\AttendeeBehavior;
+use percipiolondon\attendees\elements\Attendee as AttendeesElement;
 
 use Craft;
 use craft\base\Plugin;
-use craft\services\Plugins;
-use craft\events\PluginEvent;
 use craft\services\Elements;
 use craft\events\RegisterComponentTypesEvent;
 
-use percipiolondon\craftattendees\models\Settings;
+use percipiolondon\attendees\models\Settings;
 use yii\base\Event;
 
 /**
@@ -41,7 +39,7 @@ use yii\base\Event;
  * @since     0.1.0
  *
  */
-class Craftattendees extends Plugin
+class Attendees extends Plugin
 {
     // Static Properties
     // =========================================================================
@@ -50,7 +48,7 @@ class Craftattendees extends Plugin
      * Static property that is an instance of this plugin class so that it can be accessed via
      * Craftattendees::$plugin
      *
-     * @var Craftattendees
+     * @var Attendees
      */
     public static $plugin;
 

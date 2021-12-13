@@ -8,7 +8,7 @@
  * @copyright Copyright (c) 2021 Percipio.London
  */
 
-namespace percipiolondon\craftattendees\assetbundles\dashboardcpsection;
+namespace percipiolondon\attendees\assetbundles\dashboardcpsection;
 
 use Craft;
 use craft\web\AssetBundle;
