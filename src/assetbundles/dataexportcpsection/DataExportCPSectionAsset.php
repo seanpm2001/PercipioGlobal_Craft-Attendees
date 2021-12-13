@@ -5,7 +5,7 @@
  * A plugin to manage attendees
  *
  * @link      https://percipio.london
- * @copyright Copyright (c) 2021 Percipio.London
+ * @copyright Copyright (c) 2021 percipiolondon
  */
 
 namespace percipiolondon\craftattendees\assetbundles\dataexportcpsection;
@@ -28,9 +28,9 @@ use craft\web\assets\cp\CpAsset;
  *
  * http://www.yiiframework.com/doc-2.0/guide-structure-assets.html
  *
- * @author    Percipio.London
+ * @author    percipiolondon
  * @package   Craftattendees
- * @since     0.1.0
+ * @since     1.0.0
  */
 class DataExportCPSectionAsset extends AssetBundle
 {

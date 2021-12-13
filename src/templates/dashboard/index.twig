@@ -1,23 +1,29 @@
 {# @var craft \craft\web\twig\variables\CraftVariable #}
 {#
 /**
- * craft-attendees plugin for Craft CMS 3.x
+ * attendees plugin for Craft CMS 3.x
  *
- * craft-attendees index.twig
+ * attendees index.twig
  *
- * @author    Percipio.London
- * @copyright Copyright (c) 2021 Percipio.London
+ * @author    percipiolondon
+ * @copyright Copyright (c) 2021 percipiolondon
  * @link      https://percipio.london
- * @package   Craftattendees
- * @since     0.1.0
+ * @package   Attendees
+ * @since     1.0.0
  */
 #}
 
 {% extends "_layouts/cp" %}
-{% import "_includes/forms" as forms %}
 
-{% do view.registerAssetBundle("percipiolondon\\craftattendees\\assetbundles\\craftattendees\\CraftattendeesAsset") %}
+{% set scriptTagOptions = {
+    'depends': [
+        'percipiolondon\\craftattendees\\assetbundles\\craftattendees\\AttendeesAsset'
+    ],
+} %}
+
 {% do view.registerAssetBundle("percipiolondon\\craftattendees\\assetbundles\\dashboardcpsection\\DashboardCPSectionAsset") %}
+
+{% import "_includes/forms" as forms %}
 
 {# Link for the ? icon at the bottom of the page #}
 {% set docsUrl = "https://github.com/percipioglobal/craft-attendees/blob/master/README.md" %}
@@ -51,7 +57,13 @@
 
 {# The content of the CP Section#}
 {% set content %}
+    {{ craft.attendees.register('/src/js/attendees.ts', false, scriptTagOptions) }}
     <h2>{{ "Dashboard CP Section body goes here"|t('craft-attendees') }}</h2>
+
+    <div class="bg-blue-300 text-gray-800 text-4xl p-16">
+        Tailwind Assetbundle + Vue
+    </div>
+
     <img src="{{ iconUrl }}" height="64" width="64" />
     <p class="textline"></p>
 {% endset %}

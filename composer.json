@@ -1,18 +1,20 @@
 {
     "name": "percipiolondon/craft-attendees",
-    "description": "A plugin to manage attendees",
+    "description": "A plugin to manage attendees to an event",
     "type": "craft-plugin",
-    "version": "0.1.0",
+    "version": "1.0.0",
     "keywords": [
         "craft",
         "cms",
         "craftcms",
         "craft-plugin",
-        "craft-attendees"
+        "attendees"
     ],
     "support": {
+        "email": "support@percipio.london",
         "docs": "https://github.com/percipioglobal/craft-attendees/blob/master/README.md",
-        "issues": "https://github.com/percipioglobal/craft-attendees/issues"
+        "issues": "https://github.com/percipioglobal/craft-attendees/issues",
+        "source": "https://github.com/percipioglobal/craft-attendees"
     },
     "license": "MIT",
     "authors": [
@@ -22,17 +24,22 @@
         }
     ],
     "require": {
-        "craftcms/cms": "^3.0.0"
+        "craftcms/cms": "^3.3.0",
+        "nystudio107/craft-plugin-vite": "^1.0.0"
+    },
+    "require-dev": {
+        "codeception/codeception": "^3.0",
+        "vlucas/phpdotenv": "^3.0"
     },
     "autoload": {
         "psr-4": {
-          "percipiolondon\\craftattendees\\": "src/"
+            "percipiolondon\\craftattendees\\": "src/"
         }
     },
     "extra": {
         "name": "Attendees",
         "handle": "craft-attendees",
-        "developer": "Percipio.London",
+        "developer": "percipiolondon",
         "developerUrl": "https://percipio.london",
         "documentationUrl": "https://github.com/percipioglobal/craft-attendees/blob/master/README.md",
         "changelogUrl": "https://raw.githubusercontent.com/percipioglobal/craft-attendees/master/CHANGELOG.md",

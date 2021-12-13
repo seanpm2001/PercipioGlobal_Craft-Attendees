@@ -1,11 +1,11 @@
 <?php
 /**
- * craft-attendees plugin for Craft CMS 3.x
+ * Attendees plugin for Craft CMS 3.x
  *
  * A plugin to manage attendees
  *
  * @link      https://percipio.london
- * @copyright Copyright (c) 2021 Percipio.London
+ * @copyright Copyright (c) 2021 percipiolondon
  */
 
 namespace percipiolondon\craftattendees\assetbundles\craftattendees;
@@ -28,11 +28,11 @@ use craft\web\assets\cp\CpAsset;
  *
  * http://www.yiiframework.com/doc-2.0/guide-structure-assets.html
  *
- * @author    Percipio.London
- * @package   Craftattendees
- * @since     0.1.0
+ * @author    percipiolondon
+ * @package   attendees
+ * @since     1.0.0
  */
-class CraftattendeesAsset extends AssetBundle
+class AttendeesAsset extends AssetBundle
 {
     // Public Methods
     // =========================================================================
@@ -43,21 +43,11 @@ class CraftattendeesAsset extends AssetBundle
     public function init()
     {
         // define the path that your publishable resources live
-        $this->sourcePath = "@percipiolondon/craftattendees/assetbundles/craftattendees/dist";
+        $this->sourcePath = "@percipiolondon/timeloop/web/assets/dist";
 
         // define the dependencies
         $this->depends = [
             CpAsset::class,
-        ];
-
-        // define the relative path to CSS/JS files that should be registered with the page
-        // when this asset bundle is registered
-        $this->js = [
-            'js/Attendees.js',
-        ];
-
-        $this->css = [
-            'css/Attendees.css',
         ];
 
         parent::init();

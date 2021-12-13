@@ -3,9 +3,9 @@
  *
  * Trainings Field JS
  *
- * @author    Percipio.London
- * @copyright Copyright (c) 2021 Percipio.London
+ * @author    percipiolondon
+ * @copyright Copyright (c) 2021 percipiolondon
  * @link      https://percipio.london
  * @package   Craftattendees
- * @since     0.1.0
+ * @since     1.0.0
  */
