@@ -9,9 +9,13 @@ use Craft;
 
 class TrainingController extends Controller
 {
-    public function actionDetail(int $eventId)
+    public function actionDetail(int $eventId, string $site = '*')
     {
-        $event = Entry::find()->id($eventId)->one();
+        $event = \craft\elements\Entry::find()
+            ->id($eventId)
+            ->site($site)
+            ->anyStatus()
+            ->one();
 
         return $this->renderTemplate('craft-attendees/trainings/detail', [
             'event' => $event
