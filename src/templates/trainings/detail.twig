@@ -5,11 +5,11 @@
  *
  * craft-attendees index.twig
  *
- * @author    Percipio.London
- * @copyright Copyright (c) 2021 Percipio.London
+ * @author    percipiolondon
+ * @copyright Copyright (c) 2021 percipiolondon
  * @link      https://percipio.london
  * @package   Craftattendees
- * @since     0.1.0
+ * @since     1.0.0
  */
 #}
 
@@ -17,7 +17,7 @@
 {% import "_includes/forms" as forms %}
 
 
-{% do view.registerAssetBundle("percipiolondon\\craftattendees\\assetbundles\\trainingscpsection\\TrainingsCPSectionAsset") %}
+{#{% do view.registerAssetBundle("percipiolondon\\craftattendees\\assetbundles\\trainingscpsection\\TrainingsCPSectionAsset") %}#}
 
 {% set pluginCpUrl = url('craft-attendees') %}
 {% set settings = craft.app.getPlugins().getPlugin('craft-attendees').getSettings() %}

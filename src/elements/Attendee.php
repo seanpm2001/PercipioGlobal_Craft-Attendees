@@ -5,7 +5,7 @@
  * A plugin to manage attendees
  *
  * @link      https://percipio.london
- * @copyright Copyright (c) 2021 Percipio.London
+ * @copyright Copyright (c) 2021 percipiolondon
  */
 
 namespace percipiolondon\attendees\elements;
@@ -60,9 +60,9 @@ use yii\db\Query;
  *
  * http://pixelandtonic.com/blog/craft-element-types
  *
- * @author    Percipio.London
+ * @author    percipiolondon
  * @package   Craftattendees
- * @since     0.1.0
+ * @since     1.0.0
  */
 class Attendee extends Element
 {

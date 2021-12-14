@@ -5,11 +5,11 @@
  *
  * craft-attendees index.twig
  *
- * @author    Percipio.London
- * @copyright Copyright (c) 2021 Percipio.London
+ * @author    percipiolondon
+ * @copyright Copyright (c) 2021 percipiolondon
  * @link      https://percipio.london
  * @package   Craftattendees
- * @since     0.1.0
+ * @since     1.0.0
  */
 #}
 
@@ -17,7 +17,7 @@
 {% import "_includes/forms" as forms %}
 
 
-{% do view.registerAssetBundle("percipiolondon\\craftattendees\\assetbundles\\trainingscpsection\\TrainingsCPSectionAsset") %}
+{#{% do view.registerAssetBundle("percipiolondon\\craftattendees\\assetbundles\\trainingscpsection\\TrainingsCPSectionAsset") %}#}
 
 {% set pluginCpUrl = url('craft-attendees') %}
 {% set selectedSite = craft.app.request.getQueryParam('site')|default('main') %}
@@ -31,8 +31,9 @@
 ] %}
 
 {% set events = craft.entries.section(settings.eventSection)
+    .site(selectedSite)
     .anyStatus()
-    .all()
+    .limit(20)
 %}
 
 {# Content that should appear in the page header#}
@@ -48,6 +49,8 @@
 {# The content of the CP Section#}
 {% set content %}
 
+    {% paginate events as pageInfo, pageEntries %}
+
     <div class="tableview tablepane">
         <table class="data fullwidth">
             <thead>
@@ -61,7 +64,7 @@
             </thead>
             <tbody>
 
-                {% for event in events %}
+                {% for event in pageEntries %}
 
                     {% if event.type == 'onlineEvent' %}
                         {% set eventTimetable = event.eventDatesTimeOnline.inReverse().one() %}
@@ -100,7 +103,6 @@
                         <td data-titleType>
                             {% set categoryName = event.eventCategories.one().title ?? null %}
                             <span>{{- categoryName -}}</span>
-                            <span>CategoryName</span>
                         </td>
                         <td data-title="date" data-attr="date">
                             <span>{{ eventDate }} </span>
@@ -128,4 +130,39 @@
     </div>
 
 {#    {{ dump(craft.attendees()) }}#}
+{% endset %}
+
+{% set prevLabel = prevLabel ?? 'Previous Page'|t('app') %}
+{% set nextLabel = nextLabel ?? 'Next Page'|t('app') %}
+{% set itemLabel = "event" %}
+{% set itemsLabel = "events" %}
+
+{% set footer %}
+    <div class="flex pagination">
+        <a href="{{ pageInfo.prevUrl ?? '#' }}" class="page-link prev-page {{ pageInfo.prevUrl ? '' : 'disabled' }}" title="Previous Page"></a>
+        <a href="{{ pageInfo.nextUrl ?? '#' }}" class="page-link next-page {{ pageInfo.nextUrl ? '' : 'disabled' }}" title="Next Page"></a>
+        <div class="page-info">
+            {% if pageInfo.total %}
+                {% if itemLabel and itemsLabel %}
+                    {{ "{first, number}-{last, number} of {total, number} {total, plural, =1{{item}} other{{items}}}"|t('app', {
+                        first: pageInfo.first,
+                        last: pageInfo.last,
+                        total: pageInfo.total,
+                        item: itemLabel,
+                        items: itemsLabel
+                    }) }}
+                {% else %}
+                    {{ "{first}-{last} of {total}"|t('app', {
+                        first: pageInfo.first|number,
+                        last: pageInfo.last|number,
+                        total: pageInfo.total|number
+                    }) }}
+                {% endif %}
+            {% else %}
+                {{ noResultsLabel ?? 'No results'|t('app') }}
+            {% endif %}
+        </div>
+    </div>
+{#    {% if pageInfo.prevUrl %}<a href="{{ pageInfo.prevUrl }}">Previous Page</a>{% endif %}#}
+{#    {% if pageInfo.nextUrl %}<a href="{{ pageInfo.nextUrl }}">Next Page</a>{% endif %}#}
 {% endset %}

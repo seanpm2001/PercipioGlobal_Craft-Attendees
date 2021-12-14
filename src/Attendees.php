@@ -5,7 +5,7 @@
  * A plugin to manage attendees
  *
  * @link      https://percipio.london
- * @copyright Copyright (c) 2021 Percipio.London
+ * @copyright Copyright (c) 2021 percipiolondon
  */
 
 namespace percipiolondon\attendees;
@@ -20,8 +20,13 @@ use Craft;
 use craft\base\Plugin;
 use craft\services\Elements;
 use craft\events\RegisterComponentTypesEvent;
+use craft\services\Plugins;
+
+use nystudio107\pluginvite\services\VitePluginService;
 
 use percipiolondon\attendees\models\Settings;
+use percipiolondon\attendees\assetbundles\craftattendees\AttendeesAsset;
+use percipiolondon\attendees\variables\AttendeesVariable;
 use yii\base\Event;
 
 /**
@@ -34,9 +39,9 @@ use yii\base\Event;
  *
  * https://docs.craftcms.com/v3/extend/
  *
- * @author    Percipio.London
- * @package   Craftattendees
- * @since     0.1.0
+ * @author    percipiolondon
+ * @package   Attendees
+ * @since     1.0.0
  *
  */
 class Attendees extends Plugin
@@ -46,7 +51,7 @@ class Attendees extends Plugin
 
     /**
      * Static property that is an instance of this plugin class so that it can be accessed via
-     * Craftattendees::$plugin
+     * Attendees::$plugin
      *
      * @var Attendees
      */
@@ -60,7 +65,7 @@ class Attendees extends Plugin
      *
      * @var string
      */
-    public $schemaVersion = '0.1.0';
+    public $schemaVersion = '1.0.0';
 
     /**
      * Set to `true` if the plugin should have a settings view in the control panel.
@@ -75,6 +80,31 @@ class Attendees extends Plugin
      * @var bool
      */
     public $hasCpSection = true;
+
+    // Static Methods
+    // =========================================================================
+    /**
+     * @inheritdoc
+     */
+
+    public function __construct($id, $parent = null, array $config = [])
+    {
+        $config['components'] = [
+            'attendees' => Attendees::class,
+            'vite' => [
+                'class' => VitePluginService::class,
+                'assetClass' => AttendeesAsset::class,
+                'useDevServer' => true,
+                'devServerPublic' => 'http://localhost:3001',
+                'serverPublic' => 'http://localhost:8000',
+                'errorEntry' => '/src/js/attendees.ts',
+                'devServerInternal' => 'http://craft-attendees-buildchain:3001',
+                'checkDevServer' => true,
+            ]
+        ];
+
+        parent::__construct($id, $parent, $config);
+    }
 
     // Public Methods
     // =========================================================================
@@ -98,6 +128,16 @@ class Attendees extends Plugin
         $this->_registerCpRoutes();
         $this->_registerCraftVariables();
         $this->_registerElementTypes();
+
+        // Register variable
+        Event::on(CraftVariable::class, CraftVariable::EVENT_INIT, function (Event $event) {
+            /** @var CraftVariable $variable */
+            $variable = $event->sender;
+            $variable->set('attendees', [
+                'class' => AttendeesVariable::class,
+                'viteService' => $this->vite,
+            ]);
+        });
 
         Craft::info(
             Craft::t(

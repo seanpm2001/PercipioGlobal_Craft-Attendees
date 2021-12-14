@@ -5,7 +5,7 @@
  * A plugin to manage attendees
  *
  * @link      https://percipio.london
- * @copyright Copyright (c) 2021 Percipio.London
+ * @copyright Copyright (c) 2021 percipiolondon
  */
 
 /**
@@ -16,9 +16,9 @@
  *
  * http://www.yiiframework.com/doc-2.0/guide-tutorial-i18n.html
  *
- * @author    Percipio.London
+ * @author    percipiolondon
  * @package   Craftattendees
- * @since     0.1.0
+ * @since     1.0.0
  */
 return [
     'craft-attendees plugin loaded' => 'craft-attendees plugin loaded',
