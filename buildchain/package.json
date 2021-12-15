@@ -7,7 +7,8 @@
         "url": "https://percipio.london"
     },
     "dependencies": {
-        "vue": "^3.2.0"
+        "vue": "^3.2.0",
+        "axios": "^0.22.0"
     },
     "devDependencies": {
         "@rollup/plugin-node-resolve": "^13.0.0",

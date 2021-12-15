@@ -9,6 +9,13 @@ use Craft;
 
 class TrainingController extends Controller
 {
+    protected $allowAnonymous = ['save'];
+
+    public function actionIndex()
+    {
+        return $this->renderTemplate('craft-attendees/dashboard/index', []);
+    }
+
     public function actionDetail(int $eventId, string $site = '*')
     {
         $event = \craft\elements\Entry::find()
@@ -24,10 +31,17 @@ class TrainingController extends Controller
 
     public function actionSave()
     {
-        $this->requirePostRequest();
+        $this->requireLogin();
+        $this->requireAcceptsJson();
         $request = Craft::$app->getRequest();
 
-        $this->setSuccessFlash(Craft::t('craft-attendees', 'Attendees saved.'));
-        return $this->renderTemplate('craft-attendees/trainings');
+        $response = (object)[
+            "message" => "Look at me! I'm JSON!"
+        ];
+
+        return $this->asJson($response);
+
+//        $this->setSuccessFlash(Craft::t('craft-attendees', 'Attendees saved.'));
+//        return $this->renderTemplate('craft-attendees/trainings');
     }
 }

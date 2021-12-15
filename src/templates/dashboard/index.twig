@@ -17,7 +17,7 @@
 
 {% set scriptTagOptions = {
     'depends': [
-        'percipiolondon\\craftattendees\\assetbundles\\craftattendees\\AttendeesAsset'
+        'percipiolondon\\attendees\\assetbundles\\craftattendees\\AttendeesAsset'
     ],
 } %}
 
@@ -60,9 +60,7 @@
     {{ craft.attendees.register('/src/js/attendees.ts', false, scriptTagOptions) }}
     <h2>{{ "Dashboard CP Section body goes here"|t('craft-attendees') }}</h2>
 
-    <div class="bg-blue-300 text-gray-800 text-4xl p-16">
-        Tailwind Assetbundle + Vue
-    </div>
+
 
 {#    <img src="{{ iconUrl }}" height="64" width="64" />#}
     <p class="textline"></p>

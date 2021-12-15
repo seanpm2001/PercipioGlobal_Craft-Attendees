@@ -16,18 +16,21 @@
 {% extends "craft-attendees/_layouts/_cp" %}
 {% import "_includes/forms" as forms %}
 
-
-{#{% do view.registerAssetBundle("percipiolondon\\craftattendees\\assetbundles\\trainingscpsection\\TrainingsCPSectionAsset") %}#}
+{% set scriptTagOptions = {
+    'depends': [
+        'percipiolondon\\attendees\\assetbundles\\craftattendees\\AttendeesAsset'
+    ],
+} %}
 
 {% set pluginCpUrl = url('craft-attendees') %}
 {% set settings = craft.app.getPlugins().getPlugin('craft-attendees').getSettings() %}
 {% set selectedSubnavItem = 'trainings' %}
-{%- set fullPageForm = true -%}
 {% set eventTypes = {
     'onlineEvent': 'Online Event',
     'locationEvent': 'Location Event',
     'hybridEvent': 'Hybrid Event'
 } %}
+{#{%- set fullPageForm = true -%}#}
 
 {% set title = "Trainings | Attendees" %}
 
@@ -39,14 +42,12 @@
 {# Content that should appear in the page header#}
 {% block actionButton %}
     <a href="{{ cpUrl() ~ '/' ~ settings.eventSection ~ '/' ~ event.slug }}" class="btn">{{ "Edit Event"|t('craft-attendees') }}</a>
-    <input type="submit" data-action="craft-attendees/training/save" class="btn submit" value="{{ 'Save'|t('craft-attendees') }}">
 {% endblock %}
 
 {# The content of the CP Section#}
 {% set content %}
-    <input type="hidden" name="action" value="craft-attendees/training/save">
 
-    <div class="training">
+    <div id="training">
         <h1>{{ event.title }}</h1>
         <h6 class="event-meta">
             <span>{{ eventTypes[event.type.handle] ?? '' }}</span>
@@ -57,9 +58,109 @@
 
         <hr/>
 
-        <div class="event-actions">
+        <div class="w-full flex field">
+            <div class="heading flex-grow">
+                <label>Attendees</label>
+            </div>
             <a href="#" class="btn">{{ "Import"|t('craft-attendees') }}</a>
+            <button class="btn submit icon add">{{ "Add"|t('craft-attendees') }}</button>
         </div>
+
+        <div class="grid grid-cols-9 pt-2 bg-gray-100">
+            <div class="col-span-2 px-3 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                School / Organisation
+            </div>
+            <div class="px-3 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                Post code
+            </div>
+            <div class="px-3 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                Name of attendee
+            </div>
+            <div class="px-3 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                Email
+            </div>
+            <div class="px-3 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                Role
+            </div>
+            <div class="px-3 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                Days Attended
+            </div>
+            <div class="px-3 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                Newsletter
+            </div>
+            <div class="px-3 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                Actions
+            </div>
+        </div>
+
+        <form-attendee csrf="{{ craft.app.request.csrfToken }}" event="{{ event.id }}"></form-attendee>
+
+{#        <table class="table-auto w-full">#}
+{#            <thead class="bg-gray-100">#}
+{#                <tr>#}
+{#                    <th class="px-3">#}
+{#                        <span class="py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">#}
+{#                            School / Organisation#}
+{#                        </span>#}
+{#                    </th>#}
+{#                    <th class="px-3">#}
+{#                        <span class="py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">#}
+{#                            Post code#}
+{#                        </span>#}
+{#                    </th>#}
+{#                    <th class="px-3">#}
+{#                        <span class="py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">#}
+{#                            Name of attendee#}
+{#                        </span>#}
+{#                    </th>#}
+{#                    <th class="px-3">#}
+{#                        <span class="py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">#}
+{#                            Email#}
+{#                        </span>#}
+{#                    </th>#}
+{#                    <th class="px-3">#}
+{#                        <span class="py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">#}
+{#                            Days Attended#}
+{#                        </span>#}
+{#                    </th>#}
+{#                    <th class="px-3">#}
+{#                        <span class="py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">#}
+{#                            Newsletter#}
+{#                        </span>#}
+{#                    </th>#}
+{#                    <th class="px-3">#}
+{#                        <span class="py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">#}
+{#                            Actions#}
+{#                        </span>#}
+{#                    </th>#}
+{#                </tr>#}
+{#            </thead>#}
+{#            <tbody>#}
+{#                <tr>#}
+{#                    <td>#}
+{#                        <div class="border-b-2 border-gray-600">The Sliding Mr. Bones (Next Stop, Pottersville)</div>#}
+{#                    </td>#}
+{#                    <td>#}
+{#                        <div class="border-b-2 border-gray-600">Malcolm Lockyer</div>#}
+{#                    </td>#}
+{#                    <td>#}
+{#                        <div class="border-b-2 border-gray-600">1961</div>#}
+{#                    </td>#}
+{#                    <td>#}
+{#                        <div class="border-b-2 border-gray-600">1961</div>#}
+{#                    </td>#}
+{#                    <td>#}
+{#                        <div class="border-b-2 border-gray-600">1961</div>#}
+{#                    </td>#}
+{#                    <td>#}
+{#                        <div class="border-b-2 border-gray-600">1961</div>#}
+{#                    </td>#}
+{#                    <td>#}
+{#                        <div class="border-b-2 border-gray-600">x</div>#}
+{#                    </td>#}
+{#                </tr>#}
+{#            </tbody>#}
+{#        </table>#}
 
         {{ forms.editableTableField({
             id: 'attendee-data',
@@ -145,4 +246,6 @@
             addRowLabel: "Add another attendee" |t,
         }) }}
     </div>
+
+    {{ craft.attendees.register('/src/js/attendees.ts', false, scriptTagOptions) }}
 {% endset %}
