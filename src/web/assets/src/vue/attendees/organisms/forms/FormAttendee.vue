@@ -6,50 +6,67 @@
 
         <label class="col-span-2 text-sm box-border p-1">
             <span class="sr-only">School / Organisation</span>
-            <input name="orgName" class="block w-full px-2 py-2 mt-1 text-sm text-gray-600 appearance-none box-border border-none" placeholder="Search for a school or organisation" />
+            <input name="orgName" :class="[
+                'block w-full px-2 py-2  text-sm text-gray-600 appearance-none box-border',
+                errors?.orgName ? 'border-solid border-red-500' : 'border-solid border-white'
+            ]" placeholder="Search for a school or organisation" />
         </label>
         <label class="box-border p-1">
             <span class="sr-only">Post code</span>
-            <input name="postCode" class="block w-full px-2 py-2 mt-1 text-sm text-gray-600 appearance-none box-border border-none" placeholder="Enter a post code" />
+            <input name="postCode" :class="[
+                'block w-full px-2 py-2  text-sm text-gray-600 appearance-none box-border',
+                errors?.postCode ? 'border-solid border-red-500' : 'border-solid border-white'
+            ]" placeholder="Enter a post code" />
         </label>
         <label class="col-span-2 box-border p-1">
             <span class="sr-only">Name of attendee</span>
-            <input name="name" class="block w-full px-2 py-2 mt-1 text-sm text-gray-600 appearance-none box-border border-none" placeholder="Enter the name of the attendee" />
+            <input name="name" :class="[
+                'block w-full px-2 py-2  text-sm text-gray-600 appearance-none box-border',
+                errors?.name ? 'border-solid border-red-500' : 'border-solid border-white'
+            ]" placeholder="Enter the name of the attendee" />
         </label>
         <label class="col-span-2 box-border p-1">
             <span class="sr-only">Email</span>
-            <input name="email" class="block w-full px-2 py-2 mt-1 text-sm text-gray-600 appearance-none box-border border-none" placeholder="Enter the email of the attendee" />
+            <input name="email" :class="[
+                'block w-full px-2 py-2  text-sm text-gray-600 appearance-none box-border',
+                errors?.email ? 'border-solid border-red-500' : 'border-solid border-white'
+            ]" placeholder="Enter the email of the attendee" />
         </label>
         <label class="box-border p-1">
             <span class="sr-only">Role</span>
-            <input name="jobRole" class="block w-full px-2 py-2 mt-1 text-sm text-gray-600 appearance-none box-border border-none" placeholder="Enter the job role of the attendee" />
+            <input name="jobRole" :class="[
+                'block w-full px-2 py-2  text-sm text-gray-600 appearance-none box-border',
+                errors?.jobRole ? 'border-solid border-red-500' : 'border-solid border-white'
+            ]" placeholder="Enter the job role of the attendee" />
         </label>
         <label class="box-border p-1">
             <span class="sr-only">Days Attended</span>
-            <select name="days" class="block h-8 mt-1 px-1 bg-gray-200 rounded-md border-none">
-                <option disabed>Choose days</option>
-                <option val="1">1</option>
-                <option val="2">2</option>
-                <option val="3">3</option>
-                <option val="4">4</option>
-                <option val="5">5</option>
-                <option val="6">6</option>
-                <option val="7">7</option>
-                <option val="8">8</option>
-                <option val="9">9</option>
-                <option val="10">10</option>
+            <select name="days" :class="[
+                'block h-10 px-1 rounded-md border-none w-full',
+                errors?.days ? 'bg-red-500' : 'bg-gray-200'
+            ]">
+                <option default value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
             </select>
         </label>
         <label class="box-border p-1 flex items-center justify-center">
             <span class="sr-only">Newsletter</span>
-            <input type="checkbox" name="newsletter" value="1" class="mt-1"/>
+            <input type="checkbox" name="newsletter" value="1"/>
         </label>
-        <label class="w-full text-right">
+        <label class="w-full text-right pt-1">
             <span class="sr-only">Submit</span>
             <span
                 role="button"
                 @click="submitHandler"
-                class="btn submit m-2"
+                class="m-1 btn submit"
             >Save</span>
         </label>
     </form>
@@ -72,7 +89,7 @@
         },
         setup(){
             const form = ref(null);
-
+            const errors = ref(null);
 
             const submitHandler = () => {
                 if(form.value){
@@ -84,12 +101,18 @@
                         data: formValues
                     })
                     .then(function (response) {
+
+                        errors.value = null;
+
+                        if(!response.data.success){
+                            errors.value = response.data.errors;
+                        }
                         console.log("response?",response);
                     });
                 }
             }
 
-            return { form, submitHandler };
+            return { form, errors, submitHandler };
 
         }
     })

@@ -39,6 +39,8 @@ class TrainingController extends Controller
 
         $success = Craft::$app->getElements()->saveElement($attendee);
 
+//        Craft::dd($attendee->getErrorSummary());
+
         $response = (object)[
             "success" => $success,
             "errors" => $attendee->getErrors(),
