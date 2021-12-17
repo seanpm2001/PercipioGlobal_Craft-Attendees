@@ -18,7 +18,10 @@ use craft\elements\db\ElementQuery;
 use craft\elements\db\ElementQueryInterface;
 use percipiolondon\attendees\db\Table;
 use percipiolondon\attendees\elements\db\AttendeeQuery;
+use percipiolondon\attendees\records\Attendee as AttendeeRecord;
+use yii\db\Exception;
 use yii\db\Query;
+
 
 /**
  * Attendees Element
@@ -68,7 +71,14 @@ class Attendee extends Element
 {
     // Public Properties
     // =========================================================================
-
+    public $orgName;
+    public $postCode;
+    public $name;
+    public $email;
+    public $jobRole;
+    public $days;
+    public $newsletter;
+    public $eventId;
 
     // Static Methods
     // =========================================================================
@@ -208,10 +218,10 @@ class Attendee extends Element
      */
     public function rules()
     {
-        return [
-            ['someAttribute', 'string'],
-            ['someAttribute', 'default', 'value' => 'Some Default'],
-        ];
+        $rules = parent::defineRules();
+        $rules[] = [['orgName','postCode','name','email','jobRole','days','eventId'], 'required'];
+
+        return $rules;
     }
 
     /**
@@ -231,27 +241,27 @@ class Attendee extends Element
      */
     public function getFieldLayout()
     {
-        $tagGroup = $this->getGroup();
-
-        if ($tagGroup) {
-            return $tagGroup->getFieldLayout();
-        }
+//        $tagGroup = $this->getGroup();
+//
+//        if ($tagGroup) {
+//            return $tagGroup->getFieldLayout();
+//        }
 
         return null;
     }
 
-    public function getGroup()
-    {
-        if ($this->groupId === null) {
-            throw new InvalidConfigException('Tag is missing its group ID');
-        }
-
-        if (($group = Craft::$app->getTags()->getTagGroupById($this->groupId)) === null) {
-            throw new InvalidConfigException('Invalid tag group ID: '.$this->groupId);
-        }
-
-        return $group;
-    }
+//    public function getGroup()
+//    {
+//        if ($this->groupId === null) {
+//            throw new InvalidConfigException('Tag is missing its group ID');
+//        }
+//
+//        if (($group = Craft::$app->getTags()->getTagGroupById($this->groupId)) === null) {
+//            throw new InvalidConfigException('Invalid tag group ID: '.$this->groupId);
+//        }
+//
+//        return $group;
+//    }
 
     // Private Methods
     // =========================================================================
@@ -322,6 +332,8 @@ class Attendee extends Element
      */
     public function beforeSave(bool $isNew): bool
     {
+        $this->title = $this->name. ' - '. $this->eventId;
+
         return true;
     }
 
@@ -334,6 +346,29 @@ class Attendee extends Element
      */
     public function afterSave(bool $isNew)
     {
+        if(!$isNew) {
+            $record = AttendeeRecord::findOne($this->id);
+
+            if (!$record) {
+                throw new Exception('Invalid attendee ID: ' . $this->id);
+            }
+        }else{
+            $record = new AttendeeRecord();
+            $record->id = $this->id;
+        }
+
+        $record->orgName = $this->orgName;
+        $record->name = $this->name;
+        $record->postCode = $this->postCode;
+        $record->email = $this->email;
+        $record->jobRole = $this->jobRole;
+        $record->days = $this->days;
+        $record->siteId = $this->siteId;
+        $record->eventId = $this->eventId;
+
+        $record->save();
+
+        return parent::afterSave($isNew);
     }
 
     /**

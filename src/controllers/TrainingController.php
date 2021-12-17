@@ -6,6 +6,7 @@ use craft\elements\Entry;
 use craft\web\Controller;
 
 use Craft;
+use percipiolondon\attendees\helpers\Attendee as AttendeeHelper;
 
 class TrainingController extends Controller
 {
@@ -34,9 +35,13 @@ class TrainingController extends Controller
         $this->requireLogin();
         $this->requireAcceptsJson();
         $request = Craft::$app->getRequest();
+        $attendee = AttendeeHelper::populateAttendeeFromPost($request);
+
+        $success = Craft::$app->getElements()->saveElement($attendee);
 
         $response = (object)[
-            "message" => "Look at me! I'm JSON!"
+            "success" => $success,
+            "errors" => $attendee->getErrors(),
         ];
 
         return $this->asJson($response);
