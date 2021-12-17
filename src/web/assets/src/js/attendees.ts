@@ -1,6 +1,6 @@
 // Import our CSS
 import '@/css/app.pcss';
-import Attendees from '@/vue/attendees.vue';
+import Attendees from '@/vue/attendees/Attendees.vue';
 import { createApp } from 'vue';
 
 const main = async () => {
