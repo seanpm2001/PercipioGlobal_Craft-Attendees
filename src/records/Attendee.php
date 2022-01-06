@@ -14,6 +14,8 @@ use yii\db\ActiveRecord;
  * @property string $newsletter;
  * @property string $orgName;
  * @property string $postCode;
+ * @property string $eventId;
+ * @property string $approved;
  **/
 
 class Attendee extends ActiveRecord

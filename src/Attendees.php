@@ -226,6 +226,7 @@ class Attendees extends Plugin
             UrlManager::EVENT_REGISTER_CP_URL_RULES,
             function (RegisterUrlRulesEvent $event) {
                 $event->rules['craft-attendees/trainings/<eventId:\d+>'] = 'craft-attendees/training/detail';
+                $event->rules['craft-attendees/trainings/attendees/<eventId:\d+>/<hitsPerPage:\d+>/<currentPage:\d+>'] = 'craft-attendees/training/attendees';
             }
         );
     }

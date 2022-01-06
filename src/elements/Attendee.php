@@ -79,6 +79,7 @@ class Attendee extends Element
     public $days;
     public $newsletter;
     public $eventId;
+    public $approved;
 
     // Static Methods
     // =========================================================================
@@ -365,6 +366,8 @@ class Attendee extends Element
         $record->days = $this->days;
         $record->siteId = $this->siteId;
         $record->eventId = $this->eventId;
+        $record->approved = $this->approved;
+        $record->newsletter = $this->approved;
 
         $record->save();
 

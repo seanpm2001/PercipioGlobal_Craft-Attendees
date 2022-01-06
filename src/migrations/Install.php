@@ -76,6 +76,7 @@ class Install extends Migration
                     'jobRole' => $this->string(255)->notNull(),
                     'days' => $this->integer()->notNull(),
                     'newsletter' => $this->boolean()->defaultValue(0),
+                    'approved' => $this->boolean()->defaultValue(0),
                     'siteId' => $this->integer()->notNull(),
                     'eventId' => $this->integer()->notNull(),
                 ]
