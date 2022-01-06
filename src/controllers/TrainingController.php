@@ -6,6 +6,7 @@ use craft\elements\Entry;
 use craft\web\Controller;
 
 use Craft;
+use percipiolondon\attendees\records\Attendee as AttendeeRecord;
 use percipiolondon\attendees\helpers\Attendee as AttendeeHelper;
 
 class TrainingController extends Controller
@@ -30,6 +31,28 @@ class TrainingController extends Controller
         ]);
     }
 
+    public function actionAttendees(int $eventId, int $hitsPerPage = 0, int $currentPage = 0)
+    {
+        $offset = $hitsPerPage > 0 && $currentPage > 0 ? $hitsPerPage * $currentPage : 0;
+        $limit = $hitsPerPage > 0 ? $hitsPerPage : "*";
+
+        $attendees = AttendeeRecord::find()
+            ->where(['eventId' => $eventId])
+            ->orderBy('dateCreated DESC')
+            ->offset($offset)
+            ->limit($limit)
+            ->all();
+
+        return $this->asJson([
+            "meta" => [
+                "event" => $eventId,
+                "offset" => $offset,
+                "limit" => $limit
+            ],
+            "attendees" => $attendees
+        ]);
+    }
+
     public function actionSave()
     {
         $this->requireLogin();
@@ -39,16 +62,11 @@ class TrainingController extends Controller
 
         $success = Craft::$app->getElements()->saveElement($attendee);
 
-//        Craft::dd($attendee->getErrorSummary());
-
         $response = (object)[
             "success" => $success,
             "errors" => $attendee->getErrors(),
         ];
 
         return $this->asJson($response);
-
-//        $this->setSuccessFlash(Craft::t('craft-attendees', 'Attendees saved.'));
-//        return $this->renderTemplate('craft-attendees/trainings');
     }
 }
