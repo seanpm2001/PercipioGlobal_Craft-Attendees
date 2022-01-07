@@ -16,11 +16,25 @@ export const useAttendeeStore = defineStore('attendees', {
         }
     },
     actions: {
+        deleteAttendee(attendee) {
+            const self = this
+            this.loading = true
+
+            axios({
+                method: 'post',
+                url: '/admin/actions/craft-attendees/training/delete',
+                data: attendee
+            })
+            .then(function (response) {
+                self.loading = false
+                self.attendees = self.attendees.filter((at) => at.id != attendee.attendeeId)
+            });
+        },
         submitAttendee(formValues) {
 
             let formObj = {};
 
-            if(typeof formValues !== 'object') {
+            if(formValues instanceof FormData) {
                 for (var pair of formValues.entries()) {
                     formObj[pair[0]] = pair[1]
                 }
@@ -46,10 +60,10 @@ export const useAttendeeStore = defineStore('attendees', {
                     self.loading = false
                     self.attendeeSuccess = false
                 }else{
-                    let updatedAttendee = self.attendees.filter(a => a.id == formObj.attendeeId)
-                    const attendeeIndex = self.attendees.findIndex(a => a.id == formObj.attendeeId)
+                    console.log(response);
 
-                    console.log("updatedAttendee",updatedAttendee, attendeeIndex)
+                    let updatedAttendee = self.attendees.filter(a => a.id == response?.data?.attendee?.id)
+                    const attendeeIndex = self.attendees.findIndex(a => a.id == response?.data?.attendee?.id)
 
                     if(updatedAttendee.length > 0){
                         updatedAttendee = updatedAttendee[0]
@@ -64,7 +78,7 @@ export const useAttendeeStore = defineStore('attendees', {
 
                         self.attendees[attendeeIndex] = updatedAttendee
                     }else{
-                        self.attendees.unshift(formObj)
+                        self.attendees.unshift(response?.data?.attendee)
                     }
 
                     self.loading = false

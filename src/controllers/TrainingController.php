@@ -6,12 +6,14 @@ use craft\elements\Entry;
 use craft\web\Controller;
 
 use Craft;
+use percipiolondon\attendees\elements\Attendee;
 use percipiolondon\attendees\records\Attendee as AttendeeRecord;
 use percipiolondon\attendees\helpers\Attendee as AttendeeHelper;
+use yii\web\HttpException;
 
 class TrainingController extends Controller
 {
-    protected $allowAnonymous = ['save'];
+    protected $allowAnonymous = ['save', 'delete'];
 
     public function actionIndex()
     {
@@ -36,7 +38,7 @@ class TrainingController extends Controller
         $offset = $hitsPerPage > 0 && $currentPage > 0 ? $hitsPerPage * $currentPage : 0;
         $limit = $hitsPerPage > 0 ? $hitsPerPage : "*";
 
-        $attendees = AttendeeRecord::find()
+        $attendees = Attendee::find()
             ->where(['eventId' => $eventId])
             ->orderBy('dateCreated DESC')
             ->offset($offset)
@@ -61,12 +63,35 @@ class TrainingController extends Controller
         $attendee = AttendeeHelper::populateAttendeeFromPost($request);
 
         $success = Craft::$app->getElements()->saveElement($attendee);
+        $savedAttendee = Attendee::find()
+            ->where(['eventId' => $attendee->eventId, 'name' => $attendee->name, 'orgName' => $attendee->orgName, 'email' => $attendee->email])
+            ->one();
 
         $response = (object)[
             "success" => $success,
             "errors" => $attendee->getErrors(),
+            "attendee" => $savedAttendee
         ];
 
         return $this->asJson($response);
+    }
+
+    public function actionDelete()
+    {
+        $this->requireLogin();
+        $this->requireAcceptsJson();
+
+        $attendeeId = Craft::$app->getRequest()->getRequiredBodyParam('attendeeId');
+        $attendee = Attendee::find()->id($attendeeId)->one();
+
+        if(!$attendee){
+            throw new HttpException(404, Craft::t('craft-attendees', 'Can not find attendee.'));
+        }
+
+        if (!Craft::$app->getElements()->deleteElementById($attendee->id)) {
+            return $this->asJson(['success' => false]);
+        }
+
+        return $this->asJson(['success' => true, 'attendee' => $attendee]);
     }
 }

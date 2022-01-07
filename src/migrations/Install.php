@@ -6,6 +6,7 @@ use Craft;
 use craft\db\Migration;
 use craft\helpers\MigrationHelper;
 use percipiolondon\attendees\db\Table;
+use percipiolondon\attendees\elements\Attendee;
 
 /**
  * Install migration.
@@ -39,6 +40,8 @@ class Install extends Migration
         $this->dropForeignKeys();
         $this->removeTables();
 
+        $this->delete(\craft\db\Table::ELEMENTINDEXSETTINGS, ['type' => [ Attendee::class ]]);
+
         return true;
     }
 
@@ -56,16 +59,13 @@ class Install extends Migration
      */
     protected function createTables()
     {
-        $tablesCreated = false;
-
         //attendees table
         $tableSchema = Craft::$app->db->schema->getTableSchema(Table::ATTENDEES);
         if ($tableSchema === null) {
-            $tablesCreated = true;
             $this->createTable(
                 Table::ATTENDEES,
                 [
-                    'id' => $this->primaryKey(),
+                    'id' => $this->integer()->notNull(),
                     'dateCreated' => $this->dateTime()->notNull(),
                     'dateUpdated' => $this->dateTime()->notNull(),
                     'uid' => $this->uid(),
@@ -79,6 +79,7 @@ class Install extends Migration
                     'approved' => $this->boolean()->defaultValue(0),
                     'siteId' => $this->integer()->notNull(),
                     'eventId' => $this->integer()->notNull(),
+                    'PRIMARY KEY(id)',
                 ]
             );
         }
@@ -91,6 +92,7 @@ class Install extends Migration
 
     protected function addForeignKeys()
     {
+        $this->addForeignKey(null, Table::ATTENDEES, ['id'], '{{%elements}}', ['id'], 'CASCADE');
         $this->addForeignKey(null, Table::ATTENDEES, ['siteId'], '{{%sites}}', ['id'], 'CASCADE', 'CASCADE');
         $this->addForeignKey(null, Table::ATTENDEES, ['eventId'], '{{%entries}}', ['id'], 'CASCADE', 'CASCADE');
     }

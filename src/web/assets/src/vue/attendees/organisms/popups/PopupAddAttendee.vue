@@ -41,7 +41,6 @@ export default defineComponent({
         }
 
         watchEffect(() => {
-            console.log("attendeeSuccess.value",attendeeSuccess.value)
             if(attendeeSuccess.value){
                 hideForm()
             }
