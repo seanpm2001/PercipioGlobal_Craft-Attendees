@@ -25,6 +25,7 @@
                         @input="delay"
                         @focus="handleFocus(true)"
                         @blur="handleFocus(false)"
+                        @keydown.down="handleFocusDropdown"
                         :class="[
                             'block peer w-full px-2 py-2 text-sm text-gray-600 box-border bg-gray-100 rounded-lg',
                             attendeeFormErrors?.orgName ? 'border-solid border-red-300' : 'border-solid border-gray-100'
@@ -38,11 +39,17 @@
                     <ul
                         class="absolute left-0 top-full mt-1 w-full max-h-52 overflow-scroll z-10 bg-gray-100 rounded-lg shadow-xl"
                         v-show="showDropdown"
+                        ref="schoolDropdown"
                         aria-expanded="true"
                         role="listbox"
                         :id="`metaseed-list-${uniqueId}`"
                     >
-                        <li class="p-2 pointer-all hover:bg-blue-600 hover:text-white text-sm" v-for="school in schools" role="option" @click="handleSchoolSelect">{{school.value}}</li>
+                        <li
+                            class="p-2 pointer-all hover:bg-blue-600 hover:text-white focus:bg-blue-600 text-sm"
+                            v-for="school in schools"
+                            role="option"
+                            @click="handleSchoolSelect"
+                        >{{school.value}}</li>
                     </ul>
                 </div>
             </label>
@@ -176,6 +183,7 @@
         },
         setup( props, {emit} ){
             const form = ref(null)
+            const schoolDropdown = ref(null)
             const errors = ref(null)
             const store = useAttendeeStore()
             const uniqueId = ref(Math.floor(Math.random() * 100) + Date.now())
@@ -232,7 +240,11 @@
             }
 
             const handleFocus = (val) => {
+                // showDropdown.value = true
                 setTimeout(() => {
+                    if(school.value.length === 0){
+                        store.clearSchools()
+                    }
                     showDropdown.value = val
                 },150)
             }
@@ -263,6 +275,7 @@
                 schools,
                 uniqueId,
                 showDropdown,
+                schoolDropdown,
                 delay,
                 submitHandler,
                 hideForm,

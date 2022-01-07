@@ -70,8 +70,6 @@ export const useAttendeeStore = defineStore('attendees', {
                     self.loading = false
                     self.attendeeSuccess = false
                 }else{
-                    console.log(response);
-
                     let updatedAttendee = self.attendees.filter(a => a.id == response?.data?.attendee?.id)
                     const attendeeIndex = self.attendees.findIndex(a => a.id == response?.data?.attendee?.id)
 
@@ -123,9 +121,7 @@ export const useAttendeeStore = defineStore('attendees', {
             // this.attendeeSuccess = false
             this.attendeeInput = null
         },
-        clearSchools()
-        {
-            console.log("reset?")
+        clearSchools() {
             this.schools = null
         }
     }
