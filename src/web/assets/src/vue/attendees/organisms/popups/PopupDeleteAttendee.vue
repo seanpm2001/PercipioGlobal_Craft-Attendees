@@ -54,8 +54,6 @@
                 deleteAttendee.action = 'actions/craft-attendees/training/delete'
                 deleteAttendee.attendeeId = props.attendee.id
                 store.deleteAttendee(deleteAttendee)
-
-                this.handleCancel()
             }
 
             const handleCancel = () => {
