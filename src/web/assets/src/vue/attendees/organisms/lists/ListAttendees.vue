@@ -36,7 +36,7 @@
         </div>
         <p class="p-6" v-if="(!attendees || attendees.length === 0) && !loading">There are currently no attendees for this event</p>
     </div>
-    <span class="pl-4 pt-4 inline-block text-gray-500">Total results: {{ (!attendees || attendees.length === 0) && !loading ? attendees?.length : '0'}}</span>
+    <span class="pl-4 pt-4 inline-block text-gray-500">Total results: {{ (!attendees || attendees.length > 0) && !loading ? attendees?.length : '0'}}</span>
 </template>
 
 <script lang="ts">
