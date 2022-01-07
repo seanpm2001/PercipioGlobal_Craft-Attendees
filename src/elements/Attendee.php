@@ -21,6 +21,7 @@ use percipiolondon\attendees\elements\db\AttendeeQuery;
 use percipiolondon\attendees\records\Attendee as AttendeeRecord;
 use yii\db\Exception;
 use yii\db\Query;
+use yii\validators\Validator;
 
 
 /**
@@ -221,6 +222,19 @@ class Attendee extends Element
     {
         $rules = parent::defineRules();
         $rules[] = [['orgName','postCode','name','email','jobRole','days','eventId'], 'required'];
+        $rules[] = ['email', function($attribute, $params, Validator $validator){
+            $preg = "/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,})$/i";
+
+            // Valid email
+            if (!preg_match($preg, $this->$attribute)) {
+                $error = Craft::t('craft-attendees', '"{value}" is not a valid email address.', [
+                    'attribute' => $attribute,
+                    'value' => $this->$attribute,
+                ]);
+
+                $validator->addError($this, $attribute, $error);
+            }
+        }];
 
         return $rules;
     }

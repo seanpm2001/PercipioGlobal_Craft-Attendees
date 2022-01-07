@@ -21,7 +21,11 @@ module.exports = {
     theme: {
         extend: {
             minHeight: {
-                16: '4rem'
+                16: '4rem',
+                52: '13rem'
+            },
+            screens: {
+                'px': '1px'
             }
         }
     },
@@ -30,6 +34,7 @@ module.exports = {
     variants: {
         extend: {
             backgroundColor: ['peer'],
+            display: ['peer'],
             outline: ['peer'],
             ring: ['peer'],
             ringColor: ['peer'],

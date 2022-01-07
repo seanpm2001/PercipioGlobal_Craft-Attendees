@@ -18,14 +18,33 @@
         <div>
             <label class="block mb-6">
                 <span class="text-xs font-bold text-gray-400 block mb-1">School / Organisation <span class="text-blue-500">*</span></span>
-                <input
-                    name="orgName"
-                    :value="attendeeInput?.orgName ?? values?.orgName ?? ''"
-                    :class="[
-                        'block w-full px-2 py-2 text-sm text-gray-600 box-border bg-gray-100 rounded-lg',
-                        attendeeFormErrors?.orgName ? 'border-solid border-red-300' : 'border-solid border-gray-100'
-                    ]"
-                    placeholder="Search for a school or organisation" />
+                <div class="w-full relative">
+                    <input
+                        name="orgName"
+                        v-model="school"
+                        @input="delay"
+                        @focus="handleFocus(true)"
+                        @blur="handleFocus(false)"
+                        :class="[
+                            'block peer w-full px-2 py-2 text-sm text-gray-600 box-border bg-gray-100 rounded-lg',
+                            attendeeFormErrors?.orgName ? 'border-solid border-red-300' : 'border-solid border-gray-100'
+                        ]"
+                        placeholder="Search for a school or organisation"
+                        :aria-owns="`metaseed-list-${uniqueId}`"
+                        aria-autocomplete="list"
+                        role="combobox"
+                    />
+
+                    <ul
+                        class="absolute left-0 top-full mt-1 w-full max-h-52 overflow-scroll z-10 bg-gray-100 rounded-lg shadow-xl"
+                        v-show="showDropdown"
+                        aria-expanded="true"
+                        role="listbox"
+                        :id="`metaseed-list-${uniqueId}`"
+                    >
+                        <li class="p-2 pointer-all hover:bg-blue-600 hover:text-white text-sm" v-for="school in schools" role="option" @click="handleSchoolSelect">{{school.value}}</li>
+                    </ul>
+                </div>
             </label>
             <label class="block mb-6">
                 <span class="text-xs font-bold text-gray-400 block mb-1">Post code <span class="text-blue-500">*</span></span>
@@ -159,7 +178,18 @@
             const form = ref(null)
             const errors = ref(null)
             const store = useAttendeeStore()
-            const { attendeeInput, attendeeFormErrors, loading, showForm, resetAttendeeInput } = storeToRefs(store)
+            const uniqueId = ref(Math.floor(Math.random() * 100) + Date.now())
+            const {
+                attendeeInput,
+                attendeeFormErrors,
+                loading,
+                showForm,
+                schools,
+                resetAttendeeInput
+            } = storeToRefs(store)
+            const school = ref(attendeeInput.value ?? props.values?.orgName ?? '')
+            const timer = ref(null)
+            const showDropdown = ref(false)
 
             const submitHandler = (evt) => {
                 evt.preventDefault();
@@ -178,15 +208,40 @@
                 }
             }
 
+            const hideForm = () => {
+                store.resetForm()
+                emit('hideForm')
+            }
+
             const keyup = evt => {
                 if(evt.keyCode === 27){
                     hideForm();
                 }
             }
 
-            const hideForm = () => {
-                store.resetForm()
-                emit('hideForm')
+            const handleSchoolSelect = evt => {
+                school.value = evt.currentTarget.textContent
+                showDropdown.value = false
+                store.clearSchools()
+            }
+
+            const handleSchoolInput = () => {
+                if(school.value.length > 2){
+                    store.fetchSchools(school.value)
+                }
+            }
+
+            const handleFocus = (val) => {
+                setTimeout(() => {
+                    showDropdown.value = val
+                },150)
+            }
+
+            const delay = (fn, ms) => {
+                if(timer.value){
+                    clearTimeout(timer.value)
+                }
+                timer.value = setTimeout(handleSchoolInput, 200)
             }
 
             watchEffect(() => {
@@ -198,8 +253,24 @@
                 }
             })
 
-
-            return { form, attendeeInput, attendeeFormErrors, loading, showForm, submitHandler, hideForm, keyup };
+            return {
+                form,
+                attendeeInput,
+                attendeeFormErrors,
+                loading,
+                showForm,
+                school,
+                schools,
+                uniqueId,
+                showDropdown,
+                delay,
+                submitHandler,
+                hideForm,
+                keyup,
+                handleSchoolSelect,
+                handleSchoolInput,
+                handleFocus
+            };
 
         }
     })

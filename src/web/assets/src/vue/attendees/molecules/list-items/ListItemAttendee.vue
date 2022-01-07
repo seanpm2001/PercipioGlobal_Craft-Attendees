@@ -6,7 +6,7 @@
             expanded ? 'border-blue-800 bg-blue-100 bg-opacity-10' : 'border-white'
         ]"
     >
-        <div class="grid grid-cols-11 w-full">
+        <div class="grid grid-cols-9 xl:grid-cols-10 w-full">
             <div class="col-span-3 p-3 flex flex-nowrap items-center font-bold cursor-pointer" @click="toggle">
                 <span class="inline-flex mb-0"><input type="checkbox"/></span>
                 <span class="inline-flex pl-2">{{ attendee.orgName }}</span>
@@ -14,8 +14,8 @@
             <div class="col-span-2 box-border p-3 cursor-pointer flex items-center" @click="toggle">
                 {{ attendee.name }}
             </div>
-            <div class="col-span-3 box-border p-3 cursor-pointer flex items-center" @click="toggle">
-                {{ attendee.email }}
+            <div class="col-span-1 xl:col-span-3 box-border p-3 cursor-pointer flex items-center" @click="toggle">
+                <span class="w-full whitespace-nowrap text-ellipsis overflow-hidden">{{ attendee.email }}</span>
             </div>
             <div class="box-border p-3 cursor-pointer flex items-center" @click="toggle">
                 {{ attendee.days }}
@@ -24,9 +24,9 @@
                 <span v-if="attendee.approved == 0 || !attendee.approved" class="inline-block rounded-full text-xs bg-orange-300 text-orange-800 text-bold px-4 py-1">Pending</span>
                 <span v-else class="inline-block rounded-full text-xs bg-emerald-400 text-white text-bold px-4 py-1">Approved</span>
             </div>
-            <div class="w-full box-border pr-3 pt-px">
+            <!--div class="w-full box-border pr-3 pt-px">
                 <button class="float-right block bg-gray-300 text-gray-800 mt-2 py-1 px-3 text-sm font-bold rounded-lg">Actions v</button>
-            </div>
+            </div-->
         </div>
 
         <!-- expanded version -->
@@ -99,7 +99,6 @@
             </div>
 
             <form-attendee v-if="edit" :csrf="csrf" :values="attendee" :event="event" @hideForm="handleEdit" @submitForm="submitEdit" />
-            test - {{showDeletePopup}}
             <popup-delete-attendee :show="showDeletePopup" :csrf="csrf" :attendee="attendee" @hidePopup="handleHidePopup" />
 
         </div>

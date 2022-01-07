@@ -3,9 +3,11 @@
 namespace percipiolondon\attendees\controllers;
 
 use craft\elements\Entry;
+use craft\feeds\GuzzleClient;
 use craft\web\Controller;
 
 use Craft;
+use percipiolondon\attendees\Attendees;
 use percipiolondon\attendees\elements\Attendee;
 use percipiolondon\attendees\records\Attendee as AttendeeRecord;
 use percipiolondon\attendees\helpers\Attendee as AttendeeHelper;
@@ -15,10 +17,10 @@ class TrainingController extends Controller
 {
     protected $allowAnonymous = ['save', 'delete'];
 
-    public function actionIndex()
-    {
-        return $this->renderTemplate('craft-attendees/dashboard/index', []);
-    }
+//    public function actionIndex()
+//    {
+//        return $this->renderTemplate('craft-attendees/dashboard/index', []);
+//    }
 
     public function actionDetail(int $eventId, string $site = '*')
     {

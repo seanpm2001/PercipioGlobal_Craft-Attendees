@@ -8,14 +8,24 @@ export const useAttendeeStore = defineStore('attendees', {
         attendeeFormErrors: false,
         attendeeSuccess: false,
         showForm: false,
-        loading: false
+        loading: false,
+        schools: null
     }),
-    getters: {
-        getAttendees(id) {
-            return this.attendees
-        }
-    },
     actions: {
+        async fetchSchools(query) {
+            if(query){
+                const api = axios.create({
+                    baseURL: `https://api.v2.metaseed.io/schools/?mode=legacy&query=${query}`,
+                    timeout: 3000
+                })
+
+                const response = await api.get('')
+
+                if(response?.data){
+                    this.schools = response.data?.suggestions;
+                }
+            }
+        },
         deleteAttendee(attendee) {
             const self = this
             this.loading = true
@@ -112,6 +122,11 @@ export const useAttendeeStore = defineStore('attendees', {
             this.attendeeFormErrors = false
             // this.attendeeSuccess = false
             this.attendeeInput = null
+        },
+        clearSchools()
+        {
+            console.log("reset?")
+            this.schools = null
         }
     }
 })
