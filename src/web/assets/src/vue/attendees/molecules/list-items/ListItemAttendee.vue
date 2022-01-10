@@ -79,6 +79,7 @@
                         <span class="text-xs font-bold text-gray-400 block mb-2">Approved status</span>
                         <span v-if="attendee.approved == 0 || !attendee.approved" class="inline-block rounded-full text-xs bg-orange-300 text-orange-800 text-bold px-4 py-1">Pending</span>
                         <span v-else class="inline-block rounded-full text-xs bg-emerald-400 text-white text-bold px-4 py-1">Approved</span>
+                        <p v-if="attendee?.orgUrn" class="text-blue-600 text-xs">This school is a verified school. Visit the <a :href="`https://get-information-schools.service.gov.uk/Establishments/Establishment/Details/${attendee?.orgUrn}`" class="text-blue-600 underline" target="_blank">government establishment data</a></p>
                     </div>
                 </div>
                 <div>
