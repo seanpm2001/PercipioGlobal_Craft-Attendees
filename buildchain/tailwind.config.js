@@ -34,8 +34,9 @@ module.exports = {
     variants: {
         extend: {
             backgroundColor: ['peer'],
-            display: ['peer'],
             outline: ['peer'],
+            opacity: ['peer'],
+            pointerEvents: ['peer'],
             ring: ['peer'],
             ringColor: ['peer'],
             ringOpacity: ['peer']

@@ -49,9 +49,13 @@
 
     <div id="training">
         <h1>{{ event.title }}</h1>
-        <h6 class="inline-block mb-4 space-x-2 -mt-2">
-            <span class="inline-block rounded-full bg-gray-700 text-white px-4 py-2">{{ eventTypes[event.type.handle] ?? '' }}</span>
-            <span class="inline-block rounded-full bg-gray-700 text-white px-4 py-2">{{ event.eventCategories.one().title ?? '' }}</span>
+        <h6 class="{{ (eventTypes[event.type.handle] ?? '') or (event.eventCategories.one().title ?? '') ? 'inline-block mb-4 space-x-2 -mt-2' : '' }}">
+            {% if eventTypes[event.type.handle] ?? '' %}
+                <span class="inline-block rounded-full bg-gray-700 text-white px-4 py-2">{{ eventTypes[event.type.handle] ?? '' }}</span>
+            {% endif %}
+            {% if event.eventCategories.one().title ?? '' %}
+                <span class="inline-block rounded-full bg-gray-700 text-white px-4 py-2">{{ event.eventCategories.one().title ?? '' }}</span>
+            {% endif %}
         </h6>
         <p>{{ event.description }}</p>
 

@@ -1,7 +1,7 @@
 <template>
     <div :class="[
         'transition-all duration-500 delay-50 ease-in-out fixed left-0 top-0 w-screen h-screen',
-        show ? 'z-[200] opacity-100 bg-gray-900 bg-opacity-50' : 'z-0 opacity-0 pointer-events-none'
+        show ? 'z-[100] opacity-100 bg-gray-900 bg-opacity-50' : 'z-0 opacity-0 pointer-events-none'
     ]">
         <div class="max-h-screen text-center overflow-auto fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-72">
             <div class="bg-white p-6 rounded-xl mb-10">

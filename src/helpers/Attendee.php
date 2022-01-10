@@ -29,13 +29,14 @@ class Attendee
         }
 
         $attendee->orgName = $request->getBodyParam('orgName');
+        $attendee->orgUrn = $request->getBodyParam('orgUrn');
         $attendee->postCode = $request->getBodyParam('postCode');
         $attendee->name = $request->getBodyParam('name');
         $attendee->email = $request->getBodyParam('email');
         $attendee->jobRole = $request->getBodyParam('jobRole');
         $attendee->days = $request->getBodyParam('days');
-        $attendee->newsletter = $request->getBodyParam('newsletter');
-        $attendee->approved = $request->getBodyParam('approved');
+        $attendee->newsletter = $request->getBodyParam('newsletter') ?? 0;
+        $attendee->approved = $request->getBodyParam('approved') ?? 0;
         $attendee->eventId = $request->getBodyParam('event');
 
         return $attendee;

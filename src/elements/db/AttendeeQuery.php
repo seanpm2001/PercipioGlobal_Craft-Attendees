@@ -13,6 +13,7 @@ class AttendeeQuery extends ElementQuery
     public $days;
     public $newsletter;
     public $orgName;
+    public $orgUrn;
     public $postCode;
     public $eventId;
     public $approved;
@@ -58,6 +59,12 @@ class AttendeeQuery extends ElementQuery
         return $this;
     }
 
+    public function orgUrn($value)
+    {
+        $this->orgUrn = $value;
+        return $this;
+    }
+
     public function postCode($value)
     {
         $this->postCode = $value;
@@ -87,6 +94,7 @@ class AttendeeQuery extends ElementQuery
             'attendees_attendees.days',
             'attendees_attendees.newsletter',
             'attendees_attendees.orgName',
+            'attendees_attendees.orgUrn',
             'attendees_attendees.postCode',
             'attendees_attendees.eventId',
             'attendees_attendees.approved',

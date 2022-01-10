@@ -9,12 +9,13 @@
     export default defineComponent({
         setup(){
             const store = useAttendeeStore()
+            const { showForm } = storeToRefs(store)
 
             const toggle = () => {
                 store.setShowFrom(true);
             }
 
-            return { toggle }
+            return { showForm, toggle }
 
         }
     })

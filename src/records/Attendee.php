@@ -13,6 +13,7 @@ use yii\db\ActiveRecord;
  * @property string $days;
  * @property string $newsletter;
  * @property string $orgName;
+ * @property string $orgUrn;
  * @property string $postCode;
  * @property string $eventId;
  * @property string $approved;

@@ -73,6 +73,7 @@ class Attendee extends Element
     // Public Properties
     // =========================================================================
     public $orgName;
+    public $orgUrn;
     public $postCode;
     public $name;
     public $email;
@@ -373,6 +374,7 @@ class Attendee extends Element
         }
 
         $record->orgName = $this->orgName;
+        $record->orgUrn = $this->orgUrn;
         $record->name = $this->name;
         $record->postCode = $this->postCode;
         $record->email = $this->email;
@@ -381,7 +383,7 @@ class Attendee extends Element
         $record->siteId = $this->siteId;
         $record->eventId = $this->eventId;
         $record->approved = $this->approved;
-        $record->newsletter = $this->approved;
+        $record->newsletter = $this->newsletter;
 
         $record->save();
 

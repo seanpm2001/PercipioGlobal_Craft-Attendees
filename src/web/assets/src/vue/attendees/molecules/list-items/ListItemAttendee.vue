@@ -73,7 +73,7 @@
                     </div>
                     <div class="mb-6">
                         <span class="text-xs font-bold text-gray-400 block">Subscribed for the newsletter?</span>
-                        <span class="text-base mt-1 block">{{ attendee.newsletter == 0 ? 'No' : 'Yes' }}</span>
+                        <span class="text-base mt-1 block">{{ attendee.newsletter == 1 ? 'Yes' : 'No' }}</span>
                     </div>
                     <div class="mb-6">
                         <span class="text-xs font-bold text-gray-400 block mb-2">Approved status</span>
@@ -91,8 +91,8 @@
                         <button @click="handleApprove" v-if="attendee.approved == 0 || !attendee.approved" class="block bg-emerald-300 text-emerald-800 font-bold mt-2 py-2 px-3 text-sm rounded-lg cursor-pointer">
                             Approve
                         </button>
-                        <button @click="handleDisapprove" v-if="attendee.approved == 1 || attendee.approved" class="block bg-orange-300 text-orange-800 font-bold mt-2 py-2 px-3 text-sm rounded-lg cursor-pointer">
-                            Disapprove
+                        <button @click="handleDisapprove" v-else class="block bg-orange-300 text-orange-800 font-bold mt-2 py-2 px-3 text-sm rounded-lg cursor-pointer">
+                            Reject
                         </button>
                     </div>
                 </div>

@@ -5,8 +5,8 @@
             :name="name"
             type="checkbox"
             class="peer sr-only"
-            value="1"
-            :checked="checkedValue"
+            :value="checkedValue"
+            :checked="checkedValue == 1 ? true : false"
             @click="toggle"
         >
 
@@ -29,7 +29,7 @@
 </template>
 
 <script lang="ts">
-import { defineAsyncComponent, defineComponent, ref } from 'vue'
+import {defineAsyncComponent, defineComponent, ref, watchEffect} from 'vue'
 import { useModelWrapper } from '@/js/utils/modelWrapper'
 
 export default defineComponent({
@@ -53,7 +53,11 @@ export default defineComponent({
 
     setup(props) {
 
-        const checkedValue = ref(props.checked == 0 ? 0 : 1);
+        const checkedValue = ref(0);
+
+        watchEffect(() => {
+            checkedValue.value = props.checked == 0 ? 0 : 1
+        })
 
         const toggle = () => {
             checkedValue.value = checkedValue.value == 0 ? 1 : 0

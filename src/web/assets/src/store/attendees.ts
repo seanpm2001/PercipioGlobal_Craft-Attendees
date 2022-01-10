@@ -9,11 +9,15 @@ export const useAttendeeStore = defineStore('attendees', {
         attendeeSuccess: false,
         showForm: false,
         loading: false,
+        loadingApi: false,
         schools: null
     }),
     actions: {
         async fetchSchools(query) {
+
             if(query){
+                this.loadingApi = true
+
                 const api = axios.create({
                     baseURL: `https://api.v2.metaseed.io/schools/?mode=legacy&query=${query}`,
                     timeout: 3000
@@ -23,6 +27,9 @@ export const useAttendeeStore = defineStore('attendees', {
 
                 if(response?.data){
                     this.schools = response.data?.suggestions;
+                    this.loadingApi = false
+                }else{
+                    this.loadingApi = false
                 }
             }
         },
