@@ -1,0 +1,16 @@
+{
+  "src/js/attendees.ts": {
+    "file": "assets/attendees.ab41cb04.js",
+    "src": "src/js/attendees.ts",
+    "isEntry": true,
+    "imports": [
+      "_vendor.cc18e8c4.js"
+    ],
+    "css": [
+      "assets/attendees.1a6d1908.css"
+    ]
+  },
+  "_vendor.cc18e8c4.js": {
+    "file": "assets/vendor.cc18e8c4.js"
+  }
+}
