@@ -7,9 +7,9 @@
         ]"
     >
         <div class="grid grid-cols-9 xl:grid-cols-10 w-full">
-            <div class="col-span-3 p-3 flex flex-nowrap items-center font-bold cursor-pointer" @click="toggle">
+            <div class="col-span-3 p-3 flex flex-nowrap items-center font-bold cursor-pointer">
                 <span class="inline-flex mb-0"><input type="checkbox"/></span>
-                <span class="inline-flex pl-2">{{ attendee.orgName }}</span>
+                <span class="inline-flex pl-2 flex-grow" @click="toggle">{{ attendee.orgName }}</span>
             </div>
             <div class="col-span-2 box-border p-3 cursor-pointer flex items-center" @click="toggle">
                 {{ attendee.name }}
