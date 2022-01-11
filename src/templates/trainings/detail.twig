@@ -41,7 +41,7 @@
 
 {# Content that should appear in the page header#}
 {% block actionButton %}
-    <a href="{{ cpUrl() ~ '/entries/' ~ settings.eventSection ~ '/' ~ event.slug }}" class="btn">{{ "Edit Event"|t('craft-attendees') }}</a>
+    <a target="_blank" href="{{ cpUrl() ~ '/entries/' ~ settings.eventSection ~ '/' ~ event.id ~ '-' ~ event.slug }}" class="btn">{{ "Edit Event"|t('craft-attendees') }}</a>
 {% endblock %}
 
 {# The content of the CP Section#}
