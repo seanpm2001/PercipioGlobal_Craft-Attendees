@@ -1,6 +1,8 @@
 import {defineStore} from "pinia"
 import axios from 'axios'
 
+const ENDPOINT = window.Attendee?.cpUrl ?? 'https://researchschool.org.uk/cp'
+
 export const useAttendeeStore = defineStore('attendees', {
     state:() => ({
         attendees: null,
@@ -40,7 +42,7 @@ export const useAttendeeStore = defineStore('attendees', {
 
             axios({
                 method: 'post',
-                url: '/admin/actions/craft-attendees/training/delete',
+                url: `${ENDPOINT}/actions/craft-attendees/training/delete`,
                 data: attendee
             })
             .then(function (response) {
@@ -68,7 +70,7 @@ export const useAttendeeStore = defineStore('attendees', {
 
             axios({
                 method: 'post',
-                url: '/admin/actions/craft-attendees/training/save',
+                url: `${ENDPOINT}/actions/craft-attendees/training/save`,
                 data: formValues
             })
             .then(function (response) {
@@ -109,11 +111,9 @@ export const useAttendeeStore = defineStore('attendees', {
             const self = this;
             this.loading = true;
 
-            console.log("limit",limit)
-
             axios({
                 method: 'get',
-                url: `/admin/craft-attendees/trainings/attendees/${event}/${limit}/${offset}`,
+                url: `${ENDPOINT}/craft-attendees/trainings/attendees/${event}/${limit}/${offset}`,
             })
             .then(function (response) {
                 self.loading = false
