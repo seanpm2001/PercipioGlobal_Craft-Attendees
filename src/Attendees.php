@@ -190,15 +190,15 @@ class Attendees extends Plugin
 
         $nav['label'] = $this->getPluginName();
 
-        $nav['subnav']['dashboard'] = [
-            'label' => Craft::t('craft-attendees', 'Dashboard'),
-            'url' => 'craft-attendees/dashboard'
-        ];
-
-        $nav['subnav']['data-export'] = [
-            'label' => Craft::t('craft-attendees', 'Data Export'),
-            'url' => 'craft-attendees/data-export'
-        ];
+//        $nav['subnav']['dashboard'] = [
+//            'label' => Craft::t('craft-attendees', 'Dashboard'),
+//            'url' => 'craft-attendees/dashboard'
+//        ];
+//
+//        $nav['subnav']['data-export'] = [
+//            'label' => Craft::t('craft-attendees', 'Data Export'),
+//            'url' => 'craft-attendees/data-export'
+//        ];
 
         $nav['subnav']['trainings'] = [
             'label' => Craft::t('craft-attendees', 'Trainings'),
