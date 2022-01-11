@@ -129,16 +129,6 @@ class Attendees extends Plugin
         $this->_registerCraftVariables();
         $this->_registerElementTypes();
 
-        // Register variable
-        Event::on(CraftVariable::class, CraftVariable::EVENT_INIT, function (Event $event) {
-            /** @var CraftVariable $variable */
-            $variable = $event->sender;
-            $variable->set('attendees', [
-                'class' => AttendeesVariable::class,
-                'viteService' => $this->vite,
-            ]);
-        });
-
         Craft::info(
             Craft::t(
                 'craft-attendees',
@@ -233,6 +223,16 @@ class Attendees extends Plugin
 
     private function _registerCraftVariables()
     {
+        // Register variable
+        Event::on(CraftVariable::class, CraftVariable::EVENT_INIT, function (Event $event) {
+            /** @var CraftVariable $variable */
+            $variable = $event->sender;
+            $variable->set('viteattendees', [
+                'class' => AttendeesVariable::class,
+                'viteService' => $this->vite,
+            ]);
+        });
+
         Event::on(
             CraftVariable::class,
             CraftVariable::EVENT_INIT,

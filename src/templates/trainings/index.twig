@@ -108,7 +108,7 @@
                             <span>{{ eventDate }} </span>
                         </td>
                         <td data-title="Attendees">
-                            <span>{{ dataEngagement|length }} </span>
+                            <span>{{ craft.attendees(event.id).count() }} </span>
                         </td>
                         <td>
                             <div class="progress">

@@ -12,8 +12,9 @@ class AttendeeBehavior extends Behavior
     {
         $query = Attendee::find();
 
+
         if($criteria) {
-            \Craft::configure($query, $criteria);
+            $query->where(['eventId' => $criteria]);
         }
 
         return $query;
