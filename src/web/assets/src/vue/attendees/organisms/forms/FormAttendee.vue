@@ -33,14 +33,30 @@
             </label>
             <label class="block mb-6">
                 <span class="text-xs font-bold text-gray-400 block mb-1">Attendee's job role <span class="text-blue-500">*</span></span>
-                <input
+                <!--input
                     name="jobRole"
                     :value="attendeeInput?.jobRole ?? values?.jobRole ?? ''"
                     :class="[
                         'block w-full px-2 py-2 text-sm text-gray-600 appearance-none box-border bg-gray-100 rounded-lg',
                         attendeeFormErrors?.jobRole ? 'border-solid border-red-300' : 'border-solid border-gray-100'
                     ]"
-                    placeholder="Enter the job role of the attendee" />
+                    placeholder="Enter the job role of the attendee" /-->
+
+                <select
+                    name="jobRole"
+                    :value="attendeeInput?.jobRole ?? values?.jobRole ?? ''"
+                    :class="[
+                        'block h-10 px-1 rounded-md border-none bg-gray-100 w-full',
+                        attendeeFormErrors?.jobRole ? 'border-solid border-red-300' : ''
+                    ]"
+                >
+                    <option value="" default disabled class="text-gray-400">Select the job role of the attendee</option>
+                    <option value="na">Not Applicable</option>
+                    <option value="support">Support Staff</option>
+                    <option value="leader-middle">Middle leader</option>
+                    <option value="leader">Leadership</option>
+                    <option value="teacher">Teacher</option>
+                </select>
             </label>
             <label class="block mb-6">
                 <span class="text-xs font-bold text-gray-400 block mb-1">Email address of attendee <span class="text-blue-500">*</span></span>

@@ -35,10 +35,9 @@ class TrainingController extends Controller
         ]);
     }
 
-    public function actionAttendees(int $eventId, int $hitsPerPage = 0, int $currentPage = 0)
+    public function actionAttendees(int $eventId, int $limit = 0, int $offset = 0)
     {
-        $offset = $hitsPerPage > 0 && $currentPage > 0 ? $hitsPerPage * $currentPage : 0;
-        $limit = $hitsPerPage > 0 ? $hitsPerPage : "*";
+        $limit = $limit === 0 ? "*" : $limit;
 
         $attendees = Attendee::find()
             ->where(['eventId' => $eventId])
@@ -47,11 +46,16 @@ class TrainingController extends Controller
             ->limit($limit)
             ->all();
 
+        $count = Attendee::find()
+            ->where(['eventId' => $eventId])
+            ->count();
+
         return $this->asJson([
             "meta" => [
                 "event" => $eventId,
                 "offset" => $offset,
-                "limit" => $limit
+                "limit" => $limit,
+                "total" => $count
             ],
             "attendees" => $attendees
         ]);

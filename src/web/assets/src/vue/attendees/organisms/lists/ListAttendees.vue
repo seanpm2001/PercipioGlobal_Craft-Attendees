@@ -36,7 +36,17 @@
         </div>
         <p class="p-6" v-if="(!attendees || attendees.length === 0) && !loading">There are currently no attendees for this event</p>
     </div>
-    <span class="pl-4 pt-4 inline-block text-gray-500">Total results: {{ (!attendees || attendees.length > 0) && !loading ? attendees?.length : '0'}}</span>
+
+    <div class="ml-4 mt-4 relative text-center">
+        <span class="inline-block text-gray-500 absolute left-0 top-1/2 -translate-y-1/2">Total results: {{ (!attendees || attendees.length > 0) ? attendees?.length : '0'}}</span>
+        <button
+            :class="[
+                'bg-gray-300 text-gray-800 font-bold py-2 px-3 text-sm rounded-lg cursor-pointer',
+                remainingEntries > 0 ? '' : 'opacity-0 pointer-events-none',
+            ]"
+            @click="handleLoadMore"
+        >Load more ({{ remainingEntries }})</button>
+    </div>
 </template>
 
 <script lang="ts">
@@ -61,15 +71,27 @@
         },
         setup(props){
             const store = useAttendeeStore()
-            const { attendees, loading } = storeToRefs(store)
-            const hitsPerPage = ref(0)
-            const currentPage = ref(0)
+            const { attendees, loading, totalAttendees } = storeToRefs(store)
+            const limit = ref(30)
+            const offset = ref(0)
+            const remainingEntries = ref(0)
+
+            const handleLoadMore = () => {
+                offset.value = offset.value + limit.value
+
+                store.fetchAttendees(props.event, limit.value, offset.value)
+            }
 
             watchEffect(() => {
-                store.fetchAttendees(props.event, hitsPerPage.value, currentPage.value)
+                remainingEntries.value = (totalAttendees.value - offset.value) - limit.value
             })
 
-            return { attendees, loading }
+
+            // watchEffect(() => {
+            store.fetchAttendees(props.event, limit.value, offset.value)
+            // })
+
+            return { attendees, loading, offset, totalAttendees, remainingEntries, handleLoadMore }
 
         }
     })
