@@ -4,6 +4,7 @@ import axios from 'axios'
 export const useAttendeeStore = defineStore('attendees', {
     state:() => ({
         attendees: null,
+        totalAttendees: null,
         attendeeInput: null,
         attendeeFormErrors: false,
         attendeeSuccess: false,
@@ -104,17 +105,20 @@ export const useAttendeeStore = defineStore('attendees', {
             });
 
         },
-        fetchAttendees(event, hitsPerPage, currentPage){
+        fetchAttendees(event, limit, offset){
             const self = this;
             this.loading = true;
 
+            console.log("limit",limit)
+
             axios({
                 method: 'get',
-                url: `/admin/craft-attendees/trainings/attendees/${event}/${hitsPerPage}/${currentPage}`,
+                url: `/admin/craft-attendees/trainings/attendees/${event}/${limit}/${offset}`,
             })
             .then(function (response) {
                 self.loading = false
-                self.attendees = response?.data?.attendees
+                self.totalAttendees = parseInt(response?.data?.meta?.total)
+                self.attendees = self.attendees ? self.attendees.concat(response?.data?.attendees) : response?.data?.attendees
             });
         },
         setShowFrom(value){
