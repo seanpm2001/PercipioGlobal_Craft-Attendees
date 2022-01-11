@@ -39,7 +39,13 @@
 
     <div class="ml-4 mt-4 relative text-center">
         <span class="inline-block text-gray-500 absolute left-0 top-1/2 -translate-y-1/2">Total results: {{ (!attendees || attendees.length > 0) ? attendees?.length : '0'}}</span>
-        <button class="bg-gray-300 text-gray-800 font-bold py-2 px-3 text-sm rounded-lg cursor-pointer" @click="handleLoadMore">Load more ({{ totalAttendees ? totalAttendees - offset : '-' }})</button>
+        <button
+            :class="[
+                'bg-gray-300 text-gray-800 font-bold py-2 px-3 text-sm rounded-lg cursor-pointer',
+                remainingEntries > 0 ? '' : 'opacity-0 pointer-events-none',
+            ]"
+            @click="handleLoadMore"
+        >Load more ({{ remainingEntries }})</button>
     </div>
 </template>
 
@@ -66,8 +72,9 @@
         setup(props){
             const store = useAttendeeStore()
             const { attendees, loading, totalAttendees } = storeToRefs(store)
-            const limit = ref(5)
+            const limit = ref(20)
             const offset = ref(0)
+            const remainingEntries = ref(0)
 
             const handleLoadMore = () => {
                 offset.value = offset.value + limit.value
@@ -75,11 +82,16 @@
                 store.fetchAttendees(props.event, limit.value, offset.value)
             }
 
+            watchEffect(() => {
+                remainingEntries.value = (totalAttendees.value - offset.value) - limit.value
+            })
+
+
             // watchEffect(() => {
             store.fetchAttendees(props.event, limit.value, offset.value)
             // })
 
-            return { attendees, loading, offset, totalAttendees, handleLoadMore }
+            return { attendees, loading, offset, totalAttendees, remainingEntries, handleLoadMore }
 
         }
     })
