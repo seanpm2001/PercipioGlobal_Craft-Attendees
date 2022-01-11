@@ -59,7 +59,7 @@
                     </div>
                     <div class="mb-6">
                         <span class="text-xs font-bold text-gray-400 block">Attendee's job role</span>
-                        <span class="text-base mt-1 block">{{ attendee.jobRole }}</span>
+                        <span class="text-base mt-1 block">{{ jobRoles[attendee.jobRole] ?? '-' }}</span>
                     </div>
                     <div class="mb-6">
                         <span class="text-xs font-bold text-gray-400 block">Email address of attendee</span>
@@ -139,6 +139,13 @@
             const { attendeeSuccess, loading } = storeToRefs(store)
             const formSubmitted = ref(false)
             const showDeletePopup = ref(false)
+            const jobRoles = ref({
+                'na': 'Not Applicable',
+                'support': 'Support',
+                'leader-middle': 'Middle leader',
+                'leader': 'Leadership',
+                'teacher': 'Teacher'
+            })
 
             const toggle = () => {
                 expanded.value = !expanded.value
@@ -189,7 +196,20 @@
                 }
             })
 
-            return { expanded, edit, loading, showDeletePopup, toggle, handleEdit, submitEdit, handleApprove, handleDisapprove, handleDelete, handleHidePopup }
+            return {
+                expanded,
+                edit,
+                loading,
+                showDeletePopup,
+                jobRoles,
+                toggle,
+                handleEdit,
+                submitEdit,
+                handleApprove,
+                handleDisapprove,
+                handleDelete,
+                handleHidePopup
+            }
 
         }
     })

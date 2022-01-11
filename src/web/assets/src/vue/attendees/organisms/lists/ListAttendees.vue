@@ -72,7 +72,7 @@
         setup(props){
             const store = useAttendeeStore()
             const { attendees, loading, totalAttendees } = storeToRefs(store)
-            const limit = ref(20)
+            const limit = ref(30)
             const offset = ref(0)
             const remainingEntries = ref(0)
 
