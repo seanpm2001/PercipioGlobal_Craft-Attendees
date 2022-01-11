@@ -80,7 +80,7 @@
             :disabled="urn.length > 0"
             :class="[
                 'block w-full px-2 py-2 text-sm text-gray-600 appearance-none box-border bg-gray-100 rounded-lg',
-                'disabled:text-gray-400 cursor-not-allowed',
+                'disabled:text-gray-400 disabled:cursor-not-allowed',
                 attendeeFormErrors?.postCode ? 'border-solid border-red-300' : 'border-solid border-gray-100'
             ]"
             placeholder="Enter a post code"
