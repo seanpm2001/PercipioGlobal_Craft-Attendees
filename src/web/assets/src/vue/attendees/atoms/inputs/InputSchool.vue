@@ -92,7 +92,7 @@
 
 <script lang="ts">
 import {defineComponent, watchEffect, watch, ref} from 'vue'
-import { useAttendeeStore } from '@/store/attendees'
+import { useTrainingsStore } from '@/store/trainings'
 import { storeToRefs } from 'pinia'
 import InputSwitch from '@/vue/attendees/atoms/inputs/InputSwitch.vue';
 
@@ -106,7 +106,7 @@ export default defineComponent({
     emits: ["schoolSelect"],
     setup( props, {emit} ){
         const schoolDropdown = ref(null)
-        const store = useAttendeeStore()
+        const store = useTrainingsStore()
         const uniqueId = ref(Math.floor(Math.random() * 100) + Date.now())
         const {
             attendeeInput,

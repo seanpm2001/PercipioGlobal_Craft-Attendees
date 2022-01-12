@@ -130,7 +130,7 @@
 
 <script lang="ts">
     import {defineComponent, watchEffect, ref} from 'vue'
-    import { useAttendeeStore } from '@/store/attendees'
+    import { useTrainingsStore } from '@/store/trainings'
     import { storeToRefs } from 'pinia'
     import InputSwitch from '@/vue/attendees/atoms/inputs/InputSwitch.vue';
     import InputSchool from "@/vue/attendees/atoms/inputs/InputSchool.vue";
@@ -162,7 +162,7 @@
             const schoolDropdown = ref(null)
             const errors = ref(null)
             const urn = ref(null)
-            const store = useAttendeeStore()
+            const store = useTrainingsStore()
             const {
                 attendeeInput,
                 attendeeFormErrors,

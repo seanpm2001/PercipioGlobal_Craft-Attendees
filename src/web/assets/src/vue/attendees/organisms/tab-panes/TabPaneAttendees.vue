@@ -63,7 +63,7 @@
 
 </template>
 <script lang="ts">
-    import {defineComponent, ref} from 'vue'
+    import { defineComponent, ref } from 'vue'
     import ButtonAdd from '@/vue/attendees/atoms/buttons/ButtonAdd.vue'
     import ListAttendees from '@/vue/attendees/organisms/lists/ListAttendees.vue'
     import PopupAddAttendee from "@/vue/attendees/organisms/popups/PopupAddAttendee.vue"

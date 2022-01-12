@@ -109,7 +109,7 @@
 
 <script lang="ts">
     import {defineComponent, ref, watch, watchEffect} from 'vue'
-    import { useAttendeeStore } from '@/store/attendees'
+    import { useTrainingsStore } from '@/store/trainings'
     import { storeToRefs } from 'pinia'
     import PopupDeleteAttendee from '@/vue/attendees/organisms/popups/PopupDeleteAttendee.vue';
     import FormAttendee from '@/vue/attendees/organisms/forms/FormAttendee.vue';
@@ -136,7 +136,7 @@
         setup(props){
             const expanded = ref(false)
             const edit = ref(false)
-            const store = useAttendeeStore();
+            const store = useTrainingsStore();
             const { attendeeSuccess, loading } = storeToRefs(store)
             const formSubmitted = ref(false)
             const showDeletePopup = ref(false)

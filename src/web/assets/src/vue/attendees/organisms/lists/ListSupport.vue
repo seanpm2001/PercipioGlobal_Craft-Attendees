@@ -51,7 +51,7 @@
 
 <script lang="ts">
     import {defineComponent, ref} from 'vue'
-    import { useAttendeeStore } from '@/store/attendees'
+    import { useTrainingsStore } from '@/store/trainings'
     import { storeToRefs } from 'pinia'
 
     export default defineComponent({

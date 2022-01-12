@@ -51,7 +51,7 @@
 
 <script lang="ts">
     import {defineComponent, watchEffect, ref} from 'vue'
-    import { useAttendeeStore } from '@/store/attendees'
+    import { useTrainingsStore } from '@/store/trainings'
     import { storeToRefs } from 'pinia'
     import ListItemAttendee from '@/vue/attendees/molecules/list-items/ListItemAttendee.vue';
 
@@ -70,7 +70,7 @@
             },
         },
         setup(props){
-            const store = useAttendeeStore()
+            const store = useTrainingsStore()
             const { attendees, loading, totalAttendees } = storeToRefs(store)
             const limit = ref(30)
             const offset = ref(0)

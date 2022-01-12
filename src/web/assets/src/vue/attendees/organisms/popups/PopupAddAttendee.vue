@@ -14,7 +14,7 @@
 
 <script lang="ts">
 import {defineComponent, ref, watchEffect} from 'vue'
-import { useAttendeeStore } from '@/store/attendees'
+import { useTrainingsStore } from '@/store/trainings'
 import { storeToRefs } from 'pinia'
 import FormAttendee from '@/vue/attendees/organisms/forms/FormAttendee.vue';
 
@@ -33,7 +33,7 @@ export default defineComponent({
         }
     },
     setup(){
-        const store = useAttendeeStore()
+        const store = useTrainingsStore()
         const { showForm, attendeeSuccess } = storeToRefs(store)
 
         const hideForm = () => {

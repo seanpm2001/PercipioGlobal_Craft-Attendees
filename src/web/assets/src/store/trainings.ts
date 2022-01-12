@@ -1,9 +1,9 @@
-import {defineStore} from "pinia"
+import { defineStore } from "pinia"
 import axios from 'axios'
 
-const ENDPOINT = window.Attendee?.cpUrl ?? 'https://researchschool.org.uk/cp'
+const ENDPOINT = window?.Attendee?.cpUrl ?? 'https://researchschool.org.uk/cp'
 
-export const useAttendeeStore = defineStore('attendees', {
+export const useTrainingsStore = defineStore('trainings', {
     state:() => ({
         attendees: null,
         totalAttendees: null,
