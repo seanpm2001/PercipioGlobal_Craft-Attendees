@@ -99,9 +99,10 @@
                 <input-switch name="newsletter" :checked="attendeeInput?.newsletter ?? values?.newsletter ?? 0" />
             </label>
             <label class="block mb-6">
-                <span class="text-xs font-bold text-gray-400 block mb-1">School is approved</span>
+                <span class="text-xs font-bold text-gray-400 block mb-1">School is verified</span>
                 <input-switch name="approved" :checked="attendeeInput?.approved ?? values?.approved ?? (urn?.length > 0 ? 1 : 0)" />
-                <p v-if="attendeeInput?.orgUrn ?? values?.orgUrn ?? urn?.length > 0" class="text-blue-600 text-xs">This school is a verified school. Visit the <a :href="`https://get-information-schools.service.gov.uk/Establishments/Establishment/Details/${urn}`" class="text-blue-600 underline" target="_blank">government establishment data</a></p>
+                <p v-if="attendeeInput?.orgUrn ?? values?.orgUrn ?? urn?.length > 0" class="text-blue-600 text-xs">This school is verified and linked to <a :href="`https://get-information-schools.service.gov.uk/Establishments/Establishment/Details/${urn}`" class="text-blue-600 underline" target="_blank">government establishment data</a></p>
+                <!--p v-if="attendee?.approved == 1" class="text-blue-600 text-xs">Data verified, but not a not linked to government establishment data</p-->
             </label>
 
         </div>

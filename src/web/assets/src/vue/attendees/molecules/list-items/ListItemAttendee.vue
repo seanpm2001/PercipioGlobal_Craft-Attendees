@@ -21,8 +21,8 @@
                 {{ attendee.days }}
             </div>
             <div class="box-border p-3 cursor-pointer" @click="toggle">
-                <span v-if="attendee.approved == 0 || !attendee.approved" class="inline-block rounded-full text-xs bg-orange-300 text-orange-800 text-bold px-4 py-1">Pending</span>
-                <span v-else class="inline-block rounded-full text-xs bg-emerald-400 text-white text-bold px-4 py-1">Approved</span>
+                <span v-if="attendee.approved == 0 || !attendee.approved" class="inline-block rounded-full text-xs bg-orange-300 text-orange-800 text-bold px-4 py-1">Unverified</span>
+                <span v-else class="inline-block rounded-full text-xs bg-emerald-400 text-white text-bold px-4 py-1">Verified</span>
             </div>
             <!--div class="w-full box-border pr-3 pt-px">
                 <button class="float-right block bg-gray-300 text-gray-800 mt-2 py-1 px-3 text-sm font-bold rounded-lg">Actions v</button>
@@ -68,7 +68,7 @@
                 </div>
                 <div>
                     <div class="mb-6">
-                        <span class="text-xs font-bold text-gray-400 block">Attending days</span>
+                        <span class="text-xs font-bold text-gray-400 block">Days attended</span>
                         <span class="text-base mt-1 block">{{ attendee.days }}</span>
                     </div>
                     <div class="mb-6">
@@ -76,10 +76,11 @@
                         <span class="text-base mt-1 block">{{ attendee.newsletter == 1 ? 'Yes' : 'No' }}</span>
                     </div>
                     <div class="mb-6">
-                        <span class="text-xs font-bold text-gray-400 block mb-2">Approved status</span>
-                        <span v-if="attendee.approved == 0 || !attendee.approved" class="inline-block rounded-full text-xs bg-orange-300 text-orange-800 text-bold px-4 py-1">Pending</span>
-                        <span v-else class="inline-block rounded-full text-xs bg-emerald-400 text-white text-bold px-4 py-1">Approved</span>
-                        <p v-if="attendee?.orgUrn" class="text-blue-600 text-xs">This school is a verified school. Visit the <a :href="`https://get-information-schools.service.gov.uk/Establishments/Establishment/Details/${attendee?.orgUrn}`" class="text-blue-600 underline" target="_blank">government establishment data</a></p>
+                        <span class="text-xs font-bold text-gray-400 block mb-2">Verified status</span>
+                        <span v-if="attendee.approved == 0 || !attendee.approved" class="inline-block rounded-full text-xs bg-orange-300 text-orange-800 text-bold px-4 py-1">Unverified</span>
+                        <span v-else class="inline-block rounded-full text-xs bg-emerald-400 text-white text-bold px-4 py-1">Verified</span>
+                        <p v-if="attendee?.orgUrn" class="text-blue-600 text-xs">This school is verified and linked to <a :href="`https://get-information-schools.service.gov.uk/Establishments/Establishment/Details/${attendee?.orgUrn}`" class="text-blue-600 underline" target="_blank">government establishment data</a></p>
+                        <p v-if="attendee?.approved == 1" class="text-blue-600 text-xs">Data verified, but not a not linked to government establishment data</p>
                     </div>
                 </div>
                 <div>
@@ -90,10 +91,10 @@
                             Delete
                         </button>
                         <button @click="handleApprove" v-if="attendee.approved == 0 || !attendee.approved" class="block bg-emerald-300 text-emerald-800 font-bold mt-2 py-2 px-3 text-sm rounded-lg cursor-pointer">
-                            Approve
+                            Verify
                         </button>
                         <button @click="handleDisapprove" v-else class="block bg-orange-300 text-orange-800 font-bold mt-2 py-2 px-3 text-sm rounded-lg cursor-pointer">
-                            Reject
+                            Unverify
                         </button>
                     </div>
                 </div>

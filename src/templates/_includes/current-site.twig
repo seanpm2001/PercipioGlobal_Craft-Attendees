@@ -1,0 +1,18 @@
+{%- set permittedSites = [] %}
+
+{% for site in craft.app.sites.getAllSites() %}
+    {%- set permitted = currentUser.can('editSite:'~site.uid) -%}
+
+    {%- if permitted -%}
+        {% set permittedSites = permittedSites|merge([site]) %}
+    {% endif %}
+{% endfor %}
+
+{% set selectedSite = currentSite.handle ?? '*' %}
+{% set selectedSiteObj = craft.app.getSites().getSiteByHandle(selectedSite) %}
+
+{% if not currentUser.can('editSite:'~(selectedSiteObj.uid ?? '*')) %}
+    {% redirect url('craft-attendees/four-o-three') %}
+{% endif %}
+
+<div class="status {% if selectedSiteObj.enabled %}enabled{%  endif %}"></div>{{ selectedSiteObj.name }}

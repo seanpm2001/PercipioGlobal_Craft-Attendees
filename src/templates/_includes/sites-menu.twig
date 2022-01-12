@@ -1,26 +1,68 @@
-{% import "_includes/forms" as forms %}
+{%- set permittedSites = [] %}
 
-{% set activeSite = 0 %}
+{% for site in craft.app.sites.getAllSites() %}
+    {%- set permitted = currentUser.can('editSite:'~site.uid) -%}
 
-{% for sites in craft.app.sites.getAllSites() %}
-    {%  if sites.handle == selectedSite %}
-        {%  set activeSite = 1 %}
-        <div id="sites-btn" class="btn menubtn" data-icon="world">{{ sites.name }}</div>
-    {%  endif %}
+    {%- if permitted -%}
+        {% set permittedSites = permittedSites|merge([site]) %}
+    {% endif %}
 {% endfor %}
-    {%  if activeSite == 0 %}
-        <div id="sites-btn" class="btn menubtn" data-icon="world">{{ currentSiteName }}</div>
-    {%  endif %}
-<div class="menu">
-    <ul class="padded">
-        {% for site in craft.app.sites.getAllSites() %}
-            {%- set siteEnabled = site.enabled ?? null -%}
-                <li>
+
+{% set selectedSite = craft.app.request.getQueryParam('site')|default(permittedSites[0].handle ?? '*') %}
+{% set selectedSiteObj = craft.app.getSites().getSiteByHandle(selectedSite) %}
+
+
+{% if not currentUser.can('editSite:'~(selectedSiteObj.uid ?? '*')) %}
+    {% redirect url('craft-attendees/four-o-three') %}
+{% endif %}
+
+<div id="sites-btn" class="btn menubtn" data-icon="world">{{ selectedSiteObj.name }}</div>
+    <div class="menu">
+        <ul class="padded">
+            {% for site in permittedSites %}
+                {%- set siteEnabled = site.enabled ?? null -%}
                 {% set url = baseUrl ~ '?site=' ~site.handle %}
+                <li>
                     <a href="{{ url }}" title="{{ site.handle }}">
-                        <div class="status  {% if siteEnabled %} enabled{%  endif %}"></div>{{ site.name }}
+                        <div class="status {% if siteEnabled %}enabled{%  endif %}"></div>{{ site.name }}
                     </a>
                 </li>
-        {% endfor %}
-    </ul>
+            {% endfor %}
+        </ul>
+    </div>
 </div>
+
+{#{% import "_includes/forms" as forms %}#}
+
+{#{% set activeSite = 0 %}#}
+
+{#{% set checkCurrentPermitted = currentUser.can('editSite:'~currentSite.uid) %}#}
+
+{#{{ checkCurrentPermitted ? 'yes' : 'no' }}#}
+
+{#{% for sites in craft.app.sites.getAllSites() %}#}
+{#    {%  if sites.handle == selectedSite %}#}
+{#        {%  set activeSite = 1 %}#}
+{#        <div id="sites-btn" class="btn menubtn" data-icon="world">{{ sites.name }}</div>#}
+{#    {%  endif %}#}
+{#{% endfor %}#}
+{#    {%  if activeSite == 0 %}#}
+{#        <div id="sites-btn" class="btn menubtn" data-icon="world">{{ currentSiteName }}</div>#}
+{#    {%  endif %}#}
+{#<div class="menu">#}
+{#    <ul class="padded">#}
+{#        {% for site in craft.app.sites.getAllSites() %}#}
+{#            {%- set permitted = currentUser.can('editSite:'~site.uid) -%}#}
+
+{#            {%- if permitted -%}#}
+{#                {%- set siteEnabled = site.enabled ?? null -%}#}
+{#                {% set url = baseUrl ~ '?site=' ~site.handle %}#}
+{#                <li>#}
+{#                    <a href="{{ url }}" title="{{ site.handle }}">#}
+{#                        <div class="status {% if siteEnabled %}enabled{%  endif %}"></div>{{ site.name }}#}
+{#                    </a>#}
+{#                </li>#}
+{#            {%- endif -%}#}
+{#        {% endfor %}#}
+{#    </ul>#}
+{#</div>#}

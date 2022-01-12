@@ -27,9 +27,9 @@
             <span v-if="school?.length > 3" @click="handleClear" class="text-blue-800 bg-gray-100 block w-6 text-center flex items-center justify-center h-8 absolute right-0 top-1 cursor:pointer">&#x2715</span>
 
             <ul
-                class="absolute left-0 top-full mt-1 w-full max-h-52 overflow-scroll z-10 bg-gray-100 rounded-lg shadow-xl"
-                ref="schoolDropdown"
+                class="absolute left-0 top-full mt-1 w-128 max-h-52 overflow-scroll z-10 bg-gray-100 rounded-lg shadow-xl"
                 v-show="showDropdown"
+                ref="schoolDropdown"
                 :aria-expanded="showDropdown"
                 role="listbox"
                 :id="`metaseed-list-${uniqueId}`"
@@ -48,11 +48,12 @@
                         :data-postcode="school?.data?.postcode"
                         :data-urn="school?.data?.urn"
                         :class="[
-                         'p-2 pointer-all hover:bg-blue-600 hover:text-white focus:bg-blue-600 text-sm block',
+                         'p-2 pointer-all hover:bg-blue-600 hover:text-white focus:bg-blue-600 block group',
                          currentSelectionIndex === i ? 'bg-blue-600 text-white' : ''
                         ]"
                     >
-                        {{school.value}}
+                        <span class="block w-full text-sm font-medium">{{school.value}}</span>
+                        <span :class="['block text-xs group-focus:text-white', currentSelectionIndex === i ? 'text-white' : 'text-gray-500']">[URN: {{ school?.data?.urn ?? '-' }}] {{ school?.data?.street ?? '-' }}, {{ school?.data?.town ?? '-' }} {{ school?.data?.postcode }} (Age {{ school?.data?.ageFrom ?? '/' }} - {{ school?.data?.ageTo ?? '/' }})</span>
                     </span>
                     <span v-else class="p-2 block">
                         There's no school that matches the input

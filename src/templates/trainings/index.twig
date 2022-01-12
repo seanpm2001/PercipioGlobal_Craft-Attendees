@@ -16,11 +16,21 @@
 {% extends "craft-attendees/_layouts/_cp" %}
 {% import "_includes/forms" as forms %}
 
+{%- set permittedSites = [] %}
+
+{% for site in craft.app.sites.getAllSites() %}
+    {%- set permitted = currentUser.can('editSite:'~site.uid) -%}
+
+    {%- if permitted -%}
+        {% set permittedSites = permittedSites|merge([site]) %}
+    {% endif %}
+{% endfor %}
+
 
 {#{% do view.registerAssetBundle("percipiolondon\\craftattendees\\assetbundles\\trainingscpsection\\TrainingsCPSectionAsset") %}#}
 
 {% set pluginCpUrl = url('craft-attendees') %}
-{% set selectedSite = craft.app.request.getQueryParam('site')|default('main') %}
+{% set selectedSite = craft.app.request.getQueryParam('site')|default(permittedSites[0].handle ?? '*') %}
 {% set settings = craft.app.getPlugins().getPlugin('craft-attendees').getSettings() %}
 {% set title = "Trainings" %}
 {% set selectedSubnavItem = 'trainings' %}
@@ -38,11 +48,8 @@
 
 {# Content that should appear in the page header#}
 {% block actionButton %}
-    {% include "rsn-data/_includes/sites-menu" with {
-        baseUrl: pluginCpUrl ~ '/' ~ selectedSubnavItem,
-        currentSiteId: currentSite.id,
-        currentSiteHandle: currentSite.handle,
-        currentSiteName:  currentSite.name
+    {% include "craft-attendees/_includes/sites-menu" with {
+        baseUrl: pluginCpUrl ~ '/' ~ selectedSubnavItem
     } %}
 {% endblock %}
 

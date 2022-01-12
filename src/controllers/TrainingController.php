@@ -31,7 +31,7 @@ class TrainingController extends Controller
             ->one();
 
         return $this->renderTemplate('craft-attendees/trainings/detail', [
-            'event' => $event
+            'event' => $event,
         ]);
     }
 

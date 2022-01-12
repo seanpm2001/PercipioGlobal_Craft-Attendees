@@ -23,13 +23,11 @@
 
 {#{% do view.registerAssetBundle("percipiolondon\\craftattendees\\assetbundles\\dashboardcpsection\\DashboardCPSectionAsset") %}#}
 
-{% import "_includes/forms" as forms %}
-
 {# Link for the ? icon at the bottom of the page #}
 {% set docsUrl = "https://github.com/percipioglobal/craft-attendees/blob/master/README.md" %}
 
 {# The title of this CP section #}
-{% set title = "Attendees | Dashboard" %}
+{% set title = "Attendees | 403" %}
 
 {# The URL to this plugin's base CP section #}
 {% set pluginCpUrl = url('craft-attendees') %}
@@ -37,28 +35,14 @@
 {# Get a URL to an image in our AssetBundle #}
 {#{% set iconUrl = view.getAssetManager().getPublishedUrl('@percipiolondon/craftattendees/assetbundles/dashboardcpsection/dist', true) ~ '/img/Dashboard-icon.svg' %}#}
 
-{% set subnav = {
-    "dashboard": { label: "Dashboard"|t('craft-attendees'), url: url(pluginCpUrl ~ '/dashboard') },
-    "trainings": { label: "Trainings"|t('craft-attendees'), url: url(pluginCpUrl ~ '/trainings') },
-    "data-export": { label: "DataExport"|t('craft-attendees'), url: url(pluginCpUrl ~ '/data-export') },
-
-} %}
-{% set selectedSubnavItem = 'dashboard' %}
-
 {% set crumbs = [
     { label: "Attendees", url: url(pluginCpUrl) },
-    { label: "Dashboard"|t('craft-attendees'), url: url(pluginCpUrl ~ '/dashboard') },
+    { label: "403"|t('craft-attendees'), url: url(pluginCpUrl ~ '/four-o-three') },
 ] %}
-
-{# Content that should appear in the page header#}
-{% block actionButton %}
-{% endblock %}
 
 {# The content of the CP Section#}
 {% set content %}
-    {{ craft.viteattendees.register('/src/js/attendees.ts', false, scriptTagOptions) }}
-    <h2>{{ "Dashboard CP Section body goes here"|t('craft-attendees') }}</h2>
+    <h2>{{ "403"|t('craft-attendees') }}</h2>
 
-{#    <img src="{{ iconUrl }}" height="64" width="64" />#}
-    <p class="textline"></p>
+    <p class="textline">I'm sorry but you're not permitted to see this page</p>
 {% endset %}
