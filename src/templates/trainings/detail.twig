@@ -65,7 +65,14 @@
                     <label class="text-xl inline-block w-full">Attendees</label>
                     <span>You can import a .csv file or add a new attendee in the actions on the right.</span>
                 </div>
-                <a href="#" class="bg-gray-300 text-gray-800 font-bold py-2 px-3 text-sm rounded-lg">{{ "Import"|t('craft-attendees') }}</a>
+
+                <form id="retour-import-form" method="post" accept-charset="UTF-8" enctype="multipart/form-data">
+                    {{ csrfInput() }}
+                    <input type="hidden" name="action" value="craft-attendees/training/import">
+                    <input type="file" class="fixed top-full" name="file" id="attendee-csv-file" accept=".csv" onchange="this.form.submit();" />
+                    <label for="attendee-csv-file" class="bg-gray-300 text-gray-800 font-bold py-2 px-3 text-sm rounded-lg cursor-pointer">Import CSV File</label>
+                </form>
+
                 <button-add label="{{ "Add"|t('craft-attendees') }}"></button-add>
             </div>
 

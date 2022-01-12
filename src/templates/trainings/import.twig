@@ -1,0 +1,54 @@
+{# @var craft \craft\web\twig\variables\CraftVariable #}
+{#
+/**
+ * craft-attendees plugin for Craft CMS 3.x
+ *
+ * craft-attendees index.twig
+ *
+ * @author    percipiolondon
+ * @copyright Copyright (c) 2021 percipiolondon
+ * @link      https://percipio.london
+ * @package   Craftattendees
+ * @since     1.0.0
+ */
+#}
+
+{% extends "craft-attendees/_layouts/_cp" %}
+{% import "_includes/forms" as forms %}
+
+{% set scriptTagOptions = {
+    'depends': [
+        'percipiolondon\\attendees\\assetbundles\\craftattendees\\AttendeesAsset'
+    ],
+} %}
+
+{% set pluginCpUrl = url('craft-attendees') %}
+{% set settings = craft.app.getPlugins().getPlugin('craft-attendees').getSettings() %}
+{% set selectedSubnavItem = 'trainings' %}
+{% set eventTypes = {
+    'onlineEvent': 'Online Event',
+    'locationEvent': 'Location Event',
+    'hybridEvent': 'Hybrid Event'
+} %}
+{#{%- set fullPageForm = true -%}#}
+
+{% set title = "Trainings | Attendees | Import" %}
+
+{% set crumbs = [
+    { label: "Attendees", url: url(pluginCpUrl) },
+    { label: "Trainings"|t('craft-attendees'), url: url(pluginCpUrl ~ '/trainings') },
+] %}
+
+{# Content that should appear in the page header#}
+{% block actionButton %}
+{% endblock %}
+
+{# The content of the CP Section#}
+{% set content %}
+
+    test
+
+    {{ dump(headers) }}
+
+{#    {{ craft.viteattendees.register('/src/js/attendees.ts', false, scriptTagOptions) }}#}
+{% endset %}

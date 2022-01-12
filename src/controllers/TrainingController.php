@@ -7,15 +7,19 @@ use craft\feeds\GuzzleClient;
 use craft\web\Controller;
 
 use Craft;
+use League\Csv\Exception;
+use League\Csv\Reader;
 use percipiolondon\attendees\Attendees;
 use percipiolondon\attendees\elements\Attendee;
 use percipiolondon\attendees\records\Attendee as AttendeeRecord;
 use percipiolondon\attendees\helpers\Attendee as AttendeeHelper;
 use yii\web\HttpException;
+use yii\web\Response;
+use yii\web\UploadedFile;
 
 class TrainingController extends Controller
 {
-    protected $allowAnonymous = ['save', 'delete'];
+    protected $allowAnonymous = ['save', 'delete', 'import'];
 
 //    public function actionIndex()
 //    {
@@ -59,6 +63,46 @@ class TrainingController extends Controller
             ],
             "attendees" => $attendees
         ]);
+    }
+
+    public function actionImport(): Response
+    {
+        $variables = [];
+
+        $variables['controllerHandle'] = 'file';
+
+        // The CSV file
+        $file = UploadedFile::getInstanceByName('file');
+        if ($file !== null) {
+            $filename = uniqid($file->name, true);
+            $filePath = Craft::$app->getPath()->getTempPath().DIRECTORY_SEPARATOR.$filename;
+            $file->saveAs($filePath, false);
+            // Also save the file to the cache as a backup way to access it
+            $cache = Craft::$app->getCache();
+            $fileHandle = fopen($filePath, 'r');
+            if ($fileHandle) {
+                $fileContents = fgets($fileHandle);
+                if ($fileContents) {
+                    $cache->set($filePath, $fileContents);
+                }
+                fclose($fileHandle);
+            }
+            // Read in the headers
+            $csv = Reader::createFromPath($file->tempName);
+            try {
+//                $csv->setDelimiter(Retour::$settings->csvColumnDelimiter ?? ',');
+                $csv->setDelimiter(',');
+            } catch (Exception $e) {
+                Craft::error($e, __METHOD__);
+            }
+            $headers = $csv->fetchOne(0);
+            Craft::info(print_r($headers, true), __METHOD__);
+            $variables['headers'] = $headers;
+            $variables['filename'] = $filePath;
+        }
+
+        // Render the template
+        return $this->renderTemplate('craft-attendees/trainings/import', $variables);
     }
 
     public function actionSave()
