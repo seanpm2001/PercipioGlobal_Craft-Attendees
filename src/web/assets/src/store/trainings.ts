@@ -147,7 +147,7 @@ export const useTrainingsStore = defineStore('trainings', {
             .then(function (response) {
                 self.loading = false
                 self.totalAttendees = parseInt(response?.data?.meta?.total)
-                self.attendees = self.attendees ? self.attendees.concat(response?.data?.attendees) : response?.data?.attendees
+                self.attendees = offset !== 0 ? self.attendees.concat(response?.data?.attendees) : response?.data?.attendees
             });
         },
         setShowFrom(value){

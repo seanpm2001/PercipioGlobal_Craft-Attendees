@@ -88,7 +88,7 @@
         },
         setup() {
 
-            const activePane = ref('support')
+            const activePane = ref('attendee')
 
             const handleTabNavigation = (pane) => {
                 activePane.value = pane
