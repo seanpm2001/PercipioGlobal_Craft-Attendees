@@ -5,7 +5,7 @@
             v-for="option in followOnSupportOptions"
             class="block flex items-center"
         >
-            <input-switch name="option" :checked="getChecked(option)" :label="option.name" :value="option.value" @toggle="handleChange" />
+            <input-switch name="option" :checked="getChecked(option)" :label="option.name" :value="option.value" @changed="handleChange(option.value)" />
         </div>
     </div>
 

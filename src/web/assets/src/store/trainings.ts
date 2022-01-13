@@ -42,7 +42,6 @@ export const useTrainingsStore = defineStore('trainings', {
             })
             .then(function (response) {
                 self.loading = false
-                console.log("response",response?.data, self.loading)
             });
         },
         async fetchSchools(query) {
@@ -116,6 +115,7 @@ export const useTrainingsStore = defineStore('trainings', {
                         updatedAttendee = updatedAttendee[0]
                         updatedAttendee.name = formObj?.name
                         updatedAttendee.orgName = formObj?.orgName
+                        updatedAttendee.orgUrn = formObj?.orgUrn
                         updatedAttendee.postCode = formObj?.postCode
                         updatedAttendee.days = formObj?.days
                         updatedAttendee.email = formObj?.email

@@ -53,7 +53,7 @@
                         ]"
                     >
                         <span class="block w-full text-sm font-medium">{{school.value}}</span>
-                        <span :class="['block text-xs group-focus:text-white', currentSelectionIndex === i ? 'text-white' : 'text-gray-500']">[URN: {{ school?.data?.urn ?? '-' }}] {{ school?.data?.street ?? '-' }}, {{ school?.data?.town ?? '-' }} {{ school?.data?.postcode }} (Age {{ school?.data?.ageFrom ?? '/' }} - {{ school?.data?.ageTo ?? '/' }})</span>
+                        <span :class="['block text-xs group-hover:text-white', currentSelectionIndex === i ? 'text-white' : 'text-gray-500']">[URN: {{ school?.data?.urn ?? '-' }}] {{ school?.data?.street ?? '-' }}, {{ school?.data?.town ?? '-' }} {{ school?.data?.postcode }} (Age {{ school?.data?.ageFrom ?? '/' }} - {{ school?.data?.ageTo ?? '/' }})</span>
                     </span>
                     <span v-else class="p-2 block">
                         There's no school that matches the input

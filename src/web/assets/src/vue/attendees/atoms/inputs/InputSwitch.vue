@@ -1,12 +1,12 @@
 <template>
 
-    <div class="inline-block relative flex items-center cursor-pointer" @click="toggle">
-
+    <label class="inline-block relative flex items-center cursor-pointer">
         <input
             :name="name"
             type="checkbox"
             class="peer sr-only"
-            :value="checkedState"
+            @click="toggle"
+            :value="checkedValue"
             :checked="checkedValue == 1 ? true : false"
         >
 
@@ -25,65 +25,55 @@
 
         <span v-if="label.length > 0" class="inline-flex pl-2">{{ label }}</span>
 
-    </div>
+    </label>
 
 
 </template>
 
 <script lang="ts">
-    import {defineAsyncComponent, defineComponent, emit, ref, watchEffect} from 'vue'
-    import { useModelWrapper } from '@/js/utils/modelWrapper'
+import {defineAsyncComponent, defineComponent, ref, watchEffect} from 'vue'
+import { useModelWrapper } from '@/js/utils/modelWrapper'
 
-    export default defineComponent({
+export default defineComponent({
 
-        props: {
-            label: {
-                type: String,
-                required: false,
-            },
-
-            name: {
-                type: String,
-                required: true
-            },
-
-            label: {
-                type: String,
-                default: ''
-            },
-
-            value: {
-                type: String,
-                default: ''
-            },
-
-            checked: {
-                default: 0
-            },
-
+    props: {
+        label: {
+            type: String,
+            required: false,
         },
 
-        setup(props, {emit}) {
-
-            const checkedValue = ref(props.value ?? 0)
-            const checkedState = ref(0)
-
-            watchEffect(() => {
-                checkedValue.value = props.checked == 0 ? 0 : 1
-                checkedState.value = props.value === '' ? checkedState.value : props.value
-            })
-
-            const toggle = () => {
-
-                checkedValue.value = checkedValue.value == 0 ? 1 : 0
-                checkedState.value = props.value === '' ? checkedState.value : props.value
-
-                emit('toggle', checkedState.value)
-            }
-
-            return { toggle, checkedValue, checkedState }
-
+        name: {
+            type: String,
+            required: true
         },
 
-    })
+        label: {
+            type: String,
+            default: ''
+        },
+
+        checked: {
+            default: 0
+        },
+
+    },
+
+    setup(props, {emit}) {
+
+        const checkedValue = ref(0);
+
+        watchEffect(() => {
+            checkedValue.value = props.checked == 0 ? 0 : 1
+        })
+
+        const toggle = () => {
+            checkedValue.value = checkedValue.value == 0 ? 1 : 0
+            emit('changed', checkedValue.value)
+        }
+
+        return { toggle, checkedValue }
+
+    },
+
+})
 </script>

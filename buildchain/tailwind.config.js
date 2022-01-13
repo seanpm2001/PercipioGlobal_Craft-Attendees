@@ -37,6 +37,7 @@ module.exports = {
     variants: {
         extend: {
             backgroundColor: ['peer'],
+            color: ['group'],
             outline: ['peer'],
             opacity: ['peer'],
             pointerEvents: ['peer'],

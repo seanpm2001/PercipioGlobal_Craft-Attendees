@@ -46,8 +46,8 @@
                     name="jobRole"
                     :value="attendeeInput?.jobRole ?? values?.jobRole ?? ''"
                     :class="[
-                        'block h-10 px-1 rounded-md border-none bg-gray-100 w-full',
-                        attendeeFormErrors?.jobRole ? 'border-solid border-red-300' : ''
+                        'block h-10 px-1 rounded-md bg-gray-100 w-full',
+                        attendeeFormErrors?.jobRole ? 'border-solid border-red-300' : 'border-none'
                     ]"
                 >
                     <option value="" default disabled class="text-gray-400">Select the job role of the attendee</option>
@@ -100,8 +100,8 @@
             </label>
             <label class="block mb-6">
                 <span class="text-xs font-bold text-gray-400 block mb-1">School is verified</span>
-                <input-switch name="approved" :checked="attendeeInput?.approved ?? values?.approved ?? (urn?.length > 0 ? 1 : 0)" />
-                <p v-if="attendeeInput?.orgUrn ?? values?.orgUrn ?? urn?.length > 0" class="text-blue-600 text-xs">This school is verified and linked to <a :href="`https://get-information-schools.service.gov.uk/Establishments/Establishment/Details/${urn}`" class="text-blue-600 underline" target="_blank">government establishment data</a></p>
+                <input-switch name="approved" :checked="attendeeInput?.approved ?? (urn?.length > 0 ? 1 : 0)" />
+                <p v-if="attendeeInput?.orgUrn ?? urn?.length > 0" class="text-blue-600 text-xs">This school is verified and linked to <a :href="`https://get-information-schools.service.gov.uk/Establishments/Establishment/Details/${urn}`" class="text-blue-600 underline" target="_blank">government establishment data</a></p>
                 <!--p v-if="attendee?.approved == 1" class="text-blue-600 text-xs">Data verified, but not a not linked to government establishment data</p-->
             </label>
 
@@ -161,7 +161,7 @@
             const form = ref(null)
             const schoolDropdown = ref(null)
             const errors = ref(null)
-            const urn = ref(null)
+            const urn = ref( props.values?.approved ?? null)
             const store = useTrainingsStore()
             const {
                 attendeeInput,
