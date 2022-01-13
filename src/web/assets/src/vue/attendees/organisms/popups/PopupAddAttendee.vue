@@ -6,14 +6,14 @@
         <div class="max-h-screen overflow-auto fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 max-w-4xl">
             <div class="bg-white p-6 rounded-xl mb-10">
                 <h3 class="text-lg">Add attendee</h3>
-                <form-attendee :csrf="csrf" :event="event" @hideForm="hideForm" v-if="showForm" />
+                <form-attendee :csrf="csrf" :event="event" @hideForm="hideForm" @saveAnother="setAnotherSave" v-if="showForm" />
             </div>
         </div>
     </div>
 </template>
 
 <script lang="ts">
-import {defineComponent, ref, watchEffect} from 'vue'
+import {defineComponent, ref, watchEffect, nextTick} from 'vue'
 import { useTrainingsStore } from '@/store/trainings'
 import { storeToRefs } from 'pinia'
 import FormAttendee from '@/vue/attendees/organisms/forms/FormAttendee.vue';
@@ -35,18 +35,31 @@ export default defineComponent({
     setup(){
         const store = useTrainingsStore()
         const { showForm, attendeeSuccess } = storeToRefs(store)
+        const addAnother = ref(false)
 
         const hideForm = () => {
             store.setShowFrom(false)
         }
 
+        const setAnotherSave = (val) => {
+            addAnother.value = val
+        }
+
         watchEffect(() => {
             if(attendeeSuccess.value){
                 hideForm()
+
+                if(addAnother.value == "true"){
+
+                    nextTick(() => {
+                        store.setShowFrom(true)
+                    })
+
+                }
             }
         })
 
-        return { showForm, hideForm };
+        return { showForm, setAnotherSave, hideForm };
 
     }
 })

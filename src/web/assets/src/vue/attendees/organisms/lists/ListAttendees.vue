@@ -1,5 +1,5 @@
 <template>
-    <div class="grid grid-cols-9 xl:grid-cols-10 bg-gray-100 py-2">
+    <div class="grid grid-cols-9 xl:grid-cols-11 bg-gray-100 py-2 items-center">
         <div class="col-span-3 p-3 text-left text-xs font-semibold text-gray-600 uppercase flex flex-nowrap items-center">
             <span class="inline-flex mb-0"><input type="checkbox" indeterminate="true"/></span>
             <span class="inline-flex pl-2">School / Organisation</span>
@@ -16,7 +16,7 @@
         <div class="p-3 text-left text-xs font-semibold text-gray-600 uppercase">
             Status
         </div>
-        <!--div class="p-3 text-left text-xs font-semibold text-gray-600 uppercase">&nbsp;</div-->
+        <div class="p-3 text-right pr-8 text-lg font-semibold text-gray-600 uppercase">↗</div>
     </div>
 
     <div class="rounded-xl bg-white overflow-hidden min-h-16">

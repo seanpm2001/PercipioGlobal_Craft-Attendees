@@ -47,6 +47,7 @@
                         role="button"
                         :data-postcode="school?.data?.postcode"
                         :data-urn="school?.data?.urn"
+                        :data-name="school?.value"
                         :class="[
                          'p-2 pointer-all hover:bg-blue-600 hover:text-white focus:bg-blue-600 block group',
                          currentSelectionIndex === i ? 'bg-blue-600 text-white' : ''
@@ -123,7 +124,7 @@ export default defineComponent({
         const clearResults = ref(true)
 
         const handleSchoolSelect = evt => {
-            school.value = evt.currentTarget.textContent
+            school.value = evt.currentTarget?.dataset?.name
             urn.value = evt.currentTarget?.dataset?.urn
             postcode.value = evt.currentTarget?.dataset?.postcode
 
@@ -173,8 +174,8 @@ export default defineComponent({
 
             const selected = {
                 currentTarget: {
-                    textContent: schools.value[currentSelectionIndex.value]?.value,
                     dataset: {
+                        name: schools.value[currentSelectionIndex.value]?.value,
                         urn: schools.value[currentSelectionIndex.value]?.data?.urn,
                         postcode: schools.value[currentSelectionIndex.value]?.data?.postcode,
                     }

@@ -6,7 +6,7 @@
             expanded ? 'border-blue-800 bg-blue-100 bg-opacity-10' : 'border-white'
         ]"
     >
-        <div class="grid grid-cols-9 xl:grid-cols-10 w-full">
+        <div class="grid grid-cols-9 xl:grid-cols-11 w-full items-center">
             <div class="col-span-3 p-3 flex flex-nowrap items-center font-bold cursor-pointer">
                 <span class="inline-flex mb-0"><input type="checkbox"/></span>
                 <span class="inline-flex pl-2 flex-grow" @click="toggle">{{ attendee.orgName }}</span>
@@ -21,8 +21,18 @@
                 {{ attendee.days }}
             </div>
             <div class="box-border p-3 cursor-pointer" @click="toggle">
-                <span v-if="attendee.approved == 0 || !attendee.approved" class="inline-block rounded-full text-xs bg-orange-300 text-orange-800 text-bold px-4 py-1">Unverified</span>
-                <span v-else class="inline-block rounded-full text-xs bg-emerald-400 text-white text-bold px-4 py-1">Verified</span>
+                <span v-if="attendee.approved == 0 || !attendee.approved"
+                      class="block w-4 h-4 xl:inline-block xl:w-auto xl:h-auto rounded-full text-xs bg-orange-300 text-orange-800 text-bold xl:px-4 xl:py-1"
+                ><span class="opacity-0 pointer-events-none xl:opacity-100">Unverified</span></span>
+                <span v-else
+                      class="block w-4 h-4 xl:inline-block xl:w-auto xl:h-auto rounded-full text-xs bg-emerald-400 text-white text-bold xl:px-4 xl:py-1"
+                ><span class="opacity-0 pointer-events-none xl:opacity-100">Verified</span></span>
+            </div>
+            <div class="text-right pr-8 box-border">
+                <a v-if="attendee.orgUrn" :href="`https://get-information-schools.service.gov.uk/Establishments/Establishment/Details/${attendee?.orgUrn}`" target="_blank" class="text-blue-800 text-xl">
+                    ↗
+                </a>
+                <span v-else class="pr-1">-</span>
             </div>
             <!--div class="w-full box-border pr-3 pt-px">
                 <button class="float-right block bg-gray-300 text-gray-800 mt-2 py-1 px-3 text-sm font-bold rounded-lg">Actions v</button>
@@ -80,7 +90,7 @@
                         <span v-if="attendee.approved == 0 || !attendee.approved" class="inline-block rounded-full text-xs bg-orange-300 text-orange-800 text-bold px-4 py-1">Unverified</span>
                         <span v-else class="inline-block rounded-full text-xs bg-emerald-400 text-white text-bold px-4 py-1">Verified</span>
                         <p v-if="attendee?.orgUrn" class="text-blue-600 text-xs">This school is verified and linked to <a :href="`https://get-information-schools.service.gov.uk/Establishments/Establishment/Details/${attendee?.orgUrn}`" class="text-blue-600 underline" target="_blank">government establishment data</a></p>
-                        <p v-if="attendee?.approved == 1" class="text-blue-600 text-xs">Data verified, but not a not linked to government establishment data</p>
+                        <p v-if="attendee?.approved == 1 && !attendee?.orgUrn" class="text-blue-600 text-xs">Data verified, but not a not linked to government establishment data</p>
                     </div>
                 </div>
                 <div>
