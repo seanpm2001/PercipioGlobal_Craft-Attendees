@@ -13,9 +13,38 @@ export const useTrainingsStore = defineStore('trainings', {
         showForm: false,
         loading: false,
         loadingApi: false,
-        schools: null
+        schools: null,
+        followOnSupportOptions: null
     }),
     actions: {
+        fetchOptions(event) {
+            const self = this
+            this.loading = true
+
+            axios({
+                method: 'get',
+                url: `${ENDPOINT}/craft-attendees/trainings/fetch-support-options/${event}`,
+            })
+            .then(function (response) {
+                self.loading = false
+                self.followOnSupportOptions = response.data?.options
+                self.followOnSupportSelectedOptions = response.data?.selectedOptions
+            });
+        },
+        saveOption(data) {
+            const self = this
+            this.loading = true
+
+            axios({
+                method: 'post',
+                url: `${ENDPOINT}/actions/craft-attendees/training/save-support-options`,
+                data: data
+            })
+            .then(function (response) {
+                self.loading = false
+                console.log("response",response?.data, self.loading)
+            });
+        },
         async fetchSchools(query) {
 
             if(query){

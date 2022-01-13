@@ -7,7 +7,7 @@
                 @click="handleTabNavigation('attendee')"
                 :class="[
                     'font-bold text-base text-gray-600 border-b-2 border-solid hover:border-blue-600 pb-2 cursor-pointer',
-                    activePane === 'attendee' ? 'border-blue-600' : 'border-gray-200'
+                    activePane === 'attendee' ? 'border-blue-600' : 'border-gray-100'
                 ]"
             >
                 Attendees
@@ -17,8 +17,8 @@
                 role="menuitem"
                 @click="handleTabNavigation('support')"
                 :class="[
-                    'font-bold text-base text-gray-600 border-b-2 border-solid border-gray-200 hover:border-blue-600 pb-2 cursor-pointer',
-                    activePane === 'support' ? 'border-blue-600' : 'border-gray-200'
+                    'font-bold text-base text-gray-600 border-b-2 border-solid hover:border-blue-600 pb-2 cursor-pointer',
+                    activePane === 'support' ? 'border-blue-600' : 'border-gray-100'
                   ]"
             >
                 Follow on support
@@ -26,7 +26,7 @@
         </ul>
     </nav>
 
-    <section v-if="activePane === 'attendee'" class="bg-gray-100 p-6 pt-10 -mt-2.5 -ml-6 relative border-t-2 border-gray-200 border-solid">
+    <section v-if="activePane === 'attendee'" class="bg-gray-100 p-6 pt-10 -mt-2.5 -ml-6 relative">
 
         <div class="w-full flex field">
             <div class="heading flex-grow">
@@ -45,7 +45,7 @@
 
     </section>
 
-    <section v-if="activePane === 'support'" class="bg-gray-100 p-6 pt-10 -mt-2.5 -ml-6 relative border-t-2 border-gray-200 border-solid">
+    <section v-if="activePane === 'support'" class="bg-gray-100 p-6 pt-10 -mt-2.5 -ml-6 relative">
 
         <div class="w-full flex field">
             <div class="heading flex-grow">
@@ -66,13 +66,15 @@
     import { defineComponent, ref } from 'vue'
     import ButtonAdd from '@/vue/attendees/atoms/buttons/ButtonAdd.vue'
     import ListAttendees from '@/vue/attendees/organisms/lists/ListAttendees.vue'
+    import ListSupport from '@/vue/attendees/organisms/lists/ListSupport.vue'
     import PopupAddAttendee from "@/vue/attendees/organisms/popups/PopupAddAttendee.vue"
 
     export default defineComponent({
         components: {
             'button-add': ButtonAdd,
             'popup-add-attendee': PopupAddAttendee,
-            'list-attendees': ListAttendees
+            'list-attendees': ListAttendees,
+            'list-support': ListSupport
         },
         props: {
             csrf: {
@@ -86,10 +88,9 @@
         },
         setup() {
 
-            const activePane = ref('attendee')
+            const activePane = ref('support')
 
             const handleTabNavigation = (pane) => {
-                console.log("pane",pane)
                 activePane.value = pane
             }
 

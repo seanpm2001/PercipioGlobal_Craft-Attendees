@@ -11,11 +11,13 @@ use percipiolondon\attendees\Attendees;
 use percipiolondon\attendees\elements\Attendee;
 use percipiolondon\attendees\records\Attendee as AttendeeRecord;
 use percipiolondon\attendees\helpers\Attendee as AttendeeHelper;
+use percipiolondon\attendees\records\FollowOnSupport;
+use percipiolondon\attendees\records\FollowOnSupportOptions;
 use yii\web\HttpException;
 
 class TrainingController extends Controller
 {
-    protected $allowAnonymous = ['save', 'delete'];
+    protected $allowAnonymous = ['save', 'delete', 'save-support-options'];
 
 //    public function actionIndex()
 //    {
@@ -32,6 +34,17 @@ class TrainingController extends Controller
 
         return $this->renderTemplate('craft-attendees/trainings/detail', [
             'event' => $event,
+        ]);
+    }
+
+    public function actionFetchSupportOptions(int $eventId)
+    {
+        $options = FollowOnSupportOptions::find()->all();
+        $selectedOptions = FollowOnSupport::find()->where(['eventId' => $eventId])->all();
+
+        return $this->asJson([
+            "options" => $options,
+            "selectedOptions" => $selectedOptions
         ]);
     }
 
@@ -99,5 +112,41 @@ class TrainingController extends Controller
         }
 
         return $this->asJson(['success' => true, 'attendee' => $attendee]);
+    }
+
+    public function actionSaveSupportOptions()
+    {
+        $this->requireLogin();
+        $this->requireAcceptsJson();
+        $request = Craft::$app->getRequest();
+
+        $value = $request->getBodyParam('value');
+        $event = $request->getBodyParam('event');
+
+        $option = FollowOnSupportOptions::find()->where(['value' => $value])->one();
+
+        if($option){
+            $entry = FollowOnSupport::find()->where(['optionId' => $option->id, 'eventId' => $event])->one();
+
+            if(!$entry){
+                //add
+                $entry = new FollowOnSupport();
+
+                $entry->optionId = $option->id;
+                $entry->eventId = $event;
+
+                $entry->save();
+
+            }else{
+                //remove
+                if(!$entry->delete()){
+                    return $this->asJson(['success' => false]);
+                }
+            }
+
+
+        }
+
+        return $this->asJson(['success' => true]);
     }
 }

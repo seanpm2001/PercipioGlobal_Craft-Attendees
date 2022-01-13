@@ -1,51 +1,24 @@
 <template>
-    <div class="grid grid-cols-9 xl:grid-cols-10 bg-gray-100 py-2">
-        <div class="col-span-3 p-3 text-left text-xs font-semibold text-gray-600 uppercase flex flex-nowrap items-center">
-            <span class="inline-flex mb-0"><input type="checkbox" indeterminate="true"/></span>
-            <span class="inline-flex pl-2">School / Organisation</span>
+
+    <div class="bg-white w-full p-6 rounded-xl box-border">
+        <div
+            v-for="option in followOnSupportOptions"
+            class="block flex items-center"
+        >
+            <input-switch name="option" :checked="getChecked(option)" :label="option.name" :value="option.value" @toggle="handleChange" />
         </div>
-        <div class="col-span-2 p-3 text-left text-xs font-semibold text-gray-600 uppercase">
-            Name of attendee
-        </div>
-        <div class="col-span-1 xl:col-span-3 p-3 text-left text-xs font-semibold text-gray-600 uppercase">
-            Email
-        </div>
-        <div class="p-3 text-left text-xs font-semibold text-gray-600 uppercase">
-            Days
-        </div>
-        <div class="p-3 text-left text-xs font-semibold text-gray-600 uppercase">
-            Status
-        </div>
-        <!--div class="p-3 text-left text-xs font-semibold text-gray-600 uppercase">&nbsp;</div-->
     </div>
 
-    <div class="rounded-xl bg-white overflow-hidden min-h-16">
-        <div v-if="attendees && attendees.length > 0" class="w-full pt-2">
-            <article
-                v-for="(attendee, i) in attendees"
-                :class="[
-                    attendees.length-1 !== i ? 'border-b border-gray-100 border-solid' : ''
-                ]"
-            >
-                <list-item-attendee :event="event" :csrf="csrf" :attendee="attendee"/>
-            </article>
-            <svg v-if="loading" class="animate-spin ml-4 mt-5 mb-3 h-6 w-6 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+    <div v-if="loading" class="bg-gray-200 bg-opacity-50 absolute left-0 top-0 w-full h-full">
+        <div class="absolute left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2">
+            <svg class="animate-spin h-10 w-10 text-gray-800" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
         </div>
-        <p class="p-6" v-if="(!attendees || attendees.length === 0) && !loading">There are currently no attendees for this event</p>
-    </div>
 
-    <div class="ml-4 mt-4 relative text-center">
-        <span class="inline-block text-gray-500 absolute left-0 top-1/2 -translate-y-1/2">Total results: {{ (!attendees || attendees.length > 0) ? attendees?.length : '0'}}</span>
-        <button
-            :class="[
-                'bg-gray-300 text-gray-800 font-bold py-2 px-3 text-sm rounded-lg cursor-pointer',
-                remainingEntries > 0 ? '' : 'opacity-0 pointer-events-none',
-            ]"
-            @click="handleLoadMore"
-        >Load more ({{ remainingEntries }})</button>
+        <div class="block bg-gray-200 bg-opacity-50 w-6 left-full pb-6 top-0 h-full absolute z-10"></div>
+        <div class="block bg-gray-200 bg-opacity-50 h-6 top-full left-0 w-full absolute z-10"></div>
     </div>
 </template>
 
@@ -53,8 +26,12 @@
     import {defineComponent, ref} from 'vue'
     import { useTrainingsStore } from '@/store/trainings'
     import { storeToRefs } from 'pinia'
+    import InputSwitch from '@/vue/attendees/atoms/inputs/InputSwitch.vue'
 
     export default defineComponent({
+        components: {
+            'input-switch': InputSwitch,
+        },
         props: {
             event: {
                 type: String,
@@ -66,7 +43,27 @@
             },
         },
         setup(props){
+            const store = useTrainingsStore()
+            const { followOnSupportOptions, followOnSupportSelectedOptions , loading } = storeToRefs(store)
 
+            const handleChange = (value) => {
+                let option = {}
+                option.value = value
+                option.CRAFT_CSRF_TOKEN = props.csrf
+                option.event = props.event
+                option.action = 'actions/craft-attendees/training/saveOption'
+
+                store.saveOption(option)
+            }
+
+            const getChecked = (option) => {
+                const index = store.followOnSupportSelectedOptions.filter(e => e.optionId == option.id);
+                return index.length > 0 ? 1 : 0
+            }
+
+            store.fetchOptions(props.event)
+
+            return { followOnSupportOptions, followOnSupportSelectedOptions, loading, handleChange, getChecked }
         }
     })
 </script>
