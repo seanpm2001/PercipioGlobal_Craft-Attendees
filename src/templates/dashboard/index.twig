@@ -57,8 +57,15 @@
 {# The content of the CP Section#}
 {% set content %}
     {{ craft.viteattendees.register('/src/js/attendees.ts', false, scriptTagOptions) }}
-    <h2>{{ "Dashboard CP Section body goes here"|t('craft-attendees') }}</h2>
 
 {#    <img src="{{ iconUrl }}" height="64" width="64" />#}
-    <p class="textline"></p>
+    <div class="w-full xl:w-3/4">
+    <p class="textline">The RSN data engagement module is currently being extended and enhanced to a more robust and versatile platform.<br/><br/>
+
+        Currently this module is in beta phase and undergoing testing. It should not be used for entering final data - any data added during this testing phase will be deleted.<br/><br/>
+
+        Please continue to add / export your data using the existing RSN Data tooling until you are notified that this new platform is ready for use and contains all previously entered data.<br/><br/>
+
+        In the mean time, feel free to test this new area out to see how it will work. </p>
+    </div>
 {% endset %}
