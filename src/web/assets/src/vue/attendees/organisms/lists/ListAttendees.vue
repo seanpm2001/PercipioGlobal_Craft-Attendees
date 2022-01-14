@@ -1,4 +1,6 @@
 <template>
+    <status-saved :show="showSuccess"/>
+
     <div class="grid grid-cols-9 xl:grid-cols-11 bg-gray-100 py-2 items-center">
         <div class="col-span-3 p-3 text-left text-xs font-semibold text-gray-600 uppercase flex flex-nowrap items-center">
             <span class="inline-flex mb-0"><input type="checkbox" indeterminate="true"/></span>
@@ -53,11 +55,13 @@
     import {defineComponent, watchEffect, ref} from 'vue'
     import { useTrainingsStore } from '@/store/trainings'
     import { storeToRefs } from 'pinia'
+    import StatusSaved from '@/vue/attendees/molecules/statusses/StatusSaved.vue';
     import ListItemAttendee from '@/vue/attendees/molecules/list-items/ListItemAttendee.vue';
 
     export default defineComponent({
         components: {
             'list-item-attendee': ListItemAttendee,
+            'status-saved': StatusSaved
         },
         props: {
             event: {
@@ -71,10 +75,11 @@
         },
         setup(props){
             const store = useTrainingsStore()
-            const { attendees, loading, totalAttendees } = storeToRefs(store)
+            const { attendees, loading, totalAttendees, attendeeSuccess } = storeToRefs(store)
             const limit = ref(30)
             const offset = ref(0)
             const remainingEntries = ref(0)
+            const showSuccess = ref(false)
 
             const handleLoadMore = () => {
                 offset.value = offset.value + limit.value
@@ -84,6 +89,14 @@
 
             watchEffect(() => {
                 remainingEntries.value = (totalAttendees.value - offset.value) - limit.value
+
+                if(attendeeSuccess.value){
+                    showSuccess.value = true
+
+                    setTimeout(() => {
+                        showSuccess.value = false
+                    },3000)
+                }
             })
 
 
@@ -91,7 +104,7 @@
             store.fetchAttendees(props.event, limit.value, offset.value)
             // })
 
-            return { attendees, loading, offset, totalAttendees, remainingEntries, handleLoadMore }
+            return { showSuccess, attendees, loading, offset, totalAttendees, remainingEntries, handleLoadMore }
 
         }
     })
