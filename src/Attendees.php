@@ -180,10 +180,10 @@ class Attendees extends Plugin
 
         $nav['label'] = $this->getPluginName();
 
-//        $nav['subnav']['dashboard'] = [
-//            'label' => Craft::t('craft-attendees', 'Dashboard'),
-//            'url' => 'craft-attendees/dashboard'
-//        ];
+        $nav['subnav']['dashboard'] = [
+            'label' => Craft::t('craft-attendees', 'Dashboard'),
+            'url' => 'craft-attendees/dashboard'
+        ];
 //
 //        $nav['subnav']['data-export'] = [
 //            'label' => Craft::t('craft-attendees', 'Data Export'),
