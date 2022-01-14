@@ -75,7 +75,7 @@
     </label>
 
     <label class="block mb-6">
-        <span class="text-xs font-bold text-gray-400 block mb-1">Post code <span class="text-blue-500">*</span></span>
+        <span class="text-xs font-bold text-gray-400 block mb-1">Post code</span>
         <input
             name="postCode"
             :value="postcode"
@@ -104,7 +104,7 @@ export default defineComponent({
             default: {}
         }
     },
-    emits: ["schoolSelect"],
+    emits: ["schoolSelect", "schoolInput"],
     setup( props, {emit} ){
         const schoolDropdown = ref(null)
         const store = useTrainingsStore()
@@ -198,6 +198,8 @@ export default defineComponent({
             if(school !== prevSchool && urn.value?.length > 0 && clearResults.value){
                 resetInput();
             }
+
+            emit('schoolInput', school ? school : '')
 
             clearResults.value = true
         })

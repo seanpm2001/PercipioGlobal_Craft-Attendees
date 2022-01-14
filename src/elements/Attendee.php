@@ -222,7 +222,7 @@ class Attendee extends Element
     public function rules()
     {
         $rules = parent::defineRules();
-        $rules[] = [['orgName','postCode','name','email','jobRole','days','eventId'], 'required'];
+        $rules[] = [['orgName','name','email','jobRole','days','eventId'], 'required'];
         $rules[] = ['email', function($attribute, $params, Validator $validator){
             $preg = "/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,})$/i";
 

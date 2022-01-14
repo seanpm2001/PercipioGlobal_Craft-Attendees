@@ -15,54 +15,54 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, ref, watchEffect, nextTick} from 'vue'
-import { useTrainingsStore } from '@/store/trainings'
-import { storeToRefs } from 'pinia'
-import FormAttendee from '@/vue/attendees/organisms/forms/FormAttendee.vue';
+    import {defineComponent, ref, watchEffect, nextTick} from 'vue'
+    import { useTrainingsStore } from '@/store/trainings'
+    import { storeToRefs } from 'pinia'
+    import FormAttendee from '@/vue/attendees/organisms/forms/FormAttendee.vue';
 
-export default defineComponent({
-    components: {
-        'form-attendee': FormAttendee,
-    },
-    props: {
-        csrf: {
-            type: String,
-            required: true
+    export default defineComponent({
+        components: {
+            'form-attendee': FormAttendee,
         },
-        event: {
-            type: String,
-            required: true
-        }
-    },
-    setup(){
-        const store = useTrainingsStore()
-        const { showForm, attendeeSuccess } = storeToRefs(store)
-        const addAnother = ref(false)
-
-        const hideForm = () => {
-            store.setShowFrom(false)
-        }
-
-        const setAnotherSave = (val) => {
-            addAnother.value = val
-        }
-
-        watchEffect(() => {
-            if(attendeeSuccess.value){
-                hideForm()
-
-                if(addAnother.value == "true"){
-
-                    nextTick(() => {
-                        store.setShowFrom(true)
-                    })
-
-                }
+        props: {
+            csrf: {
+                type: String,
+                required: true
+            },
+            event: {
+                type: String,
+                required: true
             }
-        })
+        },
+        setup(){
+            const store = useTrainingsStore()
+            const { showForm, attendeeSuccess } = storeToRefs(store)
+            const addAnother = ref(false)
 
-        return { showForm, setAnotherSave, hideForm };
+            const hideForm = () => {
+                store.setShowFrom(false)
+            }
 
-    }
-})
+            const setAnotherSave = (val) => {
+                addAnother.value = val
+            }
+
+            watchEffect(() => {
+                if(attendeeSuccess.value){
+                    hideForm()
+
+                    if(addAnother.value == "true"){
+
+                        nextTick(() => {
+                            store.setShowFrom(true)
+                        })
+
+                    }
+                }
+            })
+
+            return { showForm, setAnotherSave, hideForm };
+
+        }
+    })
 </script>

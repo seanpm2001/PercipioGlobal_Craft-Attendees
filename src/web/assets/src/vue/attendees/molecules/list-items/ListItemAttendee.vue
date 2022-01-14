@@ -41,7 +41,7 @@
         <!-- expanded version -->
         <div class="px-10 py-6 relative" v-if="expanded">
 
-            <div class="border-t border-gray-200 border-solid pt-6 relative">
+            <div class="pt-6 relative">
                 <h3 class="text-lg">Attendee details</h3>
 
                 <status-approved :approved="parseInt(attendee.approved)" :urn="attendee.orgUrn" v-if="!edit"/>
@@ -118,63 +118,6 @@
                 <form-attendee v-if="edit" :csrf="csrf" :values="attendee" :event="event" @hideForm="handleEdit" @submitForm="submitEdit" :hideAnother="true" />
                 <popup-delete-attendee :show="showDeletePopup" :csrf="csrf" :attendee="attendee" @hidePopup="handleHidePopup" />
             </div>
-
-            <!--div class="grid grid-cols-3 gap-x-4" v-if="!edit">
-                <div>
-                    <div class="mb-6">
-                        <span class="text-xs font-bold text-gray-400 block">School or organisation</span>
-                        <span class="text-base mt-1 block">{{ attendee.orgName }}</span>
-                    </div>
-                    <div class="mb-6">
-                        <span class="text-xs font-bold text-gray-400 block">School or organisation post code</span>
-                        <span class="text-base mt-1 block">{{ attendee.postCode }}</span>
-                    </div>
-                    <div class="mb-6">
-                        <span class="text-xs font-bold text-gray-400 block">Name of the attendee</span>
-                        <span class="text-base mt-1 block">{{ attendee.name }}</span>
-                    </div>
-                    <div class="mb-6">
-                        <span class="text-xs font-bold text-gray-400 block">Attendee's job role</span>
-                        <span class="text-base mt-1 block">{{ jobRoles[attendee.jobRole] ?? '-' }}</span>
-                    </div>
-                    <div class="mb-6">
-                        <span class="text-xs font-bold text-gray-400 block">Email address of attendee</span>
-                        <span class="text-base mt-1 block">{{ attendee.email }}</span>
-                    </div>
-                </div>
-                <div>
-                    <div class="mb-6">
-                        <span class="text-xs font-bold text-gray-400 block">Days attended</span>
-                        <span class="text-base mt-1 block">{{ attendee.days }}</span>
-                    </div>
-                    <div class="mb-6">
-                        <span class="text-xs font-bold text-gray-400 block">Subscribed for the newsletter?</span>
-                        <span class="text-base mt-1 block">{{ attendee.newsletter == 1 ? 'Yes' : 'No' }}</span>
-                    </div>
-                    <div class="mb-6">
-                        <span class="text-xs font-bold text-gray-400 block mb-2">Verified status</span>
-                        <span v-if="attendee.approved == 0 || !attendee.approved" class="inline-block rounded-full text-xs bg-orange-300 text-orange-800 text-bold px-4 py-1">Unverified</span>
-                        <span v-else class="inline-block rounded-full text-xs bg-emerald-400 text-white text-bold px-4 py-1">Verified</span>
-                        <p v-if="attendee?.orgUrn" class="text-blue-600 text-xs">This school is verified and linked to <a :href="`https://get-information-schools.service.gov.uk/Establishments/Establishment/Details/${attendee?.orgUrn}`" class="text-blue-600 underline" target="_blank">government establishment data</a></p>
-                        <p v-if="attendee?.approved == 1 && !attendee?.orgUrn" class="text-blue-600 text-xs">Data verified, but not a not linked to government establishment data</p>
-                    </div>
-                </div>
-                <div>
-                    <div class="mb-6">
-                        <span class="text-xs font-bold text-gray-400 block">Actions</span>
-                        <button @click="handleEdit" class="block bg-gray-300 text-gray-800 mt-2 py-2 px-3 text-sm font-bold rounded-lg cursor-pointer">Edit</button>
-                        <button @click="handleDelete" class="block bg-red-300 text-red-800 font-bold mt-2 py-2 px-3 text-sm rounded-lg cursor-pointer">
-                            Delete
-                        </button>
-                        <button @click="handleApprove" v-if="attendee.approved == 0 || !attendee.approved" class="block bg-emerald-300 text-emerald-800 font-bold mt-2 py-2 px-3 text-sm rounded-lg cursor-pointer">
-                            Verify
-                        </button>
-                        <button @click="handleDisapprove" v-else class="block bg-orange-300 text-orange-800 font-bold mt-2 py-2 px-3 text-sm rounded-lg cursor-pointer">
-                            Unverify
-                        </button>
-                    </div>
-                </div>
-            </div -->
 
         </div>
     </div>
