@@ -13,13 +13,15 @@ use percipiolondon\attendees\Attendees;
 use percipiolondon\attendees\elements\Attendee;
 use percipiolondon\attendees\records\Attendee as AttendeeRecord;
 use percipiolondon\attendees\helpers\Attendee as AttendeeHelper;
+use percipiolondon\attendees\records\FollowOnSupport;
+use percipiolondon\attendees\records\FollowOnSupportOptions;
 use yii\web\HttpException;
 use yii\web\Response;
 use yii\web\UploadedFile;
 
 class TrainingController extends Controller
 {
-    protected $allowAnonymous = ['save', 'delete', 'import'];
+    protected $allowAnonymous = ['save', 'delete', 'save-support-options'];
 
 //    public function actionIndex()
 //    {
@@ -35,7 +37,18 @@ class TrainingController extends Controller
             ->one();
 
         return $this->renderTemplate('craft-attendees/trainings/detail', [
-            'event' => $event
+            'event' => $event,
+        ]);
+    }
+
+    public function actionFetchSupportOptions(int $eventId)
+    {
+        $options = FollowOnSupportOptions::find()->all();
+        $selectedOptions = FollowOnSupport::find()->where(['eventId' => $eventId])->all();
+
+        return $this->asJson([
+            "options" => $options,
+            "selectedOptions" => $selectedOptions
         ]);
     }
 
@@ -67,9 +80,19 @@ class TrainingController extends Controller
 
     public function actionImport(): Response
     {
+        $this->requireLogin();
+        $request = Craft::$app->getRequest();
+
         $variables = [];
 
         $variables['controllerHandle'] = 'file';
+
+        //event
+        $event = \craft\elements\Entry::find()
+            ->id($request->getBodyParam('event'))
+            ->site('*')
+            ->anyStatus()
+            ->one();
 
         // The CSV file
         $file = UploadedFile::getInstanceByName('file');
@@ -98,7 +121,9 @@ class TrainingController extends Controller
             $headers = $csv->fetchOne(0);
             Craft::info(print_r($headers, true), __METHOD__);
             $variables['headers'] = $headers;
-            $variables['filename'] = $filePath;
+            $variables['filepath'] = $filePath;
+            $variables['filename'] = $file->name;
+            $variables['event'] = $event;
         }
 
         // Render the template
@@ -143,5 +168,41 @@ class TrainingController extends Controller
         }
 
         return $this->asJson(['success' => true, 'attendee' => $attendee]);
+    }
+
+    public function actionSaveSupportOptions()
+    {
+        $this->requireLogin();
+        $this->requireAcceptsJson();
+        $request = Craft::$app->getRequest();
+
+        $value = $request->getBodyParam('value');
+        $event = $request->getBodyParam('event');
+
+        $option = FollowOnSupportOptions::find()->where(['value' => $value])->one();
+
+        if($option){
+            $entry = FollowOnSupport::find()->where(['optionId' => $option->id, 'eventId' => $event])->one();
+
+            if(!$entry){
+                //add
+                $entry = new FollowOnSupport();
+
+                $entry->optionId = $option->id;
+                $entry->eventId = $event;
+
+                $entry->save();
+
+            }else{
+                //remove
+                if(!$entry->delete()){
+                    return $this->asJson(['success' => false]);
+                }
+            }
+
+
+        }
+
+        return $this->asJson(['success' => true]);
     }
 }

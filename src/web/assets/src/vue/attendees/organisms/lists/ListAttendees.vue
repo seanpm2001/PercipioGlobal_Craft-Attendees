@@ -1,5 +1,7 @@
 <template>
-    <div class="grid grid-cols-9 xl:grid-cols-10 bg-gray-100 py-2">
+    <status-saved :show="showSuccess"/>
+
+    <div class="grid grid-cols-9 xl:grid-cols-11 bg-gray-100 py-2 items-center">
         <div class="col-span-3 p-3 text-left text-xs font-semibold text-gray-600 uppercase flex flex-nowrap items-center">
             <span class="inline-flex mb-0"><input type="checkbox" indeterminate="true"/></span>
             <span class="inline-flex pl-2">School / Organisation</span>
@@ -16,7 +18,7 @@
         <div class="p-3 text-left text-xs font-semibold text-gray-600 uppercase">
             Status
         </div>
-        <!--div class="p-3 text-left text-xs font-semibold text-gray-600 uppercase">&nbsp;</div-->
+        <div class="p-3 text-right pr-8 text-lg font-semibold text-gray-600 uppercase">↗</div>
     </div>
 
     <div class="rounded-xl bg-white overflow-hidden min-h-16">
@@ -29,11 +31,11 @@
             >
                 <list-item-attendee :event="event" :csrf="csrf" :attendee="attendee"/>
             </article>
-            <svg v-if="loading" class="animate-spin ml-4 mt-5 mb-3 h-6 w-6 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
         </div>
+        <svg v-if="loading" class="animate-spin ml-4 mt-5 mb-3 h-6 w-6 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
         <p class="p-6" v-if="(!attendees || attendees.length === 0) && !loading">There are currently no attendees for this event</p>
     </div>
 
@@ -51,13 +53,15 @@
 
 <script lang="ts">
     import {defineComponent, watchEffect, ref} from 'vue'
-    import { useAttendeeStore } from '@/store/attendees'
+    import { useTrainingsStore } from '@/store/trainings'
     import { storeToRefs } from 'pinia'
+    import StatusSaved from '@/vue/attendees/molecules/statusses/StatusSaved.vue';
     import ListItemAttendee from '@/vue/attendees/molecules/list-items/ListItemAttendee.vue';
 
     export default defineComponent({
         components: {
             'list-item-attendee': ListItemAttendee,
+            'status-saved': StatusSaved
         },
         props: {
             event: {
@@ -70,11 +74,12 @@
             },
         },
         setup(props){
-            const store = useAttendeeStore()
-            const { attendees, loading, totalAttendees } = storeToRefs(store)
+            const store = useTrainingsStore()
+            const { attendees, loading, totalAttendees, attendeeSuccess } = storeToRefs(store)
             const limit = ref(30)
             const offset = ref(0)
             const remainingEntries = ref(0)
+            const showSuccess = ref(false)
 
             const handleLoadMore = () => {
                 offset.value = offset.value + limit.value
@@ -84,6 +89,14 @@
 
             watchEffect(() => {
                 remainingEntries.value = (totalAttendees.value - offset.value) - limit.value
+
+                if(attendeeSuccess.value){
+                    showSuccess.value = true
+
+                    setTimeout(() => {
+                        showSuccess.value = false
+                    },3000)
+                }
             })
 
 
@@ -91,7 +104,7 @@
             store.fetchAttendees(props.event, limit.value, offset.value)
             // })
 
-            return { attendees, loading, offset, totalAttendees, remainingEntries, handleLoadMore }
+            return { showSuccess, attendees, loading, offset, totalAttendees, remainingEntries, handleLoadMore }
 
         }
     })

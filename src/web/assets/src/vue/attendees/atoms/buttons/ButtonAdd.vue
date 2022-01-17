@@ -3,12 +3,12 @@
 </template>
 <script lang="ts">
     import {defineComponent} from "vue"
-    import { useAttendeeStore } from '@/store/attendees'
+    import { useTrainingsStore } from '@/store/trainings'
     import {storeToRefs} from "pinia"
 
     export default defineComponent({
         setup(){
-            const store = useAttendeeStore()
+            const store = useTrainingsStore()
             const { showForm } = storeToRefs(store)
 
             const toggle = () => {

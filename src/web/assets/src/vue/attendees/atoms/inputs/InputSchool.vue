@@ -27,9 +27,9 @@
             <span v-if="school?.length > 3" @click="handleClear" class="text-blue-800 bg-gray-100 block w-6 text-center flex items-center justify-center h-8 absolute right-0 top-1 cursor:pointer">&#x2715</span>
 
             <ul
-                class="absolute left-0 top-full mt-1 w-full max-h-52 overflow-scroll z-10 bg-gray-100 rounded-lg shadow-xl"
-                ref="schoolDropdown"
+                class="absolute left-0 top-full mt-1 w-128 max-h-52 overflow-scroll z-10 bg-gray-100 rounded-lg shadow-xl"
                 v-show="showDropdown"
+                ref="schoolDropdown"
                 :aria-expanded="showDropdown"
                 role="listbox"
                 :id="`metaseed-list-${uniqueId}`"
@@ -47,12 +47,14 @@
                         role="button"
                         :data-postcode="school?.data?.postcode"
                         :data-urn="school?.data?.urn"
+                        :data-name="school?.value"
                         :class="[
-                         'p-2 pointer-all hover:bg-blue-600 hover:text-white focus:bg-blue-600 text-sm block',
+                         'p-2 pointer-all hover:bg-blue-600 hover:text-white focus:bg-blue-600 block group',
                          currentSelectionIndex === i ? 'bg-blue-600 text-white' : ''
                         ]"
                     >
-                        {{school.value}}
+                        <span class="block w-full text-sm font-medium">{{school.value}}</span>
+                        <span :class="['block text-xs group-hover:text-white', currentSelectionIndex === i ? 'text-white' : 'text-gray-500']">[URN: {{ school?.data?.urn ?? '-' }}] {{ school?.data?.street ?? '-' }}, {{ school?.data?.town ?? '-' }} {{ school?.data?.postcode }} (Age {{ school?.data?.ageFrom ?? '/' }} - {{ school?.data?.ageTo ?? '/' }})</span>
                     </span>
                     <span v-else class="p-2 block">
                         There's no school that matches the input
@@ -63,7 +65,7 @@
                     v-if="loadingApi"
                     class="p-2 pt-3 inline-block"
                 >
-                    <svg class="animate-spin mr-1 h-4 w-4 text-emerald-800" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <svg class="animate-spin mr-1 h-4 w-4 text-gray-800" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
@@ -73,7 +75,7 @@
     </label>
 
     <label class="block mb-6">
-        <span class="text-xs font-bold text-gray-400 block mb-1">Post code <span class="text-blue-500">*</span></span>
+        <span class="text-xs font-bold text-gray-400 block mb-1">Post code</span>
         <input
             name="postCode"
             :value="postcode"
@@ -91,7 +93,7 @@
 
 <script lang="ts">
 import {defineComponent, watchEffect, watch, ref} from 'vue'
-import { useAttendeeStore } from '@/store/attendees'
+import { useTrainingsStore } from '@/store/trainings'
 import { storeToRefs } from 'pinia'
 import InputSwitch from '@/vue/attendees/atoms/inputs/InputSwitch.vue';
 
@@ -102,10 +104,10 @@ export default defineComponent({
             default: {}
         }
     },
-    emits: ["schoolSelect"],
+    emits: ["schoolSelect", "schoolInput"],
     setup( props, {emit} ){
         const schoolDropdown = ref(null)
-        const store = useAttendeeStore()
+        const store = useTrainingsStore()
         const uniqueId = ref(Math.floor(Math.random() * 100) + Date.now())
         const {
             attendeeInput,
@@ -122,7 +124,7 @@ export default defineComponent({
         const clearResults = ref(true)
 
         const handleSchoolSelect = evt => {
-            school.value = evt.currentTarget.textContent
+            school.value = evt.currentTarget?.dataset?.name
             urn.value = evt.currentTarget?.dataset?.urn
             postcode.value = evt.currentTarget?.dataset?.postcode
 
@@ -172,8 +174,8 @@ export default defineComponent({
 
             const selected = {
                 currentTarget: {
-                    textContent: schools.value[currentSelectionIndex.value]?.value,
                     dataset: {
+                        name: schools.value[currentSelectionIndex.value]?.value,
                         urn: schools.value[currentSelectionIndex.value]?.data?.urn,
                         postcode: schools.value[currentSelectionIndex.value]?.data?.postcode,
                     }
@@ -196,6 +198,8 @@ export default defineComponent({
             if(school !== prevSchool && urn.value?.length > 0 && clearResults.value){
                 resetInput();
             }
+
+            emit('schoolInput', school ? school : '')
 
             clearResults.value = true
         })

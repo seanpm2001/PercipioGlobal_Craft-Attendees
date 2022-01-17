@@ -180,10 +180,10 @@ class Attendees extends Plugin
 
         $nav['label'] = $this->getPluginName();
 
-//        $nav['subnav']['dashboard'] = [
-//            'label' => Craft::t('craft-attendees', 'Dashboard'),
-//            'url' => 'craft-attendees/dashboard'
-//        ];
+        $nav['subnav']['dashboard'] = [
+            'label' => Craft::t('craft-attendees', 'Dashboard'),
+            'url' => 'craft-attendees/dashboard'
+        ];
 //
 //        $nav['subnav']['data-export'] = [
 //            'label' => Craft::t('craft-attendees', 'Data Export'),
@@ -217,6 +217,7 @@ class Attendees extends Plugin
             function (RegisterUrlRulesEvent $event) {
                 $event->rules['craft-attendees/trainings/<eventId:\d+>'] = 'craft-attendees/training/detail';
                 $event->rules['craft-attendees/trainings/attendees/<eventId:\d+>/<limit:\d+>/<offset:\d+>'] = 'craft-attendees/training/attendees';
+                $event->rules['craft-attendees/trainings/fetch-support-options/<eventId:\d+>'] = 'craft-attendees/training/fetch-support-options';
             }
         );
     }

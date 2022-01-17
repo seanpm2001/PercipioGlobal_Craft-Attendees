@@ -1,9 +1,9 @@
-import {defineStore} from "pinia"
+import { defineStore } from "pinia"
 import axios from 'axios'
 
-const ENDPOINT = window.Attendee?.cpUrl ?? 'https://researchschool.org.uk/cp'
+const ENDPOINT = window?.Attendee?.cpUrl ?? 'https://researchschool.org.uk/cp'
 
-export const useAttendeeStore = defineStore('attendees', {
+export const useTrainingsStore = defineStore('trainings', {
     state:() => ({
         attendees: null,
         totalAttendees: null,
@@ -13,9 +13,37 @@ export const useAttendeeStore = defineStore('attendees', {
         showForm: false,
         loading: false,
         loadingApi: false,
-        schools: null
+        schools: null,
+        followOnSupportOptions: null
     }),
     actions: {
+        fetchOptions(event) {
+            const self = this
+            this.loading = true
+
+            axios({
+                method: 'get',
+                url: `${ENDPOINT}/craft-attendees/trainings/fetch-support-options/${event}`,
+            })
+            .then(function (response) {
+                self.loading = false
+                self.followOnSupportOptions = response.data?.options
+                self.followOnSupportSelectedOptions = response.data?.selectedOptions
+            });
+        },
+        saveOption(data) {
+            const self = this
+            this.loading = true
+
+            axios({
+                method: 'post',
+                url: `${ENDPOINT}/actions/craft-attendees/training/save-support-options`,
+                data: data
+            })
+            .then(function (response) {
+                self.loading = false
+            });
+        },
         async fetchSchools(query) {
 
             if(query){
@@ -87,6 +115,7 @@ export const useAttendeeStore = defineStore('attendees', {
                         updatedAttendee = updatedAttendee[0]
                         updatedAttendee.name = formObj?.name
                         updatedAttendee.orgName = formObj?.orgName
+                        updatedAttendee.orgUrn = formObj?.orgUrn
                         updatedAttendee.postCode = formObj?.postCode
                         updatedAttendee.days = formObj?.days
                         updatedAttendee.email = formObj?.email
@@ -118,7 +147,7 @@ export const useAttendeeStore = defineStore('attendees', {
             .then(function (response) {
                 self.loading = false
                 self.totalAttendees = parseInt(response?.data?.meta?.total)
-                self.attendees = self.attendees ? self.attendees.concat(response?.data?.attendees) : response?.data?.attendees
+                self.attendees = offset !== 0 ? self.attendees.concat(response?.data?.attendees) : response?.data?.attendees
             });
         },
         setShowFrom(value){

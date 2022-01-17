@@ -26,6 +26,7 @@ class Install extends Migration
             $this->addForeignKeys();
             // Refresh the db schema caches
             Craft::$app->db->schema->refresh();
+            $this->insertDefaultData();
         }
 
         return true;
@@ -59,9 +60,12 @@ class Install extends Migration
      */
     protected function createTables()
     {
+        $tablesCreated = false;
+
         //attendees table
         $tableSchema = Craft::$app->db->schema->getTableSchema(Table::ATTENDEES);
         if ($tableSchema === null) {
+            $tablesCreated = true;
             $this->createTable(
                 Table::ATTENDEES,
                 [
@@ -84,6 +88,43 @@ class Install extends Migration
                 ]
             );
         }
+
+        //follow on support table
+        $tableSchema = Craft::$app->db->schema->getTableSchema(Table::FOLLOW_ON_SUPPORT);
+        if ($tableSchema === null) {
+            $tablesCreated = true;
+            $this->createTable(
+                Table::FOLLOW_ON_SUPPORT,
+                [
+                    'id' => $this->primaryKey(),
+                    'dateCreated' => $this->dateTime()->notNull(),
+                    'dateUpdated' => $this->dateTime()->notNull(),
+                    'uid' => $this->uid(),
+                    'optionId' => $this->integer()->notNull(),
+                    'eventId' => $this->integer()->notNull(),
+                ]
+            );
+        }
+
+        //follow on support options table
+        $tableSchema = Craft::$app->db->schema->getTableSchema(Table::FOLLOW_ON_SUPPORT_OPTIONS);
+        if ($tableSchema === null) {
+            $tablesCreated = true;
+            $this->createTable(
+                Table::FOLLOW_ON_SUPPORT_OPTIONS,
+                [
+                    'id' => $this->primaryKey(),
+                    'dateCreated' => $this->dateTime()->notNull(),
+                    'dateUpdated' => $this->dateTime()->notNull(),
+                    'uid' => $this->uid(),
+                    'name' => $this->string(255)->notNull(),
+                    'value' => $this->string(255),
+                ]
+            );
+        }
+
+        return $tablesCreated;
+
     }
 
     protected function createIndexes()
@@ -96,12 +137,16 @@ class Install extends Migration
         $this->addForeignKey(null, Table::ATTENDEES, ['id'], '{{%elements}}', ['id'], 'CASCADE');
         $this->addForeignKey(null, Table::ATTENDEES, ['siteId'], '{{%sites}}', ['id'], 'CASCADE', 'CASCADE');
         $this->addForeignKey(null, Table::ATTENDEES, ['eventId'], '{{%entries}}', ['id'], 'CASCADE', 'CASCADE');
+        $this->addForeignKey(null, Table::FOLLOW_ON_SUPPORT, ['optionId'], Table::FOLLOW_ON_SUPPORT_OPTIONS, ['id'], 'CASCADE', 'CASCADE');
+        $this->addForeignKey(null, Table::FOLLOW_ON_SUPPORT, ['eventId'], '{{%entries}}', ['id'], 'CASCADE', 'CASCADE');
     }
 
     protected function dropForeignKeys()
     {
         $tables = [
             Table::ATTENDEES,
+            Table::FOLLOW_ON_SUPPORT_OPTIONS,
+            Table::FOLLOW_ON_SUPPORT,
         ];
         foreach ($tables as $table) {
             $this->_dropForeignKeyToAndFromTable($table);
@@ -111,6 +156,38 @@ class Install extends Migration
     protected function removeTables()
     {
         $this->dropTableIfExists(Table::ATTENDEES);
+        $this->dropTableIfExists(Table::FOLLOW_ON_SUPPORT_OPTIONS);
+        $this->dropTableIfExists(Table::FOLLOW_ON_SUPPORT);
+    }
+
+    protected function insertDefaultData()
+    {
+        $rows = [];
+
+        $rows[] = ['Additional training day on specialism and/or implementation planning','opt0'];
+        $rows[] = ['Coaching','opt1'];
+        $rows[] = ['Coordinated planning with school for partnership offer','opt2'];
+        $rows[] = ['ELE/SLE/NLE brokerage of visit','opt3'];
+        $rows[] = ['ELE/SLE/NLE coaching model, multiple visits and support with independent auditing and evaluation','opt4'];
+        $rows[] = ['Follow on email','opt5'];
+        $rows[] = ['Follow on email series/webinar','opt6'];
+        $rows[] = ['Follow up call (linked to activities)','opt7'];
+        $rows[] = ['Free expert webinar','opt8'];
+        $rows[] = ['Improvement partnership model involving a variety of inputs and supports','opt9'];
+        $rows[] = ['Peer partnerships (develop a straightforward protocol and supports)','opt10'];
+        $rows[] = ['Post card reminders','opt11'];
+        $rows[] = ['Reciprocal peer visit','opt12'];
+        $rows[] = ['Reduced fee for further training','opt13'];
+        $rows[] = ['Resources to share with colleagues','opt14'];
+        $rows[] = ['RSN visit','opt15'];
+        $rows[] = ['School/Trust CPD programme','opt16'];
+        $rows[] = ['Sign up to newsletters','opt17'];
+        $rows[] = ['Supported online implementation programme','opt18'];
+        $rows[] = ['Supported school CPD planning','opt19'];
+        $rows[] = ['Webinar/online series','opt20'];
+        $rows[] = ['Whole school training offer','opt21'];
+
+        $this->batchInsert(Table::FOLLOW_ON_SUPPORT_OPTIONS, ['name', 'value'], $rows);
     }
 
 

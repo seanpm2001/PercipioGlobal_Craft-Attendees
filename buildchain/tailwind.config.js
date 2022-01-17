@@ -26,6 +26,9 @@ module.exports = {
             },
             screens: {
                 'px': '1px'
+            },
+            width: {
+                128: '32rem'
             }
         }
     },
@@ -34,6 +37,7 @@ module.exports = {
     variants: {
         extend: {
             backgroundColor: ['peer'],
+            color: ['group'],
             outline: ['peer'],
             opacity: ['peer'],
             pointerEvents: ['peer'],

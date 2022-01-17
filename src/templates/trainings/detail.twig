@@ -41,15 +41,26 @@
 
 {# Content that should appear in the page header#}
 {% block actionButton %}
-    <a target="_blank" href="{{ cpUrl() ~ '/entries/' ~ settings.eventSection ~ '/' ~ event.id ~ '-' ~ event.slug }}" class="btn">{{ "Edit Event"|t('craft-attendees') }}</a>
+    <div>
+        <a target="_blank" href="{{ cpUrl() ~ '/entries/' ~ settings.eventSection ~ '/' ~ event.id ~ '-' ~ event.slug }}" class="btn">{{ "Edit Event"|t('craft-attendees') }}</a>
+    </div>
 {% endblock %}
 
 {# The content of the CP Section#}
 {% set content %}
 
     <div id="training">
-        <h1>{{ event.title }}</h1>
-        <h6 class="{{ (eventTypes[event.type.handle] ?? '') or (event.eventCategories.one().title ?? '') ? 'inline-block mb-4 space-x-2 -mt-2' : '' }}">
+
+        <div class="flex">
+            <h1 class="inline-fex flex-grow">{{ event.title }}</h1>
+            <div>
+                {% include "craft-attendees/_includes/current-site" with {
+                    currentSite: event.site
+                } %}
+            </div>
+        </div>
+        <p>{{ event.description }}</p>
+        <h6 class="{{ (eventTypes[event.type.handle] ?? '') or (event.eventCategories.one().title ?? '') ? 'inline-block mb-4 space-x-2 mt-2' : '' }}">
             {% if eventTypes[event.type.handle] ?? '' %}
                 <span class="inline-block rounded-full bg-gray-700 text-white px-4 py-2">{{ eventTypes[event.type.handle] ?? '' }}</span>
             {% endif %}
@@ -57,180 +68,9 @@
                 <span class="inline-block rounded-full bg-gray-700 text-white px-4 py-2">{{ event.eventCategories.one().title ?? '' }}</span>
             {% endif %}
         </h6>
-        <p>{{ event.description }}</p>
 
-        <section class="rounded-2xl bg-gray-100 p-6 mt-10">
-            <div class="w-full flex field">
-                <div class="heading flex-grow">
-                    <label class="text-xl inline-block w-full">Attendees</label>
-                    <span>You can import a .csv file or add a new attendee in the actions on the right.</span>
-                </div>
+        <tabpane-attendees csrf="{{ craft.app.request.csrfToken }}" event="{{ event.id }}"></tabpane-attendees>
 
-                <form id="retour-import-form" method="post" accept-charset="UTF-8" enctype="multipart/form-data">
-                    {{ csrfInput() }}
-                    <input type="hidden" name="action" value="craft-attendees/training/import">
-                    <input type="file" class="fixed top-full" name="file" id="attendee-csv-file" accept=".csv" onchange="this.form.submit();" />
-                    <label for="attendee-csv-file" class="bg-gray-300 text-gray-800 font-bold py-2 px-3 text-sm rounded-lg cursor-pointer">Import CSV File</label>
-                </form>
-
-                <button-add label="{{ "Add"|t('craft-attendees') }}"></button-add>
-            </div>
-
-            <popup-add-attendee csrf="{{ craft.app.request.csrfToken }}" event="{{ event.id }}"></popup-add-attendee>
-
-            <list-attendees csrf="{{ craft.app.request.csrfToken }}" event="{{ event.id }}"></list-attendees>
-        </section>
-
-{#        <table class="table-auto w-full">#}
-{#            <thead class="bg-gray-100">#}
-{#                <tr>#}
-{#                    <th class="px-3">#}
-{#                        <span class="py-3 text-left text-xs font-semibold text-gray-600 uppercase">#}
-{#                            School / Organisation#}
-{#                        </span>#}
-{#                    </th>#}
-{#                    <th class="px-3">#}
-{#                        <span class="py-3 text-left text-xs font-semibold text-gray-600 uppercase">#}
-{#                            Post code#}
-{#                        </span>#}
-{#                    </th>#}
-{#                    <th class="px-3">#}
-{#                        <span class="py-3 text-left text-xs font-semibold text-gray-600 uppercase">#}
-{#                            Name of attendee#}
-{#                        </span>#}
-{#                    </th>#}
-{#                    <th class="px-3">#}
-{#                        <span class="py-3 text-left text-xs font-semibold text-gray-600 uppercase">#}
-{#                            Email#}
-{#                        </span>#}
-{#                    </th>#}
-{#                    <th class="px-3">#}
-{#                        <span class="py-3 text-left text-xs font-semibold text-gray-600 uppercase">#}
-{#                            Days Attended#}
-{#                        </span>#}
-{#                    </th>#}
-{#                    <th class="px-3">#}
-{#                        <span class="py-3 text-left text-xs font-semibold text-gray-600 uppercase">#}
-{#                            Newsletter#}
-{#                        </span>#}
-{#                    </th>#}
-{#                    <th class="px-3">#}
-{#                        <span class="py-3 text-left text-xs font-semibold text-gray-600 uppercase">#}
-{#                            Actions#}
-{#                        </span>#}
-{#                    </th>#}
-{#                </tr>#}
-{#            </thead>#}
-{#            <tbody>#}
-{#                <tr>#}
-{#                    <td>#}
-{#                        <div class="border-b-2 border-gray-600">The Sliding Mr. Bones (Next Stop, Pottersville)</div>#}
-{#                    </td>#}
-{#                    <td>#}
-{#                        <div class="border-b-2 border-gray-600">Malcolm Lockyer</div>#}
-{#                    </td>#}
-{#                    <td>#}
-{#                        <div class="border-b-2 border-gray-600">1961</div>#}
-{#                    </td>#}
-{#                    <td>#}
-{#                        <div class="border-b-2 border-gray-600">1961</div>#}
-{#                    </td>#}
-{#                    <td>#}
-{#                        <div class="border-b-2 border-gray-600">1961</div>#}
-{#                    </td>#}
-{#                    <td>#}
-{#                        <div class="border-b-2 border-gray-600">1961</div>#}
-{#                    </td>#}
-{#                    <td>#}
-{#                        <div class="border-b-2 border-gray-600">x</div>#}
-{#                    </td>#}
-{#                </tr>#}
-{#            </tbody>#}
-{#        </table>#}
-
-{#        {{ forms.editableTableField({#}
-{#            id: 'attendee-data',#}
-{#            class: '',#}
-{#            name: 'attendee[data]',#}
-{#            label: 'Attendees' |t,#}
-{#            instructions: "Use <b>+</b> button below to add a row for each attendee, if multiple people from the same organisation participated, each should be added on a new line." |t,#}
-{#            required: false,#}
-{#            static: false,#}
-{#            cols: {#}
-{#                status: {#}
-{#                    class: "thin action rsn-status",#}
-{#                    heading: "" |t,#}
-{#                    type: "singleline",#}
-{#                    value: 0,#}
-{#                },#}
-{#                school: {#}
-{#                    class: "action rsn-autocomplete orderable",#}
-{#                    heading: "School / Organisation" |t,#}
-{#                    type: "singleline",#}
-{#                    placeholder: "click to activate",#}
-{#                    width: '35%',#}
-{#                },#}
-{#                schooldata: {#}
-{#                    class: "rsn-data",#}
-{#                    type: "hidden",#}
-{#                },#}
-{#                postcode: {#}
-{#                    class: "rsn-postcode orderable",#}
-{#                    heading: "Post code" |t,#}
-{#                    type: "text",#}
-{#                    width: '10%',#}
-{#                },#}
-{#                name: {#}
-{#                    class: "rsn-name orderable",#}
-{#                    heading: "Name of attendee" |t,#}
-{#                    type: "text",#}
-{#                    width: '20%',#}
-{#                },#}
-{#                email: {#}
-{#                    class: "rsn-email",#}
-{#                    heading: "Email" |t,#}
-{#                    type: "text",#}
-{#                    width: '25%',#}
-{#                },#}
-{#                role: {#}
-{#                    class: "rsn-role",#}
-{#                    heading: "Role" |t,#}
-{#                    type: "select",#}
-{#                    options: {#}
-{#                        "": "Select one",#}
-{#                        "na": "Not Applicable",#}
-{#                        "support": "Support Staff" |t,#}
-{#                        "leader-middle": "Middle leader" |t,#}
-{#                        "leader": "Leadership" |t,#}
-{#                        "teacher": "Teacher" |t,#}
-{#                    },#}
-{#                },#}
-{#                attendance: {#}
-{#                    class: "rsn-attendance",#}
-{#                    heading: "Days Attended" |t,#}
-{#                    type: "select",#}
-{#                    options: {#}
-{#                        "1": "1",#}
-{#                        "2": "2",#}
-{#                        "3": "3",#}
-{#                        "4": "4",#}
-{#                        "5": "5",#}
-{#                        "6": "6",#}
-{#                        "7": "7",#}
-{#                        "8": "8",#}
-{#                        "9": "9",#}
-{#                        "10": "10",#}
-{#                    },#}
-{#                },#}
-{#                optin: {#}
-{#                    class: "rsn-mailing",#}
-{#                    heading: "Newsletter" |t,#}
-{#                    type: "lightswitch",#}
-{#                    width: "1%",#}
-{#                },#}
-{#            },#}
-{#            addRowLabel: "Add another attendee" |t,#}
-{#        }) }}#}
     </div>
 
     {{ craft.viteattendees.register('/src/js/attendees.ts', false, scriptTagOptions) }}

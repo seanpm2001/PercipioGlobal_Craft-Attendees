@@ -1,13 +1,13 @@
 <template>
 
-    <div class="inline-block relative">
+    <label class="inline-block relative flex items-center cursor-pointer">
         <input
             :name="name"
             type="checkbox"
             class="peer sr-only"
+            @click="toggle"
             :value="checkedValue"
             :checked="checkedValue == 1 ? true : false"
-            @click="toggle"
         >
 
         <div class="peer-focus:ring-2 peer-focus:ring-opacity-50 peer-focus:ring-blue-700 peer-focus:shadow-lg outline-none rounded-full inline-block cursor-pointer">
@@ -23,7 +23,9 @@
             </div>
         </div>
 
-    </div>
+        <span v-if="label.length > 0" class="inline-flex pl-2">{{ label }}</span>
+
+    </label>
 
 
 </template>
@@ -45,13 +47,18 @@ export default defineComponent({
             required: true
         },
 
+        label: {
+            type: String,
+            default: ''
+        },
+
         checked: {
             default: 0
         },
 
     },
 
-    setup(props) {
+    setup(props, {emit}) {
 
         const checkedValue = ref(0);
 
@@ -61,6 +68,7 @@ export default defineComponent({
 
         const toggle = () => {
             checkedValue.value = checkedValue.value == 0 ? 1 : 0
+            emit('changed', checkedValue.value)
         }
 
         return { toggle, checkedValue }

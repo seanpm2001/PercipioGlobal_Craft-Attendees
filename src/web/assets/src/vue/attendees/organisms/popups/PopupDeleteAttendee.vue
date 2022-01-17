@@ -3,16 +3,16 @@
         'transition-all duration-500 delay-50 ease-in-out fixed left-0 top-0 w-screen h-screen',
         show ? 'z-[100] opacity-100 bg-gray-900 bg-opacity-50' : 'z-0 opacity-0 pointer-events-none'
     ]">
-        <div class="max-h-screen text-center overflow-auto fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-72">
+        <div class="max-h-screen text-center overflow-auto fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-80">
             <div class="bg-white p-6 rounded-xl mb-10">
-                <h3 class="text-lg">Delete attendee</h3>
+                <h3 class="text-lg">Delete this attendee</h3>
 
                 <div class="flex justify-center">
-                    <button @click="handleDelete" class="block bg-emerald-300 text-emerald-800 font-bold mt-2 py-2 px-3 text-sm rounded-lg cursor-pointer">
-                        Confirm
-                    </button>
-                    <button @click="handleCancel" class="block bg-red-300 text-red-800 font-bold mt-2 py-2 px-3 text-sm rounded-lg cursor-pointer">
+                    <button @click="handleCancel" class="block bg-gray-300 text-gray-800 font-bold mt-2 py-2 px-3 text-sm rounded-lg cursor-pointer">
                         Cancel
+                    </button>
+                    <button @click="handleDelete" class="block bg-red-300 text-red-800 font-bold mt-2 py-2 px-3 text-sm rounded-lg cursor-pointer">
+                        Yes, delete this attendee
                     </button>
                 </div>
             </div>
@@ -22,7 +22,7 @@
 
 <script lang="ts">
     import {defineComponent, ref, watchEffect} from 'vue'
-    import { useAttendeeStore } from '@/store/attendees'
+    import { useTrainingsStore } from '@/store/trainings'
     import { storeToRefs } from 'pinia'
     import FormAttendee from '@/vue/attendees/organisms/forms/FormAttendee.vue';
 
@@ -45,7 +45,7 @@
             }
         },
         setup(props, {emit}){
-            const store = useAttendeeStore()
+            const store = useTrainingsStore()
             const { showForm, attendeeSuccess } = storeToRefs(store)
 
             const handleDelete = () => {
@@ -54,6 +54,7 @@
                 deleteAttendee.action = 'actions/craft-attendees/training/delete'
                 deleteAttendee.attendeeId = props.attendee.id
                 store.deleteAttendee(deleteAttendee)
+                emit('hidePopup')
             }
 
             const handleCancel = () => {
