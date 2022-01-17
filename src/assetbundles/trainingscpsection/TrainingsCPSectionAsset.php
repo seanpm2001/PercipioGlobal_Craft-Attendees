@@ -43,7 +43,7 @@ class TrainingsCPSectionAsset extends AssetBundle
     public function init()
     {
         // define the path that your publishable resources live
-        $this->sourcePath = "@percipiolondon/craftattendees/assetbundles/trainingscpsection/dist";
+        $this->sourcePath = "@percipiolondon/attendees/assetbundles/trainingscpsection/dist";
 
         // define the dependencies
         $this->depends = [

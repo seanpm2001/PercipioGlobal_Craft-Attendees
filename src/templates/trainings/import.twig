@@ -22,6 +22,8 @@
     ],
 } %}
 
+{% do view.registerAssetBundle("percipiolondon\\attendees\\assetbundles\\trainingscpsection\\TrainingsCPSectionAsset") %}
+
 {% set pluginCpUrl = url('craft-attendees') %}
 {% set settings = craft.app.getPlugins().getPlugin('craft-attendees').getSettings() %}
 {% set selectedSubnavItem = 'trainings' %}
@@ -38,6 +40,8 @@
     { label: "Attendees", url: url(pluginCpUrl) },
     { label: "Trainings"|t('craft-attendees'), url: url(pluginCpUrl ~ '/trainings') },
 ] %}
+
+{% set csvUrl = view.getAssetManager().getPublishedUrl('@percipiolondon/attendees/assetbundles/trainingscpsection/dist', true) ~ '/assets/demo.csv' %}
 
 {# Content that should appear in the page header#}
 {% block actionButton %}
@@ -66,9 +70,7 @@
             {% endif %}
         </h6>
 
-        {{ pluginCpUrl ~ '/' ~ selectedSubnavItem ~ '/' ~ event.id }}
-
-        <list-csv headers="{{ headers|json_encode}}" filename="{{ filename }}" parent="{{ pluginCpUrl ~ '/' ~ selectedSubnavItem ~ '/' ~ event.id }}"></list-csv>
+        <list-csv headers="{{ headers|json_encode}}" filename="{{ filename }}" parent="{{ pluginCpUrl ~ '/' ~ selectedSubnavItem ~ '/' ~ event.id }}" csv="{{ csvUrl }}" event="{{ event.title }}" ></list-csv>
 
     </div>
 

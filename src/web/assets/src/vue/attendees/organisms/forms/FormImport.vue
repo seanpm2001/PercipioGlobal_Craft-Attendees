@@ -5,7 +5,7 @@
         <input type="hidden" name="action" value="craft-attendees/training/import">
         <input type="hidden" name="event" :value="event" />
         <input type="file" class="fixed top-full" name="file" id="attendee-csv-file" accept=".csv" onchange="this.form.submit();" />
-        <label for="attendee-csv-file" class="bg-gray-300 text-gray-800 font-bold py-2 px-3 text-sm rounded-lg cursor-pointer">Import CSV File</label>
+        <label for="attendee-csv-file" class="bg-gray-300 text-gray-800 font-bold py-2 px-3 text-sm rounded-lg cursor-pointer inline-block">Import CSV File</label>
     </form>
 
 </template>

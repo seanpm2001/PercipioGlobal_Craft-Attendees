@@ -6,6 +6,10 @@
             <div class="heading flex-grow">
                 <label class="text-xl inline-block w-full mb-2">Map fields into the correct data</label>
                 <span>Choose the fields to import into the attendees from the CSV file by dragging them<br/>in the appropriate order. Click on the ✕ to delete an unused field.</span>
+
+                <div class="mt-4 w-full">
+                    <a :href="csv" target="_blank" download class="bg-gray-300 text-gray-800 font-bold py-2 px-3 text-sm rounded-lg cursor-pointer inline-block">Download CSV template</a>
+                </div>
             </div>
 
             <button class="bg-gray-300 text-gray-800 font-bold py-2 px-3 text-sm rounded-lg cursor-pointer" @click="handleCancel">Cancel</button>
@@ -17,7 +21,7 @@
 
                 <div class="mb-4">
                     <span class="font-primary text-lg font-bold block pb-2">CSV File fields</span>
-                    <span class="block">from: {{ filename }}</span>
+                    <span class="block h-10">from: {{ filename }}</span>
                 </div>
 
                 <draggable :list="csvHeaders">
@@ -36,7 +40,7 @@
 
             </div>
 
-            <div class="w-20 pt-16 mt-2.5">
+            <div class="w-20 pt-20 mt-2.5">
                 <div
                     v-for="header in csvHeaders"
                     :key="header"
@@ -49,16 +53,24 @@
 
                 <div class="mb-4">
                     <span class="font-primary text-lg font-bold block pb-2">Attendees fields</span>
-                    <span class="block">to: database</span>
+                    <span class="block h-10">to: {{event}}</span>
                 </div>
 
-                <div v-for="value in values" class="bg-white rounded-xl mb-2 w-full px-4 box-border flex items-center cursor-move h-12 pt-2">
-                    <span class="font-bold inline-block ">{{value}}</span>
+                <div
+                    v-for="value in values"
+                    :key="value.id"
+                    class="bg-white rounded-xl mb-2 w-full px-4 box-border flex items-center h-12 pt-2 leading-[0]"
+                >
+                    <span class="font-bold inline-flex flex-grow items-center">{{value.name}} <span v-if="value.required" class="text-blue-500 inline-block pl-1 font-normal text-xs">[required]</span></span>
+                    <span class="text-gray-400 italic text-xs" v-if="value.info">{{value.info}}</span>
+                    <button @click="handleShowInfo(value.id)" class="text-blue-800 cursor-pointer">ⓘ</button>
                 </div>
 
             </div>
         </div>
 
+
+        <popup-import :show="showPopup" @hidePopup="handleHidePopup" :info="popupId" />
 
 
         <div class="block bg-gray-100 w-6 left-full pb-6 top-0 h-full absolute"></div>
@@ -70,11 +82,13 @@
 
 <script lang="ts">
     import {defineComponent, ref, watchEffect} from 'vue'
-  import { VueDraggableNext } from 'vue-draggable-next'
+    import { VueDraggableNext } from 'vue-draggable-next'
+    import PopupImport from '@/vue/attendees/organisms/popups/PopupImport.vue'
 
     export default defineComponent({
         components: {
-            'draggable': VueDraggableNext
+            'draggable': VueDraggableNext,
+            'popup-import': PopupImport,
         },
         props: {
             headers: {
@@ -88,19 +102,82 @@
             parent: {
                 type: String,
                 default: ''
+            },
+            csv: {
+                type: String,
+                required: true
+            },
+            event: {
+                type: String,
+                required: true
             }
         },
         setup(props){
-            const values = ref(['Organisation / School', 'URN', 'Post Code', 'Attendee Name', 'Attendee Email Address', 'Job Role', 'Attending Days', 'Newsletter'])
+            const values = ref([
+                {
+                    id: 1,
+                    name: 'Organisation / School',
+                    required: true,
+                    info: 'Text'
+                },
+                {
+                    id: 2,
+                    name: 'URN',
+                    required: false,
+                    info: 'Number'
+                },
+                {
+                    id: 3,
+                    name: 'Postcode',
+                    required: false,
+                    info: 'Text'
+                },
+                {
+                    id: 4,
+                    name: 'Attendee Name',
+                    required: true,
+                    info: 'Text'
+                },
+                {
+                    id: 5,
+                    name: 'Attendee Email Address',
+                    required: false,
+                    info: 'Text'
+                },
+                {
+                    id: 6,
+                    name: 'Job Role',
+                    required: true,
+                    info: 'Text exact match [na, support, leader-middle, leader, teacher]',
+                },
+                {
+                    id: 7,
+                    name: 'Attending Days',
+                    required: true,
+                    info: 'Number between 1 - 10'
+                },
+                {
+                    id: 8,
+                    name: 'Newsletter',
+                    required: false,
+                    info: 'Yes | No'
+                },
+            ])
             const csvHeaders = ref(JSON.parse(props.headers))
             const spacers = ref(values.value.length > csvHeaders.value.length ? values.value.length - csvHeaders.value.length : 0 )
+            const showPopup = ref(false)
+            const popupId = ref(null)
 
+            //add empty values when too less values are in the csv
             for(let i = 0; i < spacers.value; i++){
                 csvHeaders.value.push('')
             }
 
+            //convert string to object
             csvHeaders.value = csvHeaders.value.map((el, i) => { return {'id': i, 'value': el} })
 
+
+            //handlers
             const handleRemove = (value) => {
                 console.log("map?",value)
                 csvHeaders.value = csvHeaders.value.map(el => el.value === value ? {'id': el.id, 'value': ''} : el)
@@ -114,7 +191,17 @@
                 window.location.href = props.parent?.length > 0 ? props.parent : '/'
             }
 
-            return { values, csvHeaders, handleRemove, handleSubmit, handleCancel}
+            const handleShowInfo = (id) => {
+                showPopup.value = true
+                popupId.value = id
+            }
+
+            const handleHidePopup = () => {
+                showPopup.value = false
+                popupId.value = null
+            }
+
+            return { values, csvHeaders, popupId, showPopup, handleRemove, handleSubmit, handleCancel, handleHidePopup, handleShowInfo}
         }
     })
 
