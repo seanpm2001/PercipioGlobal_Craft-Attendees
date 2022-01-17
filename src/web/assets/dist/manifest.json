@@ -1,16 +1,16 @@
 {
   "src/js/attendees.ts": {
-    "file": "assets/attendees.a84f484a.js",
+    "file": "assets/attendees.7c3848bd.js",
     "src": "src/js/attendees.ts",
     "isEntry": true,
     "imports": [
-      "_vendor.9f38f2b7.js"
+      "_vendor.f39e0bf1.js"
     ],
     "css": [
-      "assets/attendees.89ff5470.css"
+      "assets/attendees.be26701a.css"
     ]
   },
-  "_vendor.9f38f2b7.js": {
-    "file": "assets/vendor.9f38f2b7.js"
+  "_vendor.f39e0bf1.js": {
+    "file": "assets/vendor.f39e0bf1.js"
   }
 }
