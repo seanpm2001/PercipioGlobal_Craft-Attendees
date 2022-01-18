@@ -13,7 +13,7 @@
  */
 #}
 
-{% extends "craft-attendees/_layouts/_cp" %}
+{% extends "_layouts/cp" %}
 {% import "_includes/forms" as forms %}
 
 {%- set permittedSites = [] %}
@@ -58,7 +58,7 @@
 
     {% paginate events as pageInfo, pageEntries %}
 
-    <div class="tableview tablepane">
+    <div class="tableview tablepane min-h-screen">
         <table class="data fullwidth">
             <thead>
             <tr>

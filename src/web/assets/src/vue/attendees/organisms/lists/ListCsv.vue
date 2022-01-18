@@ -16,8 +16,8 @@
             <button class="bg-emerald-300 text-emerald-800 font-bold py-2 px-3 text-sm rounded-lg cursor-pointer" @click="handleSubmit">Start import</button>
         </div>
 
-        <div class="flex w-full items-start mt-10">
-            <div class="flex-grow">
+        <div class="w-full items-start mt-10">
+            <div class="w-2/5 float-left">
 
                 <div class="mb-4">
                     <span class="font-primary text-lg font-bold block pb-2">CSV File fields</span>
@@ -40,16 +40,16 @@
 
             </div>
 
-            <div class="w-20 pt-20 mt-2.5">
+            <div class="w-1/5 float-left pt-20 mt-2.5">
                 <div
-                    v-for="header in csvHeaders"
+                    v-for="header in values"
                     :key="header"
                     class="mb-2 w-full px-4 box-border flex items-center justify-center cursor-move h-12 pt-2">
                     <span class="text-blue-600 inline-block text-xl">→</span>
                 </div>
             </div>
 
-            <div class="flex-grow">
+            <div class="w-2/5 float-left">
 
                 <div class="mb-4">
                     <span class="font-primary text-lg font-bold block pb-2">Attendees fields</span>
@@ -67,6 +67,8 @@
                 </div>
 
             </div>
+
+            <div class="clear-both">&nbsp;</div>
         </div>
 
 
