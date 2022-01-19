@@ -16,23 +16,23 @@
             <button class="bg-emerald-300 text-emerald-800 font-bold py-2 px-3 text-sm rounded-lg cursor-pointer" @click="handleSubmit">Start import</button>
         </div>
 
-        <div class="w-full items-start mt-10">
-            <div class="w-2/5 float-left">
+        <div class="w-full items-start mt-10 grid grid-cols-13">
+            <div class="col-span-6">
 
                 <div class="mb-4">
                     <span class="font-primary text-lg font-bold block pb-2">CSV File fields</span>
                     <span class="block h-10">from: {{ filename }}</span>
                 </div>
 
-                <draggable :list="csvHeaders">
+                <draggable v-model="csvHeaders">
                     <div v-for="header in csvHeaders" :key="header.id">
-                        <div v-if="header.value !== ''" class="bg-white rounded-xl mb-2 w-full px-4 box-border flex items-center cursor-move h-12 pt-2">
-                            <span class="text-blue-600 text-xl leading-0">✥</span>
-                            <span class="font-bold flex-grow">{{header.value}}</span>
-                            <button @click="handleRemove(header.value)" class="text-gray-600 cursor-pointer">✕</button>
+                        <div v-if="header.value !== ''" class="bg-white rounded-xl mb-2 w-full px-4 py-2 box-border flex items-center cursor-move h-12">
+                            <span class="text-blue-600 text-xl leading-tight" style="margin-bottom:0!important">✥</span>
+                            <span class="font-bold flex-grow" style="margin-bottom:0!important">{{header.value}}</span>
+                            <button @click="handleRemove(header.value)" class="text-gray-600 cursor-pointer" style="margin-bottom:0!important">✕</button>
                         </div>
                         <div v-else class="bg-gray-200 rounded-xl mb-2 w-full px-4 box-border flex items-center cursor-move h-12 pt-2">
-                            <span class="text-blue-600 text-xl leading-0">✥</span>
+                            <span class="text-blue-600 text-xl leading-tight">✥</span>
                             <span class="italic text-gray-400">No value specified</span>
                         </div>
                     </div>
@@ -40,40 +40,56 @@
 
             </div>
 
-            <div class="w-1/5 float-left pt-20 mt-2.5">
+            <div class="col-span-1 pt-20 mt-2.5">
                 <div
                     v-for="header in values"
                     :key="header"
-                    class="mb-2 w-full px-4 box-border flex items-center justify-center cursor-move h-12 pt-2">
+                    class="mb-2 w-full px-4 py-2 box-border flex items-center justify-center cursor-move h-12">
                     <span class="text-blue-600 inline-block text-xl">→</span>
                 </div>
             </div>
 
-            <div class="w-2/5 float-left">
+            <div class="col-span-6">
 
                 <div class="mb-4">
                     <span class="font-primary text-lg font-bold block pb-2">Attendees fields</span>
-                    <span class="block h-10">to: {{event}}</span>
+                    <span class="block h-10">to: {{training.title}}</span>
                 </div>
 
                 <div
                     v-for="value in values"
                     :key="value.id"
-                    class="bg-white rounded-xl mb-2 w-full px-4 box-border flex items-center h-12 pt-2 leading-[0]"
+                    class="bg-white rounded-xl mb-2 w-full px-4 py-2 box-border flex flex-wrap items-center h-12 leading-tight"
                 >
-                    <span class="font-bold inline-flex flex-grow items-center">{{value.name}} <span v-if="value.required" class="text-blue-500 inline-block pl-1 font-normal text-xs">[required]</span></span>
-                    <span class="text-gray-400 italic text-xs" v-if="value.info">{{value.info}}</span>
-                    <button @click="handleShowInfo(value.id)" class="text-blue-800 cursor-pointer">ⓘ</button>
+                    <span class="font-bold inline-flex flex-grow items-center whitespace-nowrap" style="margin-bottom:0!important">{{value.name}} <span v-if="value.required" class="text-blue-500 inline-block pl-1 font-normal text-xs" style="margin-bottom:0!important">[required]</span></span>
+                    <div class="whitespace-nowrap" style="margin-bottom:0!important">
+                        <span class="text-gray-400 italic text-xs" v-if="value.info">{{value.info}}</span>
+                        <button @click="handleShowInfo(value.id)" class="text-blue-800 cursor-pointer font-bold ml-1">ⓘ</button>
+                    </div>
+                </div>
+
+                <div
+                    v-for="(spacer, i) in (csvHeaders.length - values.length)"
+                    v-if="(csvHeaders.length > values.length)"
+                    :key="i"
+                    class="bg-gray-200 rounded-xl mb-2 w-full px-4 box-border flex items-center cursor-move h-12 pt-2"
+                >
+                    &nbsp;&nbsp;
                 </div>
 
             </div>
-
-            <div class="clear-both">&nbsp;</div>
         </div>
 
 
         <popup-import :show="showPopup" @hidePopup="handleHidePopup" :info="popupId" />
 
+        <form-import-match
+            :csrf="csrf"
+            :event="training.id"
+            :filepath="filepath"
+            :columns="csvHeaders"
+            :submitForm="submitForm"
+        />
 
         <div class="block bg-gray-100 w-6 left-full pb-6 top-0 h-full absolute"></div>
         <div class="block bg-gray-100 h-6 top-full left-0 w-full absolute"></div>
@@ -86,11 +102,13 @@
     import {defineComponent, ref, watchEffect} from 'vue'
     import { VueDraggableNext } from 'vue-draggable-next'
     import PopupImport from '@/vue/attendees/organisms/popups/PopupImport.vue'
+    import FormImportMatch from '@/vue/attendees/organisms/forms/FormImportMatch.vue'
 
     export default defineComponent({
         components: {
             'draggable': VueDraggableNext,
             'popup-import': PopupImport,
+            'form-import-match': FormImportMatch
         },
         props: {
             headers: {
@@ -98,6 +116,10 @@
                 required: true
             },
             filename: {
+                type: String,
+                default: ''
+            },
+            filepath: {
                 type: String,
                 default: ''
             },
@@ -110,6 +132,10 @@
                 required: true
             },
             event: {
+                type: String,
+                required: true
+            },
+            csrf: {
                 type: String,
                 required: true
             }
@@ -167,8 +193,10 @@
             ])
             const csvHeaders = ref(JSON.parse(props.headers))
             const spacers = ref(values.value.length > csvHeaders.value.length ? values.value.length - csvHeaders.value.length : 0 )
+            const training = ref(JSON.parse(props.event))
             const showPopup = ref(false)
             const popupId = ref(null)
+            const submitForm = ref(false)
 
             //add empty values when too less values are in the csv
             for(let i = 0; i < spacers.value; i++){
@@ -186,7 +214,7 @@
             }
 
             const handleSubmit = () => {
-                console.log("submit")
+                submitForm.value = true
             }
 
             const handleCancel = () => {
@@ -203,7 +231,25 @@
                 popupId.value = null
             }
 
-            return { values, csvHeaders, popupId, showPopup, handleRemove, handleSubmit, handleCancel, handleHidePopup, handleShowInfo}
+            const handleChange = (evt) => {
+                console.log("handle change", evt)
+            }
+
+            return {
+                values,
+                csvHeaders,
+                popupId,
+                showPopup,
+                spacers,
+                training,
+                submitForm,
+                handleRemove,
+                handleSubmit,
+                handleCancel,
+                handleHidePopup,
+                handleShowInfo,
+                handleChange
+            }
         }
     })
 

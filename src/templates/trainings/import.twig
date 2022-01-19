@@ -70,7 +70,15 @@
             {% endif %}
         </h6>
 
-        <list-csv headers="{{ headers|json_encode}}" filename="{{ filename }}" parent="{{ pluginCpUrl ~ '/' ~ selectedSubnavItem ~ '/' ~ event.id }}" csv="{{ csvUrl }}" event="{{ event.title }}" ></list-csv>
+        <list-csv
+            headers="{{ headers|json_encode}}"
+            filename="{{ filename }}"
+            parent="{{ pluginCpUrl ~ '/' ~ selectedSubnavItem ~ '/' ~ event.id }}"
+            csv="{{ csvUrl }}"
+            event="{{ event|json_encode }}"
+            filepath="{{ filepath }}"
+            csrf="{{ craft.app.request.csrfToken }}"
+        ></list-csv>
 
     </div>
 

@@ -78,58 +78,6 @@ class TrainingController extends Controller
         ]);
     }
 
-    public function actionImport(): Response
-    {
-        $this->requireLogin();
-        $request = Craft::$app->getRequest();
-
-        $variables = [];
-
-        $variables['controllerHandle'] = 'file';
-
-        //event
-        $event = \craft\elements\Entry::find()
-            ->id($request->getBodyParam('event'))
-            ->site('*')
-            ->anyStatus()
-            ->one();
-
-        // The CSV file
-        $file = UploadedFile::getInstanceByName('file');
-        if ($file !== null) {
-            $filename = uniqid($file->name, true);
-            $filePath = Craft::$app->getPath()->getTempPath().DIRECTORY_SEPARATOR.$filename;
-            $file->saveAs($filePath, false);
-            // Also save the file to the cache as a backup way to access it
-            $cache = Craft::$app->getCache();
-            $fileHandle = fopen($filePath, 'r');
-            if ($fileHandle) {
-                $fileContents = fgets($fileHandle);
-                if ($fileContents) {
-                    $cache->set($filePath, $fileContents);
-                }
-                fclose($fileHandle);
-            }
-            // Read in the headers
-            $csv = Reader::createFromPath($file->tempName);
-            try {
-//                $csv->setDelimiter(Retour::$settings->csvColumnDelimiter ?? ',');
-                $csv->setDelimiter(',');
-            } catch (Exception $e) {
-                Craft::error($e, __METHOD__);
-            }
-            $headers = $csv->fetchOne(0);
-            Craft::info(print_r($headers, true), __METHOD__);
-            $variables['headers'] = $headers;
-            $variables['filepath'] = $filePath;
-            $variables['filename'] = $file->name;
-            $variables['event'] = $event;
-        }
-
-        // Render the template
-        return $this->renderTemplate('craft-attendees/trainings/import', $variables);
-    }
-
     public function actionSave()
     {
         $this->requireLogin();

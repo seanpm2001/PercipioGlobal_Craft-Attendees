@@ -20,6 +20,9 @@ module.exports = {
     },
     theme: {
         extend: {
+            gridTemplateColumns: {
+                13: 'repeat(13, minmax(0, 1fr))',
+            },
             minHeight: {
                 16: '4rem',
                 52: '13rem'
@@ -28,7 +31,9 @@ module.exports = {
                 'px': '1px'
             },
             width: {
-                128: '32rem'
+                128: '32rem',
+                '1/7': '14.285%',
+                '3/7': '42.855%',
             }
         }
     },
