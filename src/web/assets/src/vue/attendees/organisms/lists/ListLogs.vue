@@ -1,10 +1,19 @@
 <template>
 
-    <div class="grid grid-cols-8 bg-gray-100 py-2 items-center">
-        <div class="col-span-2 p-3 text-left text-xs font-semibold text-gray-600 uppercase flex flex-nowrap items-center">
+    <div class="grid grid-cols-9 bg-gray-100 py-2 items-center">
+        <div class="p-3 text-left text-xs font-semibold text-gray-600 uppercase flex flex-nowrap items-center">
+            Status
+        </div>
+        <div class="p-3 text-left text-xs font-semibold text-gray-600 uppercase flex flex-nowrap items-center">
             Errors
         </div>
-        <div class="col-span-3 p-3 text-left text-xs font-semibold text-gray-600 uppercase">
+        <div class="p-3 text-left text-xs font-semibold text-gray-600 uppercase flex flex-nowrap items-center">
+            Success
+        </div>
+        <div class="p-3 text-left text-xs font-semibold text-gray-600 uppercase">
+            Total lines
+        </div>
+        <div class="col-span-2 p-3 text-left text-xs font-semibold text-gray-600 uppercase">
             File
         </div>
         <div class="col-span-2 p-3 text-left text-xs font-semibold text-gray-600 uppercase">

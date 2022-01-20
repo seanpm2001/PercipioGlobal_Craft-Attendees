@@ -80,13 +80,13 @@
 
     </section>
 
-    <!-- FOLLOW ON SUPPORT  -->
+    <!-- LOGS  -->
     <section v-if="activePane === 'logs'" class="bg-gray-100 p-6 pt-10 -mt-2.5 -ml-6 relative">
 
         <div class="w-full flex field">
             <div class="heading flex-grow">
                 <label class="text-xl inline-block w-full mb-2">Import logs</label>
-                <span>All the errors for this event that occurred after importing a CSV will be shown bellow</span>
+                <span>All the logs for this event that occurred after importing a CSV will be shown bellow. They will be saved for one week.</span>
             </div>
         </div>
 

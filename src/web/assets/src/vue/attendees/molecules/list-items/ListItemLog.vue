@@ -6,28 +6,37 @@
             expanded ? 'bg-blue-100 bg-opacity-10 border-red-300' : 'border-white',
         ]"
     >
-        <div class="grid grid-cols-8 py-2 items-center w-full items-center">
-            <div class="col-span-2 p-3 font-bold text-red-600 cursor-pointer" @click="toggle">
-                ⚠ {{ log.length }} error(s) occured
+        <div class="grid grid-cols-9 py-2 items-center w-full items-center">
+            <div class="p-3 font-bold cursor-pointer" @click="toggle">
+                <span>{{ status }}</span>
             </div>
-            <div class="col-span-3 p-3 cursor-pointer" @click="toggle">
+            <div class="p-3 font-bold cursor-pointer" @click="toggle">
+                <span class="text-red-600 inline-block mr-4">⚠ {{ errors.length }} line(s)</span>
+            </div>
+            <div class="p-3 font-bold cursor-pointer" @click="toggle">
+                <span class="text-emerald-600 inline-block">✓ {{ success.length }} line(s)</span>
+            </div>
+            <div class="p-3 font-bold">
+                {{log[0].totalLines}} lines
+            </div>
+            <div class="col-span-2 p-3 cursor-pointer" @click="toggle">
                 {{ filename }}
             </div>
             <div class="col-span-2 p-3 cursor-pointer" @click="toggle">
-                Last occured: {{ log[0].dateCreated }}
+                {{ log[0].dateCreated }}
             </div>
             <div class="p-3 text-blue-800 cursor-pointer" @click="toggle">
-                {{ expanded ? 'Hide' : 'Show' }} errors
+                {{ expanded ? 'Hide' : 'Show' }} logs
             </div>
         </div>
 
         <div class="px-10 py-6 relative" v-if="expanded">
 
             <div class="flex items-center relative mb-4">
-                <h3 class="text-lg inline-block flex-grow">{{ filename }} error(s) details</h3>
+                <h3 class="text-lg inline-block flex-grow">Error details</h3>
                 <span :class="[
                     'text-xs flex items-center mt-2 transition ease-in-out',
-                    loading ? 'opacity-100' : 'opacity-0'
+                    loading && status !== 'Done' ? 'opacity-100' : 'opacity-0'
                 ]">
                     <svg class="animate-spin h-4 w-4 text-gray-600 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -52,12 +61,12 @@
                 </div>
             </div>
 
-            <template v-for="error in logs">
-                <div class="w-full grid grid-cols-9 py-2 border-b border-solid border-gray-100" v-for="errorLine in JSON.parse(error.message)">
-                    <div>{{ error.line }}</div>
-                    <div class="col-span-2">{{ error.attendee }}</div>
+            <template v-for="line in logs">
+                <div v-if="line.type === 'error'" class="w-full grid grid-cols-9 py-2 border-b border-solid border-gray-100" v-for="errorLine in JSON.parse(line.message)">
+                    <div>{{ line.line }}</div>
+                    <div class="col-span-2">{{ line.attendee }}</div>
                     <div class="col-span-4">{{ errorLine[0] }}</div>
-                    <div class="col-span-2">{{ error.dateCreated }}</div>
+                    <div class="col-span-2">{{ line.dateCreated }}</div>
                 </div>
             </template>
         </div>
@@ -66,7 +75,7 @@
 
 <script>
 
-    import { defineComponent, ref, watchEffect } from 'vue'
+    import { defineComponent, ref, watch, watchEffect, toRefs } from 'vue'
     import { useLogsStore } from '@/store/logs'
     import { storeToRefs } from 'pinia'
 
@@ -82,22 +91,44 @@
             }
         },
         setup(props){
+            let { log } = toRefs(props)
             const store = useLogsStore()
             const { loading } = storeToRefs(store)
             const expanded = ref(false)
-            const logs = ref({})
+            const logs = ref(props.log.sort((a,b) => (a.line < b.line)))
+            const errors = ref(props.log.filter(log => log.type === 'error'))
+            const success = ref(props.log.filter(log => log.type === 'success'))
+            const status = ref('In Progress')
 
             const toggle = () => {
                 expanded.value = !expanded.value
             }
 
-            watchEffect(() => {
-                if(props.log){
-                    logs.value = props.log.sort((a,b) => (a.line < b.line) ? 1 : ((b.line > a.line) ? -1 : 0))
+            watch(log, (newValue, oldValue) => {
+                logs.value = newValue.sort((a,b) => (a.line < b.line))
+
+                errors.value = newValue.filter(log => log.type === 'error')
+                success.value = newValue.filter(log => log.type === 'success')
+
+                if((errors.value.length + success.value.length) === parseInt(newValue[0].totalLines)){
+                    status.value = 'Done'
+                }else{
+                    status.value = 'In Progress'
                 }
             })
 
-            return { logs, expanded, loading, toggle }
+            // watchEffect(() => {
+            //     if(logsModel.value){
+            //         logs.value = logsModel.value.sort((a,b) => (a.line < b.line))
+            //
+            //         console.log("check");
+            //
+            //         errors.value = ref(logsModel.value.filter(log => log.type === 'error'))
+            //         success.value = ref(logsModel.value.filter(log => log.type === 'success'))
+            //     }
+            // })
+
+            return { status, logs, success, errors, expanded, loading, toggle }
         }
     })
 
