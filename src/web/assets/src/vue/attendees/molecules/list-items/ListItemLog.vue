@@ -11,13 +11,13 @@
                 <span>{{ status }}</span>
             </div>
             <div class="p-3 font-bold cursor-pointer" @click="toggle">
-                <span class="text-red-600 inline-block mr-4">⚠ {{ errors.length }} line(s)</span>
+                <span class="text-red-600 inline-block mr-4">⚠ {{ errors.length }}</span>
             </div>
             <div class="p-3 font-bold cursor-pointer" @click="toggle">
-                <span class="text-emerald-600 inline-block">✓ {{ success.length }} line(s)</span>
+                <span class="text-emerald-600 inline-block">✓ {{ success.length }}</span>
             </div>
             <div class="p-3 font-bold" @click="toggle">
-                {{log[0].totalLines}} lines
+                {{log[0].totalLines}}
             </div>
             <div class="col-span-2 p-3 cursor-pointer" @click="toggle">
                 {{ filename }}

@@ -11,7 +11,7 @@
             Success
         </div>
         <div class="p-3 text-left text-xs font-semibold text-gray-600 uppercase">
-            Total lines
+            Total rows
         </div>
         <div class="col-span-2 p-3 text-left text-xs font-semibold text-gray-600 uppercase">
             File
