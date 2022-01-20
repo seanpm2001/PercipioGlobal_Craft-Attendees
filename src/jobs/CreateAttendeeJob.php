@@ -15,20 +15,6 @@ class CreateAttendeeJob extends BaseJob
 
     public function execute($queue)
     {
-//        [
-//            'id' => 0
-//            'event' => '302141'
-//            'orgName' => 'Aspirer'
-//            'orgUrn' => '111584'
-//            'postCode' => null
-//            'name' => '142343'
-//            'email' => 'Chorlton Park Primary'
-//            'jobRole' => 'Manchester'
-//            'days' => '352'
-//            'newsletter' => '2004'
-//            'eventId' => 'Chorlton Park Primary'
-//        ]
-
         $orgName = $this->config['orgName'] ?? '';
         $name = $this->config['name'] ?? '';
         $jobRole = $this->config['jobRole'] ?? '';
@@ -37,6 +23,7 @@ class CreateAttendeeJob extends BaseJob
         $file = $this->config['file'] ?? '';
         $filepath = $this->config['filepath'] ?? '';
         $line = (int)($this->config['line'] ?? 0);
+        $totalLines = (int)($this->config['total'] ?? 0);
 
         $identifier = hash('md4', $orgName.$name.$jobRole.$days);
 
@@ -50,7 +37,18 @@ class CreateAttendeeJob extends BaseJob
                 'duplicate' => ['Attendee '.$name.' from '.$orgName.' already exists']
             );
 
-            Log::error(json_encode($errors), $eventId, $file, $filepath, $line, $name);
+            $log = [
+                'status' => 'error',
+                'message' => json_encode($errors),
+                'name' => $name,
+                'eventId' => $eventId,
+                'file' => $file,
+                'filepath' => $filepath,
+                'line' => $line,
+                'totalLines' => $totalLines
+            ];
+
+            Log::log($log);
         }else{
             // save the attendee
             $attendee = AttendeeHelper::populateAttendeeFromArray($this->config, $identifier);
@@ -60,8 +58,38 @@ class CreateAttendeeJob extends BaseJob
             if($attendee->errors){
                 Craft::info('Importing row: ' . print_r($attendee->errors, true));
 
-                Log::error(json_encode($attendee->errors), $eventId, $file, $filepath, $line, $name);
+                $log = [
+                    'status' => 'error',
+                    'message' => json_encode($attendee->errors),
+                    'name' => $name,
+                    'eventId' => $eventId,
+                    'file' => $file,
+                    'filepath' => $filepath,
+                    'line' => $line,
+                    'totalLines' => $totalLines
+                ];
+
+                Log::log($log);
             }else{
+                Craft::info('Importing row: success');
+
+                $success = (object) array(
+                    'success' => ['Attendee '.$name.' from '.$orgName.' succeeded']
+                );
+
+                $log = [
+                    'status' => 'success',
+                    'message' => json_encode($success),
+                    'name' => $name,
+                    'eventId' => $eventId,
+                    'file' => $file,
+                    'filepath' => $filepath,
+                    'line' => $line,
+                    'totalLines' => $totalLines
+                ];
+
+                Log::log($log);
+
                 $attendee->save();
             }
         }

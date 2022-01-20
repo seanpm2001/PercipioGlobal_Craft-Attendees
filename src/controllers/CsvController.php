@@ -166,7 +166,8 @@ class CsvController extends Controller
         $csv->setOffset(1);
         $columns = ArrayHelper::filterEmptyStringsFromArray($columns);
         $rowCount = 0;
-        $csv->each(function ($row) use ($headers, $columns, $eventId, $siteId, $file, $filepath, $rowCount) {
+        $totalRows = count($csv) - 1;
+        $csv->each(function ($row) use ($headers, $columns, $eventId, $siteId, $file, $filepath, $rowCount, $totalRows) {
 
             $rowCount++;
 
@@ -176,7 +177,8 @@ class CsvController extends Controller
                 'site' => $siteId,
                 'file' => $file,
                 'filepath' => $filepath,
-                'line' => $rowCount
+                'line' => $rowCount,
+                'total' => $totalRows
             ];
             $index = 0;
             foreach (self::IMPORT_CSV_FIELDS as $importField) {
@@ -210,6 +212,7 @@ class CsvController extends Controller
         ;
         $rows = $stmt->process($csv);
         $columns = ArrayHelper::filterEmptyStringsFromArray($columns);
+        $totalRows = count($csv) - 1;
         $rowCount = 0;
         foreach ($rows as $row) {
             $rowCount++;
@@ -220,7 +223,8 @@ class CsvController extends Controller
                 'site' => $siteId,
                 'file' => $file,
                 'filepath' => $filepath,
-                'line' => $rowCount
+                'line' => $rowCount,
+                'total' => $totalRows
             ];
             $index = 0;
             foreach (self::IMPORT_CSV_FIELDS as $importField) {

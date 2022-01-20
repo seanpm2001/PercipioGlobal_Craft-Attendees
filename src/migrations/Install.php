@@ -136,6 +136,8 @@ class Install extends Migration
                     'filename' => $this->string(255)->notNull(),
                     'line' => $this->integer()->notNull(),
                     'attendee' => $this->string(255)->notNull(),
+                    'type' => $this->string(255)->notNull(),
+                    'totalLines' => $this->integer()->notNull(),
                     'uid' => $this->uid(),
                 ]
             );
