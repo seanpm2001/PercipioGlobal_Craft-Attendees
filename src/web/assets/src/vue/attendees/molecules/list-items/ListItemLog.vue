@@ -16,7 +16,7 @@
             <div class="p-3 font-bold cursor-pointer" @click="toggle">
                 <span class="text-emerald-600 inline-block">✓ {{ success.length }} line(s)</span>
             </div>
-            <div class="p-3 font-bold">
+            <div class="p-3 font-bold" @click="toggle">
                 {{log[0].totalLines}} lines
             </div>
             <div class="col-span-2 p-3 cursor-pointer" @click="toggle">
@@ -98,7 +98,7 @@
             const logs = ref(props.log.sort((a,b) => (a.line < b.line)))
             const errors = ref(props.log.filter(log => log.type === 'error'))
             const success = ref(props.log.filter(log => log.type === 'success'))
-            const status = ref('In Progress')
+            const status = ref('-')
 
             const toggle = () => {
                 expanded.value = !expanded.value
