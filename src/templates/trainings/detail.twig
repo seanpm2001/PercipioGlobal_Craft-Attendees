@@ -30,6 +30,8 @@
     'locationEvent': 'Location Event',
     'hybridEvent': 'Hybrid Event'
 } %}
+
+{% set csvUrl = view.getAssetManager().getPublishedUrl('@percipiolondon/attendees/assetbundles/trainingscpsection/dist', true) ~ '/assets/demo.csv' %}
 {#{%- set fullPageForm = true -%}#}
 
 {% set title = "Trainings | Attendees" %}
@@ -69,7 +71,13 @@
             {% endif %}
         </h6>
 
-        <tabpane-attendees csrf="{{ craft.app.request.csrfToken }}" event="{{ event.id }}"></tabpane-attendees>
+        <tabpane-attendees
+            csrf="{{ craft.app.request.csrfToken }}"
+            event="{{ event.id }}"
+            site="{{ event.siteId }}"
+            active="{{ tab ?? '' }}"
+            csv="{{ csvUrl }}"
+        ></tabpane-attendees>
 
     </div>
 

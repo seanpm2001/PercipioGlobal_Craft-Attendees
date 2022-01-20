@@ -94,8 +94,10 @@ class CsvController extends Controller
         $this->requirePostRequest();
 
         $filename = Craft::$app->getRequest()->getRequiredBodyParam('filename');
+        $file = Craft::$app->getRequest()->getRequiredBodyParam('file');
         $columns = Craft::$app->getRequest()->getRequiredBodyParam('columns');
         $eventId = Craft::$app->getRequest()->getRequiredBodyParam('event');
+        $siteId = Craft::$app->getRequest()->getRequiredBodyParam('site');
         $headers = null;
 
         try {
@@ -125,10 +127,10 @@ class CsvController extends Controller
         if ($headers !== null) {
             switch (VersionHelper::getLeagueCsvVersion()) {
                 case 8:
-                    $this->importCsvApi8($csv, $columns, $headers, $eventId);
+                    $this->importCsvApi8($csv, $columns, $headers, $eventId, $siteId, $file, $filename);
                     break;
                 case 9:
-                    $this->importCsvApi9($csv, $columns, $headers, $eventId);
+                    $this->importCsvApi9($csv, $columns, $headers, $eventId, $siteId, $file, $filename);
                     break;
                 default:
                     Craft::$app->getSession()->setNotice(Craft::t('retour', 'Unknown league/csv package API version'));
@@ -140,6 +142,18 @@ class CsvController extends Controller
         } else {
             Craft::$app->getSession()->setError(Craft::t('retour', 'CSV imports could not be imported.'));
         }
+
+        // Render the template
+        $event = \craft\elements\Entry::find()
+            ->id($eventId)
+            ->siteId($siteId)
+            ->anyStatus()
+            ->one();
+
+        return $this->renderTemplate('craft-attendees/trainings/detail', [
+            'event' => $event,
+            'tab' => 'logs'
+        ]);
     }
 
     /**
@@ -147,14 +161,22 @@ class CsvController extends Controller
      * @param array $columns
      * @param array $headers
      */
-    protected function importCsvApi8(AbstractCsv $csv, array $columns, array $headers, string $eventId)
+    protected function importCsvApi8(AbstractCsv $csv, array $columns, array $headers, string $eventId, string $siteId, string $file, string $filepath)
     {
         $csv->setOffset(1);
         $columns = ArrayHelper::filterEmptyStringsFromArray($columns);
-        $csv->each(function ($row) use ($headers, $columns, $eventId) {
+        $rowCount = 0;
+        $csv->each(function ($row) use ($headers, $columns, $eventId, $siteId, $file, $filepath, $rowCount) {
+
+            $rowCount++;
+
             $config = [
                 'id' => 0,
-                'event' => $eventId
+                'event' => $eventId,
+                'site' => $siteId,
+                'file' => $file,
+                'filepath' => $filepath,
+                'line' => $rowCount
             ];
             $index = 0;
             foreach (self::IMPORT_CSV_FIELDS as $importField) {
@@ -181,20 +203,28 @@ class CsvController extends Controller
      * @param array $headers
      * @throws \League\Csv\Exception
      */
-    protected function importCsvApi9(AbstractCsv $csv, array $columns, array $headers, string $eventId)
+    protected function importCsvApi9(AbstractCsv $csv, array $columns, array $headers, string $eventId, string $siteId, string $file, string $filepath)
     {
         $stmt = (new Statement())
             ->offset(1)
         ;
         $rows = $stmt->process($csv);
         $columns = ArrayHelper::filterEmptyStringsFromArray($columns);
+        $rowCount = 0;
         foreach ($rows as $row) {
+            $rowCount++;
+
             $config = [
                 'id' => 0,
-                'event' => $eventId
+                'event' => $eventId,
+                'site' => $siteId,
+                'file' => $file,
+                'filepath' => $filepath,
+                'line' => $rowCount
             ];
             $index = 0;
             foreach (self::IMPORT_CSV_FIELDS as $importField) {
+
                 if (isset($columns[$index], $headers[$columns[$index]])) {
                     $config[$importField] = empty($row[$headers[$columns[$index]]])
                         ? null
@@ -208,6 +238,8 @@ class CsvController extends Controller
             ]));
 //            Retour::$plugin->redirects->saveRedirect($redirectConfig);
         }
+
+
     }
 
 }

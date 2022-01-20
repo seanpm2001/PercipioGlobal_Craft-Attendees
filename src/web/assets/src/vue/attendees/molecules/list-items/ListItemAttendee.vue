@@ -116,7 +116,7 @@
 
                 </div>
 
-                <form-attendee v-if="edit" :csrf="csrf" :values="attendee" :event="event" @hideForm="handleEdit" @submitForm="submitEdit" :hideAnother="true" />
+                <form-attendee v-if="edit" :csrf="csrf" :values="attendee" :event="event" :site="site" @hideForm="handleEdit" @submitForm="submitEdit" :hideAnother="true" />
                 <popup-delete-attendee :show="showDeletePopup" :csrf="csrf" :attendee="attendee" @hidePopup="handleHidePopup" />
             </div>
 
@@ -148,6 +148,10 @@
                 required: true
             },
             event: {
+                type: String,
+                required: true
+            },
+            site: {
                 type: String,
                 required: true
             }

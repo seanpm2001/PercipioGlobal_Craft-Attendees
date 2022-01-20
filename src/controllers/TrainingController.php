@@ -10,7 +10,6 @@ use Craft;
 use League\Csv\Exception;
 use League\Csv\Reader;
 use percipiolondon\attendees\Attendees;
-use percipiolondon\attendees\elements\Attendee;
 use percipiolondon\attendees\records\Attendee as AttendeeRecord;
 use percipiolondon\attendees\helpers\Attendee as AttendeeHelper;
 use percipiolondon\attendees\records\FollowOnSupport;
@@ -56,14 +55,14 @@ class TrainingController extends Controller
     {
         $limit = $limit === 0 ? "*" : $limit;
 
-        $attendees = Attendee::find()
+        $attendees = AttendeeRecord::find()
             ->where(['eventId' => $eventId])
             ->orderBy('dateCreated DESC')
             ->offset($offset)
             ->limit($limit)
             ->all();
 
-        $count = Attendee::find()
+        $count = AttendeeRecord::find()
             ->where(['eventId' => $eventId])
             ->count();
 
@@ -85,8 +84,8 @@ class TrainingController extends Controller
         $request = Craft::$app->getRequest();
         $attendee = AttendeeHelper::populateAttendeeFromPost($request);
 
-        $success = Craft::$app->getElements()->saveElement($attendee);
-        $savedAttendee = Attendee::find()
+        $success = $attendee->save(true);
+        $savedAttendee = AttendeeRecord::find()
             ->where(['eventId' => $attendee->eventId, 'name' => $attendee->name, 'orgName' => $attendee->orgName, 'email' => $attendee->email])
             ->one();
 
@@ -105,13 +104,13 @@ class TrainingController extends Controller
         $this->requireAcceptsJson();
 
         $attendeeId = Craft::$app->getRequest()->getRequiredBodyParam('attendeeId');
-        $attendee = Attendee::find()->id($attendeeId)->one();
+        $attendee = AttendeeRecord::find()->id($attendeeId)->one();
 
         if(!$attendee){
             throw new HttpException(404, Craft::t('craft-attendees', 'Can not find attendee.'));
         }
 
-        if (!Craft::$app->getElements()->deleteElementById($attendee->id)) {
+        if (!$attendee->delete()) {
             return $this->asJson(['success' => false]);
         }
 

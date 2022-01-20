@@ -7,7 +7,7 @@
             <div class="bg-white px-6 pb-6 rounded-xl mb-10">
                 <div class="relative">
                     <h3 class="text-lg pt-6">Add attendee</h3>
-                    <form-attendee :csrf="csrf" :event="event" @hideForm="hideForm" @saveAnother="setAnotherSave" v-if="showForm" />
+                    <form-attendee :csrf="csrf" :event="event" :site="site" @hideForm="hideForm" @saveAnother="setAnotherSave" v-if="showForm" />
                 </div>
             </div>
         </div>
@@ -30,6 +30,10 @@
                 required: true
             },
             event: {
+                type: String,
+                required: true
+            },
+            site: {
                 type: String,
                 required: true
             }

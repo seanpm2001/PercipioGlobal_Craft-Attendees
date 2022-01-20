@@ -41,8 +41,6 @@
     { label: "Trainings"|t('craft-attendees'), url: url(pluginCpUrl ~ '/trainings') },
 ] %}
 
-{% set csvUrl = view.getAssetManager().getPublishedUrl('@percipiolondon/attendees/assetbundles/trainingscpsection/dist', true) ~ '/assets/demo.csv' %}
-
 {# Content that should appear in the page header#}
 {% block actionButton %}
 {% endblock %}
@@ -74,10 +72,10 @@
             headers="{{ headers|json_encode}}"
             filename="{{ filename }}"
             parent="{{ pluginCpUrl ~ '/' ~ selectedSubnavItem ~ '/' ~ event.id }}"
-            csv="{{ csvUrl }}"
             event="{{ event|json_encode }}"
             filepath="{{ filepath }}"
             csrf="{{ craft.app.request.csrfToken }}"
+            site="{{ event.siteId }}"
         ></list-csv>
 
     </div>

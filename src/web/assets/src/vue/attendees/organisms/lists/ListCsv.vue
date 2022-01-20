@@ -6,10 +6,6 @@
             <div class="heading flex-grow">
                 <label class="text-xl inline-block w-full mb-2">Map fields into the correct data</label>
                 <span>Choose the fields to import into the attendees from the CSV file by dragging them<br/>in the appropriate order. Click on the ✕ to delete an unused field.</span>
-
-                <div class="mt-4 w-full">
-                    <a :href="csv" target="_blank" download class="bg-gray-300 text-gray-800 font-bold py-2 px-3 text-sm rounded-lg cursor-pointer inline-block">Download CSV template</a>
-                </div>
             </div>
 
             <button class="bg-gray-300 text-gray-800 font-bold py-2 px-3 text-sm rounded-lg cursor-pointer" @click="handleCancel">Cancel</button>
@@ -87,7 +83,9 @@
             :csrf="csrf"
             :event="training.id"
             :filepath="filepath"
+            :filename="filename"
             :columns="csvHeaders"
+            :site="site"
             :submitForm="submitForm"
         />
 
@@ -127,15 +125,15 @@
                 type: String,
                 default: ''
             },
-            csv: {
-                type: String,
-                required: true
-            },
             event: {
                 type: String,
                 required: true
             },
             csrf: {
+                type: String,
+                required: true
+            },
+            site: {
                 type: String,
                 required: true
             }
@@ -209,7 +207,6 @@
 
             //handlers
             const handleRemove = (value) => {
-                console.log("map?",value)
                 csvHeaders.value = csvHeaders.value.map(el => el.value === value ? {'id': el.id, 'value': ''} : el)
             }
 
@@ -231,10 +228,6 @@
                 popupId.value = null
             }
 
-            const handleChange = (evt) => {
-                console.log("handle change", evt)
-            }
-
             return {
                 values,
                 csvHeaders,
@@ -247,8 +240,7 @@
                 handleSubmit,
                 handleCancel,
                 handleHidePopup,
-                handleShowInfo,
-                handleChange
+                handleShowInfo
             }
         }
     })

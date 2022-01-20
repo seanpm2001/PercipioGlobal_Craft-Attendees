@@ -4,7 +4,9 @@
         <input type="hidden" name="CRAFT_CSRF_TOKEN" :value="csrf" />
         <input type="hidden" name="action" value="craft-attendees/csv/import-csv-columns">
         <input type="hidden" name="filename" :value="filepath" />
+        <input type="hidden" name="file" :value="filename" />
         <input type="hidden" name="event" :value="event" />
+        <input type="hidden" name="site" :value="site" />
         <template v-for="(column, i) in columns">
             <input
                 type="hidden"
@@ -31,9 +33,17 @@ export default defineComponent({
             type: Number,
             required: true
         },
+        site: {
+            type: String,
+            required: true
+        },
         filepath: {
             type: String,
             required: true
+        },
+        filename: {
+            type: String,
+            required: true,
         },
         columns: {
             type: Object,

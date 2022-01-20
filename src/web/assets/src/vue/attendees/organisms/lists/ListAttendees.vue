@@ -29,7 +29,7 @@
                     attendees.length-1 !== i ? 'border-b border-gray-100 border-solid' : ''
                 ]"
             >
-                <list-item-attendee :event="event" :csrf="csrf" :attendee="attendee"/>
+                <list-item-attendee :event="event" :csrf="csrf" :site="site" :attendee="attendee"/>
             </article>
         </div>
         <svg v-if="loading" class="animate-spin ml-4 mt-5 mb-3 h-6 w-6 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -72,6 +72,10 @@
                 type: String,
                 required: true
             },
+            site: {
+                type: String,
+                required: true
+            }
         },
         setup(props){
             const store = useTrainingsStore()

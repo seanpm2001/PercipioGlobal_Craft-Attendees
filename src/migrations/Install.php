@@ -6,7 +6,6 @@ use Craft;
 use craft\db\Migration;
 use craft\helpers\MigrationHelper;
 use percipiolondon\attendees\db\Table;
-use percipiolondon\attendees\elements\Attendee;
 
 /**
  * Install migration.
@@ -41,8 +40,6 @@ class Install extends Migration
         $this->dropForeignKeys();
         $this->removeTables();
 
-        $this->delete(\craft\db\Table::ELEMENTINDEXSETTINGS, ['type' => [ Attendee::class ]]);
-
         return true;
     }
 
@@ -69,7 +66,7 @@ class Install extends Migration
             $this->createTable(
                 Table::ATTENDEES,
                 [
-                    'id' => $this->integer()->notNull(),
+                    'id' => $this->primaryKey(),
                     'dateCreated' => $this->dateTime()->notNull(),
                     'dateUpdated' => $this->dateTime()->notNull(),
                     'uid' => $this->uid(),
@@ -84,7 +81,7 @@ class Install extends Migration
                     'approved' => $this->boolean()->defaultValue(0),
                     'siteId' => $this->integer()->notNull(),
                     'eventId' => $this->integer()->notNull(),
-                    'PRIMARY KEY(id)',
+                    'identifier' => $this->string(255),
                 ]
             );
         }
@@ -123,6 +120,27 @@ class Install extends Migration
             );
         }
 
+        //logs
+        $tableSchema = Craft::$app->db->schema->getTableSchema(Table::LOGS);
+        if ($tableSchema === null) {
+            $tablesCreated = true;
+            $this->createTable(
+                Table::LOGS,
+                [
+                    'id' => $this->primaryKey(),
+                    'dateCreated' => $this->dateTime()->notNull(),
+                    'dateUpdated' => $this->dateTime()->notNull(),
+                    'message' => $this->string(255)->notNull(),
+                    'eventId' => $this->integer()->notNull(),
+                    'filepath' => $this->string(255)->notNull(),
+                    'filename' => $this->string(255)->notNull(),
+                    'line' => $this->integer()->notNull(),
+                    'attendee' => $this->string(255)->notNull(),
+                    'uid' => $this->uid(),
+                ]
+            );
+        }
+
         return $tablesCreated;
 
     }
@@ -134,7 +152,7 @@ class Install extends Migration
 
     protected function addForeignKeys()
     {
-        $this->addForeignKey(null, Table::ATTENDEES, ['id'], '{{%elements}}', ['id'], 'CASCADE');
+        $this->addForeignKey(null, Table::LOGS, ['eventId'], '{{%entries}}', ['id'], 'CASCADE', 'CASCADE');
         $this->addForeignKey(null, Table::ATTENDEES, ['siteId'], '{{%sites}}', ['id'], 'CASCADE', 'CASCADE');
         $this->addForeignKey(null, Table::ATTENDEES, ['eventId'], '{{%entries}}', ['id'], 'CASCADE', 'CASCADE');
         $this->addForeignKey(null, Table::FOLLOW_ON_SUPPORT, ['optionId'], Table::FOLLOW_ON_SUPPORT_OPTIONS, ['id'], 'CASCADE', 'CASCADE');
@@ -147,6 +165,7 @@ class Install extends Migration
             Table::ATTENDEES,
             Table::FOLLOW_ON_SUPPORT_OPTIONS,
             Table::FOLLOW_ON_SUPPORT,
+            Table::LOGS,
         ];
         foreach ($tables as $table) {
             $this->_dropForeignKeyToAndFromTable($table);
@@ -158,6 +177,7 @@ class Install extends Migration
         $this->dropTableIfExists(Table::ATTENDEES);
         $this->dropTableIfExists(Table::FOLLOW_ON_SUPPORT_OPTIONS);
         $this->dropTableIfExists(Table::FOLLOW_ON_SUPPORT);
+        $this->dropTableIfExists(Table::LOGS);
     }
 
     protected function insertDefaultData()

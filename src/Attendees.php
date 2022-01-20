@@ -14,7 +14,6 @@ use craft\events\RegisterUrlRulesEvent;
 use craft\web\twig\variables\CraftVariable;
 use craft\web\UrlManager;
 use percipiolondon\attendees\behaviors\AttendeeBehavior;
-use percipiolondon\attendees\elements\Attendee as AttendeesElement;
 
 use Craft;
 use craft\base\Plugin;
@@ -127,7 +126,6 @@ class Attendees extends Plugin
 
         $this->_registerCpRoutes();
         $this->_registerCraftVariables();
-        $this->_registerElementTypes();
 
         Craft::info(
             Craft::t(
@@ -217,6 +215,7 @@ class Attendees extends Plugin
             function (RegisterUrlRulesEvent $event) {
                 $event->rules['craft-attendees/trainings/<eventId:\d+>'] = 'craft-attendees/training/detail';
                 $event->rules['craft-attendees/trainings/attendees/<eventId:\d+>/<limit:\d+>/<offset:\d+>'] = 'craft-attendees/training/attendees';
+                $event->rules['craft-attendees/trainings/logs/<eventId:\d+>'] = 'craft-attendees/log/logs';
                 $event->rules['craft-attendees/trainings/fetch-support-options/<eventId:\d+>'] = 'craft-attendees/training/fetch-support-options';
             }
         );
@@ -247,15 +246,12 @@ class Attendees extends Plugin
         );
     }
 
-    private function _registerElementTypes()
+    /**
+     * Clear all the caches!
+     */
+    public function clearAllCaches()
     {
-        Event::on(
-            Elements::class,
-            Elements::EVENT_REGISTER_ELEMENT_TYPES,
-            function (RegisterComponentTypesEvent $event) {
-                $event->types[] = AttendeesElement::class;
-            }
-        );
+//        self::$plugin->attendees->invalidateCaches();
     }
 
 }

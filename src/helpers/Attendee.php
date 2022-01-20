@@ -6,7 +6,7 @@ use yii\web\NotFoundHttpException;
 use yii\web\Request;
 use Craft;
 
-use percipiolondon\attendees\elements\Attendee as AttendeeModel;
+use percipiolondon\attendees\records\Attendee as AttendeeModel;
 
 class Attendee
 {
@@ -38,6 +38,27 @@ class Attendee
         $attendee->newsletter = $request->getBodyParam('newsletter') ?? 0;
         $attendee->approved = $request->getBodyParam('approved') ?? 0;
         $attendee->eventId = $request->getBodyParam('event');
+        $attendee->siteId = $request->getBodyParam('site');
+
+        return $attendee;
+    }
+
+    public static function populateAttendeeFromArray( array $entry, string $identifier): AttendeeModel
+    {
+        $attendee = new AttendeeModel();
+
+        $attendee->orgName = $entry['orgName'] ?? '';
+        $attendee->orgUrn = $entry['orgUrn'] ?? '';
+        $attendee->postCode = $entry['postCode'] ?? '';
+        $attendee->name = $entry['name'] ?? '';
+        $attendee->email = $entry['email'] ?? '';
+        $attendee->jobRole = $entry['jobRole'] ?? '';
+        $attendee->days = $entry['days'] ?? '';
+        $attendee->newsletter = str_contains($entry['newsletter'] ?? 'n', 'y');
+        $attendee->approved = 0;
+        $attendee->eventId = $entry['event'] ?? '';
+        $attendee->siteId = $entry['site'] ?? '';
+        $attendee->identifier = $identifier ?? '';
 
         return $attendee;
     }

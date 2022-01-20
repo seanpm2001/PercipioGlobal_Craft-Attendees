@@ -15,6 +15,7 @@
         <input type="hidden" name="action" value="actions/craft-attendees/training/save">
         <input type="hidden" name="event" :value="event">
         <input type="hidden" name="CRAFT_CSRF_TOKEN" :value="csrf">
+        <input type="hidden" name="site" :value="site">
         <input type="hidden" name="attendeeId" :value="attendeeInput?.id ?? values?.id ?? ''">
 
         <div class="grid grid-cols-3 gap-x-4">
@@ -150,6 +151,10 @@ import {defineComponent, watchEffect, ref, nextTick} from 'vue'
                 required: true
             },
             event: {
+                type: String,
+                required: true
+            },
+            site: {
                 type: String,
                 required: true
             },

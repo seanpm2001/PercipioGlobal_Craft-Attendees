@@ -56,85 +56,91 @@
 {# The content of the CP Section#}
 {% set content %}
 
-    {% paginate events as pageInfo, pageEntries %}
+    {% if not settings.eventSection %}
+        There's no section selected in the settings. Please provide the correct section
+    {% else %}
 
-    <div class="tableview tablepane min-h-screen">
-        <table class="data fullwidth">
-            <thead>
-            <tr>
-                <th scope="col" data-attribute="title" class="orderable" style="width:35%">Training</th>
-                <th scope="col" data-attribute="category" class="orderable">Type</th>
-                <th scope="col" data-attribute="eventDate" class="ordered desc">Event Date</th>
-                <th scope="col" data-attribute="attendees" class="orderable">Attendees</th>
-                <th scope="col" data-attribute="engagement" class="orderable">Engagement</th>
-            </tr>
-            </thead>
-            <tbody>
+        {% paginate events as pageInfo, pageEntries %}
 
-                {% for event in pageEntries %}
+        <div class="tableview tablepane min-h-screen">
+            <table class="data fullwidth">
+                <thead>
+                <tr>
+                    <th scope="col" data-attribute="title" class="orderable" style="width:35%">Training</th>
+                    <th scope="col" data-attribute="category" class="orderable">Type</th>
+                    <th scope="col" data-attribute="eventDate" class="ordered desc">Event Date</th>
+                    <th scope="col" data-attribute="attendees" class="orderable">Attendees</th>
+                    <th scope="col" data-attribute="engagement" class="orderable">Engagement</th>
+                </tr>
+                </thead>
+                <tbody>
 
-                    {% if event.type == 'onlineEvent' %}
-                        {% set eventTimetable = event.eventDatesTimeOnline.inReverse().one() %}
-                    {% else %}
-                        {% set eventTimetable = event.eventDatesTime ? event.eventDatesTime.inReverse().one() : null %}
-                    {% endif %}
+                    {% for event in pageEntries %}
 
-                    {% set eventDate = eventTimetable.startDateTime ?? '' %}
-                    {% if eventDate %}
-                        {% set eventDate = eventTimetable.startDateTime|date('d/n/Y') %}
-                    {% endif %}
+                        {% if event.type == 'onlineEvent' %}
+                            {% set eventTimetable = event.eventDatesTimeOnline.inReverse().one() %}
+                        {% else %}
+                            {% set eventTimetable = event.eventDatesTime ? event.eventDatesTime.inReverse().one() : null %}
+                        {% endif %}
 
-                    {% set dataEngagement = null %}
-                    {% set dataEnganged = 0 %}
-                    {% set dataSustained = 0 %}
-                    {% set dataEmbedded = 0 %}
+                        {% set eventDate = eventTimetable.startDateTime ?? '' %}
+                        {% if eventDate %}
+                            {% set eventDate = eventTimetable.startDateTime|date('d/n/Y') %}
+                        {% endif %}
 
-                    <tr data-id="{{ event.id }}" tabindex="0">
-                        <td data-title="{{event.slug }} " data-titlecell="">
-                            <div class="element small hasstatus"
-                                 data-type="craft\elements\Entry"
-                                 data-id="{{ event.id }}"
-                                 data-status="{{  event.enabled ? 'enabled' : 'disabled' }}"
-                                 data-label="{{ event.title }}"
-                                 data-url="{{ event.url }}"
-                                 title="{{ event.title }}">
-                                <span class="status {{ event.enabled ? 'enabled' : 'disabled' }}"></span>
-                                <div class="label">
-                                    <span class="title">
-                                        <a href="{{ pluginCpUrl ~ '/' ~ selectedSubnavItem ~ '/' ~ event.id }}">{{ event.title }}</a>
-                                    </span>
+                        {% set dataEngagement = null %}
+                        {% set dataEnganged = 0 %}
+                        {% set dataSustained = 0 %}
+                        {% set dataEmbedded = 0 %}
+
+                        <tr data-id="{{ event.id }}" tabindex="0">
+                            <td data-title="{{event.slug }} " data-titlecell="">
+                                <div class="element small hasstatus"
+                                     data-type="craft\elements\Entry"
+                                     data-id="{{ event.id }}"
+                                     data-status="{{  event.enabled ? 'enabled' : 'disabled' }}"
+                                     data-label="{{ event.title }}"
+                                     data-url="{{ event.url }}"
+                                     title="{{ event.title }}">
+                                    <span class="status {{ event.enabled ? 'enabled' : 'disabled' }}"></span>
+                                    <div class="label">
+                                        <span class="title">
+                                            <a href="{{ pluginCpUrl ~ '/' ~ selectedSubnavItem ~ '/' ~ event.id }}">{{ event.title }}</a>
+                                        </span>
+                                    </div>
                                 </div>
-                            </div>
-                        </td>
+                            </td>
 
-                        <td data-titleType>
-                            {% set categoryName = event.eventCategories.one().title ?? null %}
-                            <span>{{- categoryName -}}</span>
-                        </td>
-                        <td data-title="date" data-attr="date">
-                            <span>{{ eventDate }} </span>
-                        </td>
-                        <td data-title="Attendees">
-                            <span>{{ craft.attendees(event.id).count() }} </span>
-                        </td>
-                        <td>
-                            <div class="progress">
-                                <div class="meter bg-red" title="Engaged {{ dataEnganged }}%">
-                                    <span style="width: {{ dataEnganged }}%"></span>
+                            <td data-titleType>
+                                {% set categoryName = event.eventCategories.one().title ?? null %}
+                                <span>{{- categoryName -}}</span>
+                            </td>
+                            <td data-title="date" data-attr="date">
+                                <span>{{ eventDate }} </span>
+                            </td>
+                            <td data-title="Attendees">
+                                <span>{{ craft.attendees(event.id).count() }} </span>
+                            </td>
+                            <td>
+                                <div class="progress">
+                                    <div class="meter bg-red" title="Engaged {{ dataEnganged }}%">
+                                        <span style="width: {{ dataEnganged }}%"></span>
+                                    </div>
+                                    <div class="meter bg-orange" title="Sustained {{ dataSustained }}%">
+                                        <span style="width: {{ dataSustained }}%"></span>
+                                    </div>
+                                    <div class="meter bg-blue" title="Embedded {{ dataEmbedded }}%">
+                                        <span style="width: {{ dataEmbedded }}%"></span>
+                                    </div>
                                 </div>
-                                <div class="meter bg-orange" title="Sustained {{ dataSustained }}%">
-                                    <span style="width: {{ dataSustained }}%"></span>
-                                </div>
-                                <div class="meter bg-blue" title="Embedded {{ dataEmbedded }}%">
-                                    <span style="width: {{ dataEmbedded }}%"></span>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    {% endif %}
 
 {#    {{ dump(craft.attendees()) }}#}
 {% endset %}
@@ -145,29 +151,32 @@
 {% set itemsLabel = "events" %}
 
 {% set footer %}
-    <div class="flex pagination">
-        <a href="{{ pageInfo.prevUrl ?? '#' }}" class="page-link prev-page {{ pageInfo.prevUrl ? '' : 'disabled' }}" title="Previous Page"></a>
-        <a href="{{ pageInfo.nextUrl ?? '#' }}" class="page-link next-page {{ pageInfo.nextUrl ? '' : 'disabled' }}" title="Next Page"></a>
-        <div class="page-info">
-            {% if pageInfo.total %}
-                {% if itemLabel and itemsLabel %}
-                    {{ "{first, number}-{last, number} of {total, number} {total, plural, =1{{item}} other{{items}}}"|t('app', {
-                        first: pageInfo.first,
-                        last: pageInfo.last,
-                        total: pageInfo.total,
-                        item: itemLabel,
-                        items: itemsLabel
-                    }) }}
+
+    {% if settings.eventSection %}
+        <div class="flex pagination">
+            <a href="{{ pageInfo.prevUrl ?? '#' }}" class="page-link prev-page {{ pageInfo.prevUrl ? '' : 'disabled' }}" title="Previous Page"></a>
+            <a href="{{ pageInfo.nextUrl ?? '#' }}" class="page-link next-page {{ pageInfo.nextUrl ? '' : 'disabled' }}" title="Next Page"></a>
+            <div class="page-info">
+                {% if pageInfo.total %}
+                    {% if itemLabel and itemsLabel %}
+                        {{ "{first, number}-{last, number} of {total, number} {total, plural, =1{{item}} other{{items}}}"|t('app', {
+                            first: pageInfo.first,
+                            last: pageInfo.last,
+                            total: pageInfo.total,
+                            item: itemLabel,
+                            items: itemsLabel
+                        }) }}
+                    {% else %}
+                        {{ "{first}-{last} of {total}"|t('app', {
+                            first: pageInfo.first|number,
+                            last: pageInfo.last|number,
+                            total: pageInfo.total|number
+                        }) }}
+                    {% endif %}
                 {% else %}
-                    {{ "{first}-{last} of {total}"|t('app', {
-                        first: pageInfo.first|number,
-                        last: pageInfo.last|number,
-                        total: pageInfo.total|number
-                    }) }}
+                    {{ noResultsLabel ?? 'No results'|t('app') }}
                 {% endif %}
-            {% else %}
-                {{ noResultsLabel ?? 'No results'|t('app') }}
-            {% endif %}
+            </div>
         </div>
-    </div>
+    {% endif %}
 {% endset %}

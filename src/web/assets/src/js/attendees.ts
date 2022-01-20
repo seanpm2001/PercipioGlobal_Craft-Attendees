@@ -5,11 +5,13 @@ import { createApp } from 'vue';
 import { createPinia } from 'pinia'
 
 const main = async () => {
-    const app = createApp({...Attendees});
+    const app = createApp(Attendees);
     app.use(createPinia())
 
     const vm = app.mount('#training');
+
+    return vm
 };
 
-main().then( (root) => {
+main().then( (vm) => {
 });
