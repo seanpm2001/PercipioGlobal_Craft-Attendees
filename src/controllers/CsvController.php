@@ -125,22 +125,12 @@ class CsvController extends Controller
 
         // If we have headers, then we have a file, so parse it
         if ($headers !== null) {
-            switch (VersionHelper::getLeagueCsvVersion()) {
-                case 8:
-                    $this->importCsvApi8($csv, $columns, $headers, $eventId, $siteId, $file, $filename);
-                    break;
-                case 9:
-                    $this->importCsvApi9($csv, $columns, $headers, $eventId, $siteId, $file, $filename);
-                    break;
-                default:
-                    Craft::$app->getSession()->setNotice(Craft::t('retour', 'Unknown league/csv package API version'));
-                    break;
-            }
+            $this->importCsvApi9($csv, $columns, $headers, $eventId, $siteId, $file, $filename);
             @unlink($filename);
             Attendees::$plugin->clearAllCaches();
-            Craft::$app->getSession()->setNotice(Craft::t('retour', 'Imports from CSV started.'));
+            Craft::$app->getSession()->setNotice(Craft::t('craft-attendees', 'Imports from CSV started.'));
         } else {
-            Craft::$app->getSession()->setError(Craft::t('retour', 'CSV imports could not be imported.'));
+            Craft::$app->getSession()->setError(Craft::t('craft-attendees', 'CSV imports could not be imported.'));
         }
 
         // Render the template
@@ -154,49 +144,6 @@ class CsvController extends Controller
             'event' => $event,
             'tab' => 'logs'
         ]);
-    }
-
-    /**
-     * @param AbstractCsv $csv
-     * @param array $columns
-     * @param array $headers
-     */
-    protected function importCsvApi8(AbstractCsv $csv, array $columns, array $headers, string $eventId, string $siteId, string $file, string $filepath)
-    {
-        $csv->setOffset(1);
-        $columns = ArrayHelper::filterEmptyStringsFromArray($columns);
-        $rowCount = 0;
-        $totalRows = count($csv) - 1;
-        $csv->each(function ($row) use ($headers, $columns, $eventId, $siteId, $file, $filepath, $rowCount, $totalRows) {
-
-            $rowCount++;
-
-            $config = [
-                'id' => 0,
-                'event' => $eventId,
-                'site' => $siteId,
-                'file' => $file,
-                'filepath' => $filepath,
-                'line' => $rowCount,
-                'total' => $totalRows
-            ];
-            $index = 0;
-            foreach (self::IMPORT_CSV_FIELDS as $importField) {
-                if (isset($columns[$index], $headers[$columns[$index]])) {
-                    $config[$importField] = empty($row[$headers[$columns[$index]]])
-                        ? null
-                        : $row[$headers[$columns[$index]]];
-                }
-                $index++;
-            }
-
-            Queue::push(new CreateAttendeeJob([
-                'config' => $config
-            ]));
-//            Retour::$plugin->redirects->saveRedirect($redirectConfig);
-
-            return true;
-        });
     }
 
     /**
