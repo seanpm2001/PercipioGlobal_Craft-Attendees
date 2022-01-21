@@ -1,13 +1,13 @@
 {
   "src/js/attendees.ts": {
-    "file": "assets/attendees.bac4ee89.js",
+    "file": "assets/attendees.61e46d64.js",
     "src": "src/js/attendees.ts",
     "isEntry": true,
     "imports": [
       "_vendor.dafd8728.js"
     ],
     "css": [
-      "assets/attendees.21c9c9ba.css"
+      "assets/attendees.19090147.css"
     ]
   },
   "_vendor.dafd8728.js": {

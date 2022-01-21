@@ -99,6 +99,7 @@
 
                     setTimeout(() => {
                         showSuccess.value = false
+                        store.attendeeSuccess = false
                     },3000)
                 }
             })

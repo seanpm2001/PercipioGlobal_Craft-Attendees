@@ -23,16 +23,22 @@
             <div class="box-border p-3 cursor-pointer flex items-center" @click="toggle">
                 {{ attendee.days }}
             </div>
-            <div class="box-border p-3 cursor-pointer" @click="toggle">
-                <span v-if="attendee.approved == 0 || !attendee.approved"
+            <div class="box-border p-3">
+                <!--span v-if="attendee.approved == 0 || !attendee.approved"
                     class="block w-4 h-4 xl:inline-block xl:w-auto xl:h-auto rounded-full text-xs bg-orange-300 text-orange-800 text-bold xl:px-4 xl:py-1"
                 ><span class="opacity-0 pointer-events-none xl:opacity-100">Unverified</span></span>
                 <span v-else
                     class="block w-4 h-4 xl:inline-block xl:w-auto xl:h-auto rounded-full text-xs bg-emerald-400 text-white text-bold xl:px-4 xl:py-1"
-                ><span class="opacity-0 pointer-events-none xl:opacity-100">Verified</span></span>
+                ><span class="opacity-0 pointer-events-none xl:opacity-100">Verified</span></span-->
+                <button @click="handleApprove" v-if="attendee.approved == 0 || !attendee.approved" class="inline-block bg-emerald-300 text-emerald-800 font-bold py-1 px-3 text-sm rounded-lg cursor-pointer">
+                    Verify
+                </button>
+                <button @click="handleDisapprove" v-else class="inline-block bg-orange-300 text-orange-800 font-bold py-1 px-3 text-sm rounded-lg cursor-pointer">
+                    Unverify
+                </button>
             </div>
             <div class="text-right pr-8 box-border">
-                <a v-if="attendee.orgUrn" :href="`https://get-information-schools.service.gov.uk/Establishments/Establishment/Details/${attendee?.orgUrn}`" target="_blank" class="text-blue-800 text-xl">
+                <a v-if="attendee.orgUrn && (attendee.approved == 1 || attendee.approved)" :href="`https://get-information-schools.service.gov.uk/Establishments/Establishment/Details/${attendee?.orgUrn}`" target="_blank" class="text-blue-800 text-xl">
                     ↗
                 </a>
                 <span v-else class="pr-1">-</span>
@@ -121,6 +127,8 @@
             </div>
 
         </div>
+
+        <popup-verify-attendee v-if="showVerifyPopup" :csrf="csrf" :attendee="attendee" :show="showVerifyPopup" @hidePopup="handleHidePopup" />
     </div>
 </template>
 
@@ -130,12 +138,15 @@
     import { storeToRefs } from 'pinia'
     import StatusApproved from '@/vue/attendees/molecules/statusses/StatusApproved.vue';
     import PopupDeleteAttendee from '@/vue/attendees/organisms/popups/PopupDeleteAttendee.vue';
+    import PopupVerifyAttendee from "@/vue/attendees/organisms/popups/PopupVerifyAttendee.vue";
     import FormAttendee from '@/vue/attendees/organisms/forms/FormAttendee.vue';
 
     export default defineComponent({
         components: {
+            PopupVerifyAttendee,
             'form-attendee': FormAttendee,
             'popup-delete-attendee': PopupDeleteAttendee,
+            'popup-verify-attendee': PopupVerifyAttendee,
             'status-approved': StatusApproved
         },
         props: {
@@ -163,6 +174,7 @@
             const { attendeeSuccess, loading } = storeToRefs(store)
             const formSubmitted = ref(false)
             const showDeletePopup = ref(false)
+            const showVerifyPopup = ref(false)
             const jobRoles = ref({
                 'na': 'Not Applicable',
                 'support': 'Support',
@@ -181,6 +193,7 @@
 
             const handleHidePopup = () => {
                 showDeletePopup.value = false
+                showVerifyPopup.value = false
             }
 
             const handleDelete = () => {
@@ -192,14 +205,15 @@
             }
 
             const handleApprove = () => {
-                let approveAttendee = {...props.attendee}
-                approveAttendee.approved = 1
-                approveAttendee.CRAFT_CSRF_TOKEN = props.csrf
-                approveAttendee.event = props.event
-                approveAttendee.attendeeId = props.attendee.id
-                approveAttendee.action = 'actions/craft-attendees/training/save'
-
-                store.submitAttendee(approveAttendee)
+                // let approveAttendee = {...props.attendee}
+                // approveAttendee.approved = 1
+                // approveAttendee.CRAFT_CSRF_TOKEN = props.csrf
+                // approveAttendee.event = props.event
+                // approveAttendee.attendeeId = props.attendee.id
+                // approveAttendee.action = 'actions/craft-attendees/training/save'
+                //
+                // store.submitAttendee(approveAttendee)
+                showVerifyPopup.value = true;
             }
 
             const handleDisapprove = () => {
@@ -225,6 +239,7 @@
                 edit,
                 loading,
                 showDeletePopup,
+                showVerifyPopup,
                 jobRoles,
                 toggle,
                 handleEdit,

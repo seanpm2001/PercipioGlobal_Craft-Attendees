@@ -131,7 +131,7 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, watchEffect, ref, nextTick} from 'vue'
+    import {defineComponent, watchEffect, ref, nextTick} from 'vue'
     import { useTrainingsStore } from '@/store/trainings'
     import { storeToRefs } from 'pinia'
     import InputSwitch from '@/vue/attendees/atoms/inputs/InputSwitch.vue';

@@ -117,17 +117,6 @@
                 }
             })
 
-            // watchEffect(() => {
-            //     if(logsModel.value){
-            //         logs.value = logsModel.value.sort((a,b) => (a.line < b.line))
-            //
-            //         console.log("check");
-            //
-            //         errors.value = ref(logsModel.value.filter(log => log.type === 'error'))
-            //         success.value = ref(logsModel.value.filter(log => log.type === 'success'))
-            //     }
-            // })
-
             return { status, logs, success, errors, expanded, loading, toggle }
         }
     })
