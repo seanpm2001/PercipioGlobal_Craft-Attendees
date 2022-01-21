@@ -21,7 +21,7 @@ class Attendee
         if(!$attendeeId){
             $attendee = new AttendeeModel();
         }else{
-            $attendee = AttendeeModel::find()->id($attendeeId)->one();
+            $attendee = AttendeeModel::findOne(['id' =>$attendeeId ]);
 
             if (!$attendee) {
                 throw new NotFoundHttpException(Craft::t('craft-attendees', 'No attendee with the ID “{id}”', ['id' => $attendeeId]));
@@ -38,7 +38,7 @@ class Attendee
         $attendee->newsletter = $request->getBodyParam('newsletter') ?? 0;
         $attendee->approved = $request->getBodyParam('approved') ?? 0;
         $attendee->eventId = $request->getBodyParam('event');
-        $attendee->siteId = $request->getBodyParam('site');
+        $attendee->siteId = $request->getBodyParam('siteId');
 
         return $attendee;
     }

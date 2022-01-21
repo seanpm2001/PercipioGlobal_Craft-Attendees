@@ -104,7 +104,7 @@ class TrainingController extends Controller
         $this->requireAcceptsJson();
 
         $attendeeId = Craft::$app->getRequest()->getRequiredBodyParam('attendeeId');
-        $attendee = AttendeeRecord::find()->id($attendeeId)->one();
+        $attendee = AttendeeRecord::findOne(['id' =>$attendeeId ]);
 
         if(!$attendee){
             throw new HttpException(404, Craft::t('craft-attendees', 'Can not find attendee.'));
