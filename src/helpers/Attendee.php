@@ -2,6 +2,7 @@
 
 namespace percipiolondon\attendees\helpers;
 
+use percipiolondon\attendees\Attendees;
 use yii\web\NotFoundHttpException;
 use yii\web\Request;
 use Craft;
@@ -47,15 +48,26 @@ class Attendee
     {
         $attendee = new AttendeeModel();
 
-        $attendee->orgName = $entry['orgName'] ?? '';
+        if($entry['orgUrn']){
+            $result = Attendees::getInstance()->metaseed->school($entry['orgUrn']);
+
+            if($result->suggestions[0]->data ?? null){
+                $attendee->orgName = $result->suggestions[0]->value ?? $entry['name'] ?? '';
+                $attendee->postCode = $result->suggestions[0]->data->postcode ?? $entry['postCode'] ?? '';
+                $attendee->approved = 1;
+            }else{
+                $attendee->orgName = $entry['name'] ?? '';
+                $attendee->postCode = $entry['postCode'] ?? '';
+                $attendee->approved = 0;
+            }
+        }
+
         $attendee->orgUrn = $entry['orgUrn'] ?? '';
-        $attendee->postCode = $entry['postCode'] ?? '';
         $attendee->name = $entry['name'] ?? '';
         $attendee->email = $entry['email'] ?? '';
         $attendee->jobRole = $entry['jobRole'] ?? '';
         $attendee->days = $entry['days'] ?? '';
         $attendee->newsletter = str_contains($entry['newsletter'] ?? 'n', 'y');
-        $attendee->approved = 0;
         $attendee->eventId = $entry['event'] ?? '';
         $attendee->siteId = $entry['site'] ?? '';
         $attendee->identifier = $identifier ?? '';

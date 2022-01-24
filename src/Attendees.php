@@ -26,6 +26,7 @@ use nystudio107\pluginvite\services\VitePluginService;
 use percipiolondon\attendees\models\Settings;
 use percipiolondon\attendees\assetbundles\craftattendees\AttendeesAsset;
 use percipiolondon\attendees\variables\AttendeesVariable;
+use percipiolondon\attendees\services\Metaseed;
 use yii\base\Event;
 
 /**
@@ -126,6 +127,7 @@ class Attendees extends Plugin
 
         $this->_registerCpRoutes();
         $this->_registerCraftVariables();
+        $this->_registerServices();
 
         Craft::info(
             Craft::t(
@@ -219,6 +221,14 @@ class Attendees extends Plugin
                 $event->rules['craft-attendees/trainings/fetch-support-options/<eventId:\d+>'] = 'craft-attendees/training/fetch-support-options';
             }
         );
+    }
+
+    private function _registerServices()
+    {
+        $this->setComponents([
+            'metaseed' => Metaseed::class
+        ]);
+
     }
 
     private function _registerCraftVariables()
