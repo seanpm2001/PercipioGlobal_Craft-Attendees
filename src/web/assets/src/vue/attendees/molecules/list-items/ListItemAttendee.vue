@@ -35,9 +35,12 @@
                 <button @click="handleApprove" v-if="attendee.approved == 0 || !attendee.approved" class="inline-block font-bold bg-orange-300 text-orange-800 py-1 px-3 text-sm rounded-lg cursor-pointer">
                     Verify
                 </button>
-                <button @click="handleDisapprove" v-else class="inline-block bg-emerald-300 text-emerald-800 font-bold py-1 px-3 text-sm rounded-lg cursor-pointer">
+                <span v-else
+                      class="block w-4 h-4 xl:inline-block xl:w-auto xl:h-auto rounded-full text-xs bg-emerald-400 text-white text-bold xl:px-4 xl:py-1"
+                ><span class="opacity-0 pointer-events-none xl:opacity-100">Verified</span></span>
+                <!--button @click="handleDisapprove" v-else class="inline-block bg-emerald-300 text-emerald-800 font-bold py-1 px-3 text-sm rounded-lg cursor-pointer">
                     Unverify
-                </button>
+                </button-->
             </div>
             <div class="text-right pr-8 box-border">
                 <a v-if="attendee.orgUrn && (attendee.approved == 1 || attendee.approved)" :href="`https://get-information-schools.service.gov.uk/Establishments/Establishment/Details/${attendee?.orgUrn}`" target="_blank" class="text-blue-800 text-xl">
