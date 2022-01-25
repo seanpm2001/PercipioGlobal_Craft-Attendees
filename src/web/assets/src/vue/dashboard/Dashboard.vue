@@ -4,11 +4,13 @@
     import { defineComponent } from 'vue';
     import StatsFigures from '@/vue/dashboard/organisms/stats/StatsFigures.vue';
     import StatsLevels from '@/vue/dashboard/organisms/stats/StatsLevels.vue';
+    import StatsSupport from '@/vue/dashboard/organisms/stats/StatsSupport.vue';
 
     export default defineComponent({
         components: {
             'stats-figures': StatsFigures,
             'stats-levels': StatsLevels,
+            'stats-support': StatsSupport,
         }
     });
 

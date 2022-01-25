@@ -1,5 +1,5 @@
 <template>
-    <article class="bg-white p-4 rounded-xl">
+    <article class="bg-white p-4 rounded-xl mb-4">
         <p class="font-bold text-lg">Engagement level</p>
         <apexchart
             height="200"
