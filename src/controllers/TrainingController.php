@@ -51,13 +51,20 @@ class TrainingController extends Controller
         ]);
     }
 
-    public function actionAttendees(int $eventId, int $limit = 0, int $offset = 0)
+    public function actionAttendees(int $eventId, string $order = 'date', int $limit = 0, int $offset = 0)
     {
         $limit = $limit === 0 ? "*" : $limit;
+        $orberByOptions = array(
+            'date' => 'dateCreated DESC',
+            'org' => 'orgName ASC',
+            'attendee' => 'name ASC',
+            'approved' => 'approved DESC'
+        );
+        $orderBy = $orberByOptions[$order] ?? 'dateCreated DESC';
 
         $attendees = AttendeeRecord::find()
             ->where(['eventId' => $eventId])
-            ->orderBy('dateCreated DESC')
+            ->orderBy($orderBy)
             ->offset($offset)
             ->limit($limit)
             ->all();
@@ -103,18 +110,24 @@ class TrainingController extends Controller
         $this->requireLogin();
         $this->requireAcceptsJson();
 
-        $attendeeId = Craft::$app->getRequest()->getRequiredBodyParam('attendeeId');
-        $attendee = AttendeeRecord::findOne(['id' =>$attendeeId ]);
+//        $attendeeId = Craft::$app->getRequest()->getRequiredBodyParam('attendeeId');
+//        $attendee = AttendeeRecord::findOne(['id' =>$attendeeId ]);
 
-        if(!$attendee){
-            throw new HttpException(404, Craft::t('craft-attendees', 'Can not find attendee.'));
+        $attendees = Craft::$app->getRequest()->getRequiredBodyParam('attendees');
+
+        foreach($attendees as $id){
+            $attendee = AttendeeRecord::findOne(['id' =>$id ]);
+
+            if(!$attendee){
+                throw new HttpException(404, Craft::t('craft-attendees', 'Can not find attendee.'));
+            }
+
+            if (!$attendee->delete()) {
+                return $this->asJson(['success' => false]);
+            }
         }
 
-        if (!$attendee->delete()) {
-            return $this->asJson(['success' => false]);
-        }
-
-        return $this->asJson(['success' => true, 'attendee' => $attendee]);
+        return $this->asJson(['success' => true, 'attendees' => $attendees]);
     }
 
     public function actionSaveSupportOptions()

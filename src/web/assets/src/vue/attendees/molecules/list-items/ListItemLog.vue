@@ -61,8 +61,8 @@
                 </div>
             </div>
 
-            <template v-for="line in logs">
-                <div v-if="line.type === 'error'" class="w-full grid grid-cols-9 py-2 border-b border-solid border-gray-100" v-for="errorLine in JSON.parse(line.message)">
+            <template v-for="line in logs" :key="`${line.line}.${filename}`">
+                <div v-if="line.type === 'error'" class="w-full grid grid-cols-9 py-2 border-b border-solid border-gray-100" v-for="errorLine in JSON.parse(line.message)" :key="`${line.line}.${filename}.${line.line}`">
                     <div>{{ line.line }}</div>
                     <div class="col-span-2">{{ line.attendee }}</div>
                     <div class="col-span-4">{{ errorLine[0] }}</div>

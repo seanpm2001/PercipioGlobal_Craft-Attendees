@@ -38,6 +38,7 @@ class Attendee
         $attendee->days = $request->getBodyParam('days');
         $attendee->newsletter = $request->getBodyParam('newsletter') ?? 0;
         $attendee->approved = $request->getBodyParam('approved') ?? 0;
+        $attendee->priority = $request->getBodyParam('priority') ?? 0;
         $attendee->eventId = $request->getBodyParam('event');
         $attendee->siteId = $request->getBodyParam('siteId');
 
@@ -54,10 +55,12 @@ class Attendee
             if($result->suggestions[0]->data ?? null){
                 $attendee->orgName = $result->suggestions[0]->value ?? $entry['name'] ?? '';
                 $attendee->postCode = $result->suggestions[0]->data->postcode ?? $entry['postCode'] ?? '';
+                $attendee->priority = $result->suggestions[0]->data->priority ?? $entry['priority'] ?? 0;
                 $attendee->approved = 1;
             }else{
                 $attendee->orgName = $entry['name'] ?? '';
                 $attendee->postCode = $entry['postCode'] ?? '';
+                $attendee->priority = $entry['priority'] ?? 0;
                 $attendee->approved = 0;
             }
         }

@@ -1,6 +1,7 @@
 <template>
 
     <input type="hidden" name="orgUrn" :value="urn ?? ''">
+    <input type="hidden" name="priority" :value="priority ?? 0">
 
     <label class="block mb-6">
         <span class="text-xs font-bold text-gray-400 block mb-1">Saved school or organisation</span>
@@ -29,7 +30,7 @@
             <li
                 v-if="!loadingApi"
                 v-for="(option, i) in schools"
-                :key="option?.data?.urn"
+                :key="option?.data?.urn ?? i"
                 role="option"
             >
                 <span
@@ -135,6 +136,7 @@ export default defineComponent({
         const school = ref(attendeeInput.value?.orgName ?? props.values?.orgName ?? '')
         const urn = ref(attendeeInput.value?.orgUrn ?? props.values?.orgUrn ?? '')
         const postcode = ref(attendeeInput.value?.postCode ?? props.values?.postCode ?? '')
+        const priority = ref(attendeeInput.value?.priority ?? props.values?.priority ?? 0)
         const timer = ref(null)
         const clearResults = ref(true)
 
@@ -148,16 +150,18 @@ export default defineComponent({
                 school.value = evt.currentTarget?.dataset?.name
                 urn.value = evt.currentTarget?.dataset?.urn
                 postcode.value = evt.currentTarget?.dataset?.postcode
+                priority.value = evt.currentTarget?.dataset?.priority
 
-                emit('schoolSelect', school.value, urn.value, postcode.value)
+                emit('schoolSelect', school.value, urn.value, postcode.value, priority.value)
             }
 
         }
 
         const handleClear = () => {
             school.value = ""
-            urn.value = ""
+            urn.value = null
             postcode.value = ""
+            priority.value = 0
 
             emit('schoolSelect', null, null, null)
             // school.value = null
@@ -205,6 +209,7 @@ export default defineComponent({
             attendeeFormErrors,
             school,
             schools,
+            priority,
             urn,
             uniqueId,
             postcode,

@@ -32,7 +32,7 @@
                 type: Number,
             },
            urn: {
-                type: String,
+                type: Number,
                 default: ''
            },
            disabled: {

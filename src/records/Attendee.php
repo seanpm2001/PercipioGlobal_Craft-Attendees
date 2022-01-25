@@ -18,6 +18,7 @@ use yii\validators\Validator;
  * @property string $orgName;
  * @property string $orgUrn;
  * @property string $postCode;
+ * @property string $priority;
  * @property string $eventId;
  * @property string $approved;
  * @property string $identifier;

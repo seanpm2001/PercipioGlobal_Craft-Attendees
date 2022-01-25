@@ -14,7 +14,8 @@ export const useTrainingsStore = defineStore('trainings', {
         loading: false,
         loadingApi: false,
         schools: null,
-        followOnSupportOptions: null
+        followOnSupportOptions: null,
+        order: 'date'
     }),
     actions: {
         fetchOptions(event) {
@@ -64,18 +65,22 @@ export const useTrainingsStore = defineStore('trainings', {
                 }
             }
         },
-        deleteAttendee(attendee) {
+        deleteAttendees(attendees) {
             const self = this
             this.loading = true
 
             axios({
                 method: 'post',
                 url: `${ENDPOINT}/actions/craft-attendees/training/delete`,
-                data: attendee
+                data: attendees
             })
             .then(function (response) {
                 self.loading = false
-                self.attendees = self.attendees.filter((at) => at.id != attendee.attendeeId)
+
+                attendees.attendees.forEach((attendee) => {
+                    self.attendees = self.attendees.filter((at) => at.id != attendee)
+                })
+
             });
         },
         submitAttendee(formValues) {
@@ -136,13 +141,18 @@ export const useTrainingsStore = defineStore('trainings', {
             });
 
         },
-        fetchAttendees(event, limit, offset){
+        fetchAttendees(event, order, limit, offset, init = false){
             const self = this;
             this.loading = true;
+            this.order = order;
+
+            if(init){
+                this.attendees = []
+            }
 
             axios({
                 method: 'get',
-                url: `${ENDPOINT}/craft-attendees/trainings/attendees/${event}/${limit}/${offset}`,
+                url: `${ENDPOINT}/craft-attendees/trainings/attendees/${event}/${order}/${limit}/${offset}`,
             })
             .then(function (response) {
                 self.loading = false

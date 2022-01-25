@@ -218,7 +218,7 @@
 
             const handleSchoolSelect = (schoolVal, urnVal, postcodeVal) => {
                 urn.value = urnVal
-                approved.value = urn.value?.length > 0 ? 1 : 0
+                approved.value = urnVal ? 1 : 0
             }
 
             const handleSchoolInput = (input) => {

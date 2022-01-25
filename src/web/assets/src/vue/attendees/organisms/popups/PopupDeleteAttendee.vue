@@ -5,14 +5,14 @@
     ]">
         <div class="max-h-screen text-center overflow-auto fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-80">
             <div class="bg-white p-6 rounded-xl mb-10">
-                <h3 class="text-lg">Delete this attendee</h3>
+                <h3 class="text-lg">Delete <span v-if="attendees.length < 2">attendee</span><span v-else>{{attendees.length }} attendees</span></h3>
 
                 <div class="flex justify-center">
                     <button @click="handleCancel" class="block bg-gray-300 text-gray-800 font-bold mt-2 py-2 px-3 text-sm rounded-lg cursor-pointer">
                         Cancel
                     </button>
                     <button @click="handleDelete" class="block bg-red-300 text-red-800 font-bold mt-2 py-2 px-3 text-sm rounded-lg cursor-pointer">
-                        Yes, delete this attendee
+                        Yes, delete <span v-if="attendees.length < 2">attendee</span><span v-else>attendees</span>
                     </button>
                 </div>
             </div>
@@ -35,8 +35,8 @@
                 type: String,
                 required: true
             },
-            attendee: {
-                type: Object,
+            attendees: {
+                type: Array,
                 required: true
             },
             show: {
@@ -49,16 +49,16 @@
             const { showForm, attendeeSuccess } = storeToRefs(store)
 
             const handleDelete = () => {
-                let deleteAttendee = {}
-                deleteAttendee.CRAFT_CSRF_TOKEN = props.csrf
-                deleteAttendee.action = 'actions/craft-attendees/training/delete'
-                deleteAttendee.attendeeId = props.attendee.id
-                store.deleteAttendee(deleteAttendee)
-                emit('hidePopup')
+                let deleteAttendees = {}
+                deleteAttendees.CRAFT_CSRF_TOKEN = props.csrf
+                deleteAttendees.action = 'actions/craft-attendees/training/delete'
+                deleteAttendees.attendees = props.attendees
+                store.deleteAttendees(deleteAttendees)
+                emit('hidePopup', 'delete')
             }
 
             const handleCancel = () => {
-                emit('hidePopup')
+                emit('hidePopup', 'cancel')
             }
 
             return { showForm, handleCancel, handleDelete };

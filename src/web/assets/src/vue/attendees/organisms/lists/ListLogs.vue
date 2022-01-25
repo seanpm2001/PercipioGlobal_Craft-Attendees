@@ -26,6 +26,7 @@
         <div v-if="Object.keys(groupedLogs).length > 0" class="w-ful">
             <article
                 v-for="(log, file, i) in groupedLogs"
+                :key="i"
                 :class="[
                     Object.keys(groupedLogs).length-1 !== i ? 'border-b border-gray-100 border-solid' : ''
                 ]"

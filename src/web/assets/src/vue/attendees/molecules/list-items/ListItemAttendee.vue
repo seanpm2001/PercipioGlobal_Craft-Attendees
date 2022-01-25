@@ -11,7 +11,9 @@
 
         <div class="grid grid-cols-9 xl:grid-cols-11 w-full items-center">
             <div class="col-span-3 p-3 flex flex-nowrap items-center font-bold cursor-pointer">
-                <span class="inline-flex mb-0"><input type="checkbox"/></span>
+                <span class="inline-flex mb-0">
+                    <input type="checkbox" @change="handleCheckbox" v-model="checkedState"/>
+                </span>
                 <span class="inline-flex pl-2 flex-grow" @click="toggle">{{ attendee.orgName }}</span>
             </div>
             <div class="col-span-2 box-border p-3 cursor-pointer flex items-center" @click="toggle">
@@ -101,7 +103,7 @@
                             <span class="text-base mt-1 block">{{ jobRoles[attendee.jobRole] ?? '-' }}</span>
                         </div>
                         <div class="mb-6">
-                            <span class="text-xs font-bold text-gray-400 block">Days attended</span>
+                            <span class="text-xs font-bold text-gray-400 block">Modules attended</span>
                             <span class="text-base mt-1 block">{{ attendee.days }}</span>
                         </div>
                     </div>
@@ -123,12 +125,12 @@
                 </div>
 
                 <form-attendee v-if="edit" :csrf="csrf" :values="attendee" :event="event" :site="site" @hideForm="handleEdit" @submitForm="submitEdit" :hideAnother="true" />
-                <popup-delete-attendee :show="showDeletePopup" :csrf="csrf" :attendee="attendee" @hidePopup="handleHidePopup" />
+                <popup-delete-attendee :show="showDeletePopup" :csrf="csrf" :attendees="[attendee.id]" @hidePopup="handleHidePopup" />
             </div>
 
         </div>
 
-        <popup-verify-attendee v-if="showVerifyPopup" :csrf="csrf" :attendee="attendee" :show="showVerifyPopup" @hidePopup="handleHidePopup" />
+        <popup-verify-attendee v-if="showVerifyPopup" :csrf="csrf" :attendees="attendee" :show="showVerifyPopup" @hidePopup="handleHidePopup" />
     </div>
 </template>
 
@@ -165,9 +167,13 @@
             site: {
                 type: String,
                 required: true
-            }
+            },
+            checked: {
+                type: Boolean,
+                default: false
+            },
         },
-        setup(props){
+        setup(props, {emit}){
             const expanded = ref(false)
             const edit = ref(false)
             const store = useTrainingsStore();
@@ -175,6 +181,7 @@
             const formSubmitted = ref(false)
             const showDeletePopup = ref(false)
             const showVerifyPopup = ref(false)
+            const checkedState = ref(props.checked)
             const jobRoles = ref({
                 'na': 'Not Applicable',
                 'support': 'Support',
@@ -227,6 +234,10 @@
                 store.submitAttendee(disapproveAttendee)
             }
 
+            const handleCheckbox = () => {
+                emit('tick', props.attendee.id)
+            }
+
             watchEffect(() => {
                 if(formSubmitted.value && attendeeSuccess.value){
                     edit.value = false
@@ -234,9 +245,15 @@
                 }
             })
 
+            watch(() => props.checked, (checked, prevChecked) => {
+                checkedState.value = checked
+                emit('tick', props.attendee.id)
+            })
+
             return {
                 expanded,
                 edit,
+                checkedState,
                 loading,
                 showDeletePopup,
                 showVerifyPopup,
@@ -247,7 +264,8 @@
                 handleApprove,
                 handleDisapprove,
                 handleDelete,
-                handleHidePopup
+                handleHidePopup,
+                handleCheckbox,
             }
 
         }

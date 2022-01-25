@@ -3,6 +3,7 @@
     <div class="bg-white w-full p-6 rounded-xl box-border">
         <div
             v-for="option in followOnSupportOptions"
+            :key="option.value"
             class="block flex items-center"
         >
             <input-switch name="option" :checked="getChecked(option)" :label="option.name" :value="option.value" @changed="handleChange(option.value)" />

@@ -178,7 +178,7 @@
                 },
                 {
                     id: 7,
-                    name: 'Attending Days',
+                    name: 'Attending Modules',
                     required: true,
                     info: 'Number between 1 - 10'
                 },
@@ -187,7 +187,7 @@
                     name: 'Newsletter',
                     required: false,
                     info: 'Yes | No'
-                },
+                }
             ])
             const csvHeaders = ref(JSON.parse(props.headers))
             const spacers = ref(values.value.length > csvHeaders.value.length ? values.value.length - csvHeaders.value.length : 0 )

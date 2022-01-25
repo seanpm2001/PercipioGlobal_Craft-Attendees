@@ -41,16 +41,14 @@
     <!-- ATTENDEE  -->
     <section v-if="activePane === 'attendee'" class="bg-gray-100 p-6 pt-10 -mt-2.5 -ml-6 relative">
 
-        <div class="w-full flex field">
+        <div class="w-full flex mb-10">
             <div class="heading flex-grow">
-                <label class="text-xl inline-block w-full mb-2">Attendees</label>
-                <span>Use the action buttons to either bulk upload from a CSV file or manually manage attendee data.</span>
-
-                <div class="mt-4 w-full">
-                    <a :href="csv" target="_blank" download class="bg-gray-300 text-gray-800 font-bold py-2 px-3 text-sm rounded-lg cursor-pointer inline-block">Download CSV template</a>
-                </div>
+                <label class="text-xl font-bold inline-block w-full mb-2">Attendees</label>
+                <span>Use the action buttons to either bulk upload from a CSV file or manually manage attendee data.<br/><a :href="csv" target="_blank" download class="text-blue-600 cursor-pointer inline-block">Download CSV template</a> to make the field mapping easier.</span>
             </div>
             <!--a href="#" class="bg-gray-300 text-gray-800 font-bold py-2 px-3 text-sm rounded-lg">Import</a-->
+
+
             <form-import :csrf="csrf" :event="event" :site="site" />
             <button-add label="Add"></button-add>
         </div>
@@ -66,9 +64,9 @@
     <!-- FOLLOW ON SUPPORT  -->
     <section v-if="activePane === 'support'" class="bg-gray-100 p-6 pt-10 -mt-2.5 -ml-6 relative">
 
-        <div class="w-full flex field">
+        <div class="w-full flex mb-10">
             <div class="heading flex-grow">
-                <label class="text-xl inline-block w-full mb-2">Follow on support</label>
+                <label class="text-xl font-bold  inline-block w-full mb-2">Follow on support</label>
                 <span>Indicate the relevant follow on support offered to attendees of the event.</span>
             </div>
         </div>
@@ -83,9 +81,9 @@
     <!-- LOGS  -->
     <section v-if="activePane === 'logs'" class="bg-gray-100 p-6 pt-10 -mt-2.5 -ml-6 relative">
 
-        <div class="w-full flex field">
+        <div class="w-full flex mb-10">
             <div class="heading flex-grow">
-                <label class="text-xl inline-block w-full mb-2">Import logs</label>
+                <label class="text-xl font-bold  inline-block w-full mb-2">Import logs</label>
                 <span>All the logs for this event that occurred after importing a CSV will be shown bellow. They will be saved for one week.</span>
             </div>
         </div>
@@ -101,6 +99,7 @@
 <script lang="ts">
     import { defineComponent, ref } from 'vue'
     import ButtonAdd from '@/vue/attendees/atoms/buttons/ButtonAdd.vue'
+    import InputActions from '@/vue/attendees/atoms/inputs/InputActions.vue';
     import ListAttendees from '@/vue/attendees/organisms/lists/ListAttendees.vue'
     import ListLogs from '@/vue/attendees/organisms/lists/ListLogs.vue'
     import ListSupport from '@/vue/attendees/organisms/lists/ListSupport.vue'

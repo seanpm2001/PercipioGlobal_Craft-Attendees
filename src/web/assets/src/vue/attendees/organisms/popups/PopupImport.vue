@@ -84,7 +84,7 @@
                         <h3 class="text-lg">Newsletter</h3>
                     </div>
 
-                    <p>Input expected: yes/no or y/n or true/false (Not Required)</p>
+                    <p>Input expected: yes/no or y/n (Not Required)</p>
 
                     <p>This field informs us if the user wishes their email address be signed up to your Research School's mailing list.<br/><br/>If the cell in the corresponding CSV row does not match any of the expected inputs, no will be automatically assumed. </p>
                 </div>

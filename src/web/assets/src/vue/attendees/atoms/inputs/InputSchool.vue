@@ -1,6 +1,7 @@
 <template>
 
     <input type="hidden" name="orgUrn" :value="urn ?? ''">
+    <input type="hidden" name="priority" :value="priority ?? 0">
 
     <label class="block mb-6">
         <span class="text-xs font-bold text-gray-400 block mb-1">School / Organisation <span class="text-blue-500">*</span> </span>
@@ -48,6 +49,7 @@
                         :data-postcode="school?.data?.postcode"
                         :data-urn="school?.data?.urn"
                         :data-name="school?.value"
+                        :data-priority="school?.data?.priority"
                         :class="[
                          'p-2 pointer-all hover:bg-blue-600 hover:text-white focus:bg-blue-600 block group',
                          currentSelectionIndex === i ? 'bg-blue-600 text-white' : ''
@@ -118,6 +120,7 @@ export default defineComponent({
         const school = ref(attendeeInput.value?.orgName ?? props.values?.orgName ?? '')
         const urn = ref(attendeeInput.value?.orgUrn ?? props.values?.orgUrn ?? '')
         const postcode = ref(attendeeInput.value?.postCode ?? props.values?.postCode ?? '')
+        const priority = ref(attendeeInput.value?.priority ?? props.values?.priority ?? 0)
         const timer = ref(null)
         const showDropdown = ref(false)
         const currentSelectionIndex = ref(0)
@@ -125,12 +128,13 @@ export default defineComponent({
 
         const handleSchoolSelect = evt => {
             school.value = evt.currentTarget?.dataset?.name
-            urn.value = evt.currentTarget?.dataset?.urn
+            urn.value = parseInt(evt.currentTarget?.dataset?.urn)
             postcode.value = evt.currentTarget?.dataset?.postcode
+            priority.value = parseInt(evt.currentTarget?.dataset?.priority)
 
             clearResults.value = false
 
-            emit('schoolSelect', school.value, urn.value, postcode.value)
+            emit('schoolSelect', school.value, urn.value, postcode.value, priority.value)
 
             showDropdown.value = false
             store.clearSchools()
@@ -178,6 +182,7 @@ export default defineComponent({
                         name: schools.value[currentSelectionIndex.value]?.value,
                         urn: schools.value[currentSelectionIndex.value]?.data?.urn,
                         postcode: schools.value[currentSelectionIndex.value]?.data?.postcode,
+                        priority: schools.value[currentSelectionIndex.value]?.data?.priority,
                     }
                 }
             }
@@ -207,8 +212,9 @@ export default defineComponent({
         const resetInput = () => {
             urn.value = null
             postcode.value = null
+            priority.value = null
 
-            emit('schoolSelect', school.value, urn.value, postcode.value)
+            emit('schoolSelect', school.value, urn.value, postcode.value, priority.value)
 
             showDropdown.value = false
             store.clearSchools()
@@ -221,6 +227,7 @@ export default defineComponent({
             school,
             schools,
             urn,
+            priority,
             uniqueId,
             postcode,
             showDropdown,
