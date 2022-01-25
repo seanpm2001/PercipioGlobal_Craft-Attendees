@@ -13,8 +13,14 @@
  */
 #}
 
-{% extends "_layouts/cp" %}
+{% extends "craft-attendees/_layouts/_cp" %}
 {% import "_includes/forms" as forms %}
+
+{% set scriptTagOptions = {
+    'depends': [
+        'percipiolondon\\attendees\\assetbundles\\craftattendees\\AttendeesAsset'
+    ],
+} %}
 
 {%- set permittedSites = [] %}
 
@@ -40,11 +46,25 @@
     { label: "Trainings"|t('craft-attendees'), url: url(pluginCpUrl ~ '/trainings') },
 ] %}
 
+{% set searchQuery = craft.app.request.getParam('q') ?? '' %}
+{% set orderQuery = craft.app.request.getParam('order') ?? 'desc' %}
+
 {% set events = craft.entries.section(settings.eventSection)
+    .search(searchQuery)
     .site(selectedSite)
     .anyStatus()
     .limit(20)
 %}
+
+{% block toolbar %}
+    <div class="flex-grow texticon search icon clearable">
+        <form class="fullwidth flex" action="{{ url(pluginCpUrl ~ '/trainings') }}">
+            <input type="search" name="q" aria-label="Search" placeholder="Search" class="text fullwidth">
+            <input type="hidden" name="site" value="{{ selectedSite }}" />
+            <button type="submit" class="btn submit icon search">Search</button>
+        </form>
+    </div>
+{% endblock %}
 
 {# Content that should appear in the page header#}
 {% block actionButton %}
@@ -62,15 +82,18 @@
 
         {% paginate events as pageInfo, pageEntries %}
 
-        <div class="tableview tablepane min-h-screen">
+        <div class="tableview tablepane">
             <table class="data fullwidth">
                 <thead>
                 <tr>
-                    <th scope="col" data-attribute="title" class="orderable" style="width:35%">Training</th>
-                    <th scope="col" data-attribute="category" class="orderable">Type</th>
-                    <th scope="col" data-attribute="eventDate" class="ordered desc">Event Date</th>
-                    <th scope="col" data-attribute="attendees" class="orderable">Attendees</th>
-                    <th scope="col" data-attribute="engagement" class="orderable">Engagement</th>
+                    <th scope="col" data-attribute="title" style="width:35%">Training</th>
+                    <th scope="col" data-attribute="category">Type</th>
+                    <th scope="col" data-attribute="eventDate" class="relative">
+                        Event Date
+{#                        <a href="{{ url(pluginCpUrl ~ '/trainings') }}{{ craft.app.request.queryString|length > 0 ? '?' ~ craft.app.request.queryString ~ '&order=desc' : '?order=desc' }}" class="block absolute left-0 top-0 w-full h-full z-10"></a>#}
+                    </th>
+                    <th scope="col" data-attribute="attendees">Attendees</th>
+                    <th scope="col" data-attribute="engagement">Engagement</th> <!--  class="orderable" -->
                 </tr>
                 </thead>
                 <tbody>
@@ -142,7 +165,7 @@
 
     {% endif %}
 
-{#    {{ dump(craft.attendees()) }}#}
+    {{ craft.viteattendees.register('/src/js/trainings.ts', false, scriptTagOptions) }}
 {% endset %}
 
 {% set prevLabel = prevLabel ?? 'Previous Page'|t('app') %}

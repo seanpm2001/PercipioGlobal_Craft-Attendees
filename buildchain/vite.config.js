@@ -13,6 +13,7 @@ export default ({ command }) => ({
         rollupOptions: {
             input: {
                 attendees: '/src/js/attendees.ts',
+                trainings: '/src/js/trainings.ts',
             },
             output: {
                 sourcemap: true
