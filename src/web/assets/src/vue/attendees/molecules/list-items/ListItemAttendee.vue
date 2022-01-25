@@ -133,7 +133,7 @@
 
         </div>
 
-        <popup-verify-attendee v-if="showVerifyPopup" :csrf="csrf" :attendees="attendee" :show="showVerifyPopup" @hidePopup="handleHidePopup" />
+        <popup-verify-attendee v-if="showVerifyPopup" :csrf="csrf" :attendee="attendee" :show="showVerifyPopup" @hidePopup="handleHidePopup" />
     </div>
 </template>
 
