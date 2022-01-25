@@ -17,52 +17,16 @@
 {% endif %}
 
 <div id="sites-btn" class="btn menubtn" data-icon="world">{{ selectedSiteObj.name }}</div>
-    <div class="menu">
-        <ul class="padded">
-            {% for site in permittedSites %}
-                {%- set siteEnabled = site.enabled ?? null -%}
-                {% set url = baseUrl ~ '?site=' ~site.handle %}
-                <li>
-                    <a href="{{ url }}" title="{{ site.handle }}">
-                        <div class="status {% if siteEnabled %}enabled{%  endif %}"></div>{{ site.name }}
-                    </a>
-                </li>
-            {% endfor %}
-        </ul>
-    </div>
+<div class="menu">
+    <ul class="padded">
+        {% for site in permittedSites %}
+            {%- set siteEnabled = site.enabled ?? null -%}
+            {% set url = baseUrl ~ '?site=' ~site.handle %}
+            <li>
+                <a href="{{ url }}" title="{{ site.handle }}">
+                    <div class="status {% if siteEnabled %}enabled{%  endif %}"></div>{{ site.name }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
 </div>
-
-{#{% import "_includes/forms" as forms %}#}
-
-{#{% set activeSite = 0 %}#}
-
-{#{% set checkCurrentPermitted = currentUser.can('editSite:'~currentSite.uid) %}#}
-
-{#{{ checkCurrentPermitted ? 'yes' : 'no' }}#}
-
-{#{% for sites in craft.app.sites.getAllSites() %}#}
-{#    {%  if sites.handle == selectedSite %}#}
-{#        {%  set activeSite = 1 %}#}
-{#        <div id="sites-btn" class="btn menubtn" data-icon="world">{{ sites.name }}</div>#}
-{#    {%  endif %}#}
-{#{% endfor %}#}
-{#    {%  if activeSite == 0 %}#}
-{#        <div id="sites-btn" class="btn menubtn" data-icon="world">{{ currentSiteName }}</div>#}
-{#    {%  endif %}#}
-{#<div class="menu">#}
-{#    <ul class="padded">#}
-{#        {% for site in craft.app.sites.getAllSites() %}#}
-{#            {%- set permitted = currentUser.can('editSite:'~site.uid) -%}#}
-
-{#            {%- if permitted -%}#}
-{#                {%- set siteEnabled = site.enabled ?? null -%}#}
-{#                {% set url = baseUrl ~ '?site=' ~site.handle %}#}
-{#                <li>#}
-{#                    <a href="{{ url }}" title="{{ site.handle }}">#}
-{#                        <div class="status {% if siteEnabled %}enabled{%  endif %}"></div>{{ site.name }}#}
-{#                    </a>#}
-{#                </li>#}
-{#            {%- endif -%}#}
-{#        {% endfor %}#}
-{#    </ul>#}
-{#</div>#}
