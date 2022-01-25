@@ -1,6 +1,6 @@
 <template>
     <article class="bg-white rounded-xl p-4">
-            <span class="flex items-end pb-2">
+            <span class="flex items-end pb-2" style="align-items: end">
                 <span class="text-6xl block text-blue-600" style="margin-bottom:0!important">{{ value }}</span>
                 <span class="block pb-1" style="margin-bottom:0!important">{{ type }}</span>
             </span>

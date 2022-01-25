@@ -15,8 +15,7 @@
     import Stat from '@/vue/dashboard/atoms/stats/Stat.vue'
 
     export default defineComponent({
-        components:
-            {
+        components: {
             'stat': Stat
         }
     })
