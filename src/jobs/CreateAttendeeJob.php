@@ -27,7 +27,7 @@ class CreateAttendeeJob extends BaseJob
 
         $identifier = hash('md4', $orgName.$name.$jobRole.$days);
 
-        $attendee = Attendee::find()->where(['identifier' => $identifier])->one();
+        $attendee = Attendee::find()->where(['eventId' => $eventId, 'identifier' => $identifier])->one();
 
         if($attendee){
             //log an error that this one is being skipped because he already exists

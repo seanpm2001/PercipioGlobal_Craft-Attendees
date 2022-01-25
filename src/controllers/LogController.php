@@ -15,7 +15,7 @@ class LogController extends Controller
             ->where([
                 'eventId' => $eventId
             ])
-            ->where(['>=', 'UNIX_TIMESTAMP(dateCreated)', strtotime("-1 month")])
+            ->andWhere(['>=', 'UNIX_TIMESTAMP(dateCreated)', strtotime("-1 month")])
             ->orderBy('dateCreated DESC')
             ->all();
 
