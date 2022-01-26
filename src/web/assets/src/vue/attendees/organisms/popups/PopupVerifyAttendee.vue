@@ -11,9 +11,14 @@
                     <p class="text-sm">Attendee data needs to be verified against the government establishment data. Using organisation name provided you will find some suggestions below. Click the correct school to verify the data.<br/><br/>If <strong>{{ attendee.name }}</strong> is not associated with a school, you can still verify without selecting a school.</p>
                 </div>
 
-                <input-school :values="attendee" @schoolSelect="handleSchoolSelect" @schoolInput="handleSchoolInput" />
+                <input-school :values="attendee" @schoolSelect="handleSchoolSelect" />
 
-                <div class="flex justify-center">
+                <div class="flex">
+                    <div class="flex-grow">
+                        <button @click="handleEdit" class="block bg-gray-300 text-gray-800 font-bold mt-2 py-2 px-3 text-sm rounded-lg cursor-pointer">
+                            Edit
+                        </button>
+                    </div>
                     <button @click="handleCancel" class="block bg-gray-300 text-gray-800 font-bold mt-2 py-2 px-3 text-sm rounded-lg cursor-pointer">
                         Cancel
                     </button>
@@ -21,6 +26,7 @@
                         Verify organisation
                     </button>
                 </div>
+
             </div>
         </div>
     </div>
@@ -35,6 +41,7 @@
         components: {
             'input-school': SelectSchool,
         },
+        emits: ['hidePopup','edit'],
         props: {
             csrf: {
                 type: String,
@@ -85,6 +92,10 @@
                 emit('hidePopup')
             }
 
+            const handleEdit = () => {
+                emit('edit')
+            }
+
             const handleSchoolSelect = (school, urn, postcode) => {
                 if(school || urn || postcode){
                     //selected from api
@@ -95,11 +106,7 @@
                 }
             }
 
-            const handleSchoolInput = () => {
-
-            }
-
-            return { handleCancel, handleVerify, handleSchoolSelect, handleSchoolInput };
+            return { handleCancel, handleVerify, handleSchoolSelect, handleEdit };
 
         }
     })

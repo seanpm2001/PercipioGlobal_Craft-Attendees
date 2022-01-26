@@ -14,7 +14,7 @@
                 <span class="inline-flex mb-0">
                     <input type="checkbox" @change="handleCheckbox" v-model="checkedState"/>
                 </span>
-                <span class="inline-flex pl-2 flex-grow" @click="toggle">{{ attendee.orgName }}</span>
+                <span class="inline-block pl-2 flex-grow" @click="toggle">{{ attendee.orgName }}&nbsp;<span v-if="(attendee.priority ?? 0) === 1" class="text-blue-600">&#9873;</span></span>
             </div>
             <div class="col-span-2 box-border p-3 cursor-pointer flex items-center" @click="toggle">
                 {{ attendee.name }}
@@ -72,7 +72,7 @@
                     <div class="grid grid-cols-3 gap-x-4">
                         <div class="mb-6">
                             <span class="text-xs font-bold text-gray-400 block">School / Organisation</span>
-                            <span class="text-base mt-1 block">{{ attendee.orgName }}</span>
+                            <span class="text-base mt-1 block">{{ attendee.orgName }}&nbsp;<span v-if="(attendee.priority ?? 0) === 1" class="text-blue-600">&#9873;</span></span>
                         </div>
                         <div class="mb-6">
                             <span class="text-xs font-bold text-gray-400 block">School or organisation post code</span>
@@ -133,7 +133,7 @@
 
         </div>
 
-        <popup-verify-attendee v-if="showVerifyPopup" :csrf="csrf" :attendee="attendee" :show="showVerifyPopup" @hidePopup="handleHidePopup" />
+        <popup-verify-attendee v-if="showVerifyPopup" :csrf="csrf" :attendee="attendee" :show="showVerifyPopup" @hidePopup="handleHidePopup" @edit="handleEditPopup" />
     </div>
 </template>
 
@@ -241,6 +241,13 @@
                 emit('tick', props.attendee.id)
             }
 
+            const handleEditPopup = () => {
+                showDeletePopup.value = false
+                showVerifyPopup.value = false
+                edit.value = true;
+                expanded.value = true;
+            }
+
             watchEffect(() => {
                 if(formSubmitted.value && attendeeSuccess.value){
                     edit.value = false
@@ -269,6 +276,7 @@
                 handleDelete,
                 handleHidePopup,
                 handleCheckbox,
+                handleEditPopup
             }
 
         }
