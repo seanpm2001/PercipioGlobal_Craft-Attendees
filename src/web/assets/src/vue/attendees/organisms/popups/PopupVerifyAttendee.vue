@@ -66,8 +66,8 @@
 
                 let approveAttendee = {...props.attendee}
                 approveAttendee.orgName = schoolData.value.school ?? props.attendee.orgName;
-                approveAttendee.urn = schoolData.value.urn ?? props.attendee.urn;
-                approveAttendee.postcode = schoolData.value.postcode ?? props.attendee.postcode;
+                approveAttendee.orgUrn = schoolData.value.urn ?? props.attendee.orgUrn;
+                approveAttendee.postCode = schoolData.value.postcode ?? props.attendee.postCode;
                 approveAttendee.approved = 1
                 approveAttendee.CRAFT_CSRF_TOKEN = props.csrf
                 approveAttendee.event = props.attendee.eventId
