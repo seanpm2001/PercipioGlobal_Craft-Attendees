@@ -1,12 +1,14 @@
 <template>
-    <article class="bg-white p-4 rounded-xl">
-        <p class="font-bold text-lg">Follow on support</p>
+    <article class="bg-white p-4 rounded-xl mb-4">
+        <p class="font-bold text-lg">Engagement Data Completion</p>
         <apexchart
-            height="400"
+            height="150"
             type="bar"
             :options="chartOptions"
             :series="series"
         ></apexchart>
+
+        <span class="block w-full text-center py-2"><strong>26</strong> total training events, <strong>12</strong> (46,15%) have engagement data.</span>
     </article>
 </template>
 
@@ -23,36 +25,43 @@ export default defineComponent({
     setup(){
         const chartOptions = ref({
             chart: {
-                id: "follow-on-support",
+                id: "engagement-levels",
+                stacked: true,
+                stackType: '100%'
             },
             plotOptions: {
                 bar: {
                     horizontal: true,
-                    height: '10%'
                 }
             },
             theme: {
                 palette: 'palette3'
             },
             legend: {
-                position: 'top'
+                show: false
             },
             xaxis: {
-                categories: ['South Korea', 'Canada', 'United Kingdom', 'Netherlands', 'Italy', 'France', 'Japan',
-                    'United States', 'China', 'Germany'
-                ],
+                labels: {
+                    show: false
+                },
+                axisBorder: {
+                    show: false,
+                },
+                axisTicks: {
+                    show: false
+                }
             },
             yaxis: {
-                labels: {
-                    style: {
-                        fontSize: '14px',
-                        fontFamily: 'system-ui,BlinkMacSystemFont,-apple-system,"Segoe UI","Roboto","Oxygen","Ubuntu","Cantarell","Fira Sans","Droid Sans","Helvetica Neue",sans-serif'
-                    }
-                }
-            }
+                show: false
+            },
+            colors:  ['#2b63eb', '#113795']
         })
         const series = ref([{
-                data: [400, 430, 448, 470, 540, 580, 690, 1100, 1200, 1380]
+                name: 'Engaged (1 module)',
+                data: [44]
+            }, {
+                name: 'Sustained (2 modules)',
+                data: [53]
             }]
         )
 

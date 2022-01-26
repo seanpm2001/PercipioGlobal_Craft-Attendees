@@ -7,6 +7,8 @@
             :options="chartOptions"
             :series="series"
         ></apexchart>
+
+        <span class="block w-full text-center py-2">Showing the split of engagement levels across all events in this time period</span>
     </article>
 </template>
 
@@ -38,9 +40,21 @@
                 legend: {
                     position: 'top'
                 },
+                xaxis: {
+                    labels: {
+                        show: false
+                    },
+                    axisBorder: {
+                        show: false,
+                    },
+                    axisTicks: {
+                        show: false
+                    }
+                },
                 yaxis: {
                     show: false
-                }
+                },
+                colors:  ['#2b63eb', '#113795', '#07205b']
             })
             const series = ref([{
                     name: 'Engaged (1 module)',

@@ -13,7 +13,7 @@
  */
 #}
 
-{% extends "_layouts/cp" %}
+{% extends "craft-attendees/_layouts/_cp" %}
 
 {% set scriptTagOptions = {
     'depends': [
@@ -58,7 +58,7 @@
 {% set content %}
     {{ craft.viteattendees.register('/src/js/dashboard.ts', false, scriptTagOptions) }}
 
-{#    <img src="{{ iconUrl }}" height="64" width="64" />#}
+    {#    <img src="{{ iconUrl }}" height="64" width="64" />#}
     <!--div class="w-full xl:w-3/4">
         <p class="textline">The RSN data engagement module is currently being extended and enhanced to a more robust and versatile platform.<br/><br/>
 
@@ -69,13 +69,10 @@
         In the mean time, feel free to test this new area out to see how it will work. </p>
     </div-->
 
-    <div id="dashboard" class="bg-gray-100 p-6 -mt-6 -ml-6 relative">
+    <div id="dashboard" class="bg-gray-100 p-6 pt-2 -mt-6 -ml-6 relative">
 
-        <p class="text-xl font-bold inline-block w-full sticky z-20 bg-gray-100 bg-opacity-70 py-4 backdrop-blur" style="top:50px;">Showing data from <strong>09 September 2021</strong> to <strong>09 December 2021</strong></p>
-
-        <stats-figures></stats-figures>
-        <stats-levels></stats-levels>
-        <stats-support></stats-support>
+        <header-dashboard></header-dashboard>
+        <stats-dashboard></stats-dashboard>
 
         <div class="block bg-gray-100 w-6 left-full pb-6 top-0 h-full absolute"></div>
         <div class="block bg-gray-100 h-6 top-full left-0 w-full absolute"></div>
