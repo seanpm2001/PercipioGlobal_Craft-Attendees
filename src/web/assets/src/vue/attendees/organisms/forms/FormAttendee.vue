@@ -78,7 +78,7 @@
                 </select>
             </label>
             <label class="block mb-6">
-                <span class="text-xs font-bold text-gray-400 block mb-1">Attending days <span class="text-blue-500">*</span></span>
+                <span class="text-xs font-bold text-gray-400 block mb-1">Modules attended <span class="text-blue-500">*</span></span>
                 <select
                     name="days"
                     :value="attendeeInput?.days ?? values?.days ?? 1"

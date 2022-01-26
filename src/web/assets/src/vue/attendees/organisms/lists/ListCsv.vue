@@ -180,7 +180,7 @@
                     id: 7,
                     name: 'Modules attended',
                     required: true,
-                    info: 'Number between 1 - 10'
+                    info: 'Number between 1 - 15'
                 },
                 {
                     id: 8,

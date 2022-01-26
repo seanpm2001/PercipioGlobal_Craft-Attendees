@@ -74,7 +74,7 @@
                         <h3 class="text-lg">Modules Attended</h3>
                     </div>
 
-                    <p>Input expected: Numeric from 1-10 (Not Required)</p>
+                    <p>Input expected: Numeric from 1-15 (Not Required)</p>
 
                     <p>This field represents the number of modules the attendee participated in this event. A number from 1 to 15 is expected.<br/><br/>If the cell in the corresponding CSV row does not match 1-15, 1 will be automatically assumed.</p>
                 </div>
