@@ -1,14 +1,14 @@
 {
   "src/js/attendees.ts": {
-    "file": "assets/attendees.405c8a4f.js",
+    "file": "assets/attendees.c8154a42.js",
     "src": "src/js/attendees.ts",
     "isEntry": true,
     "imports": [
-      "_vendor.2b3b06bc.js",
+      "_vendor.97c4a88b.js",
       "_plugin-vue_export-helper.21dcd24c.js"
     ],
     "css": [
-      "assets/app.b225a30c.css"
+      "assets/app.d59e2403.css"
     ]
   },
   "src/js/trainings.ts": {
@@ -16,23 +16,23 @@
     "src": "src/js/trainings.ts",
     "isEntry": true,
     "css": [
-      "assets/app.b225a30c.css"
+      "assets/app.d59e2403.css"
     ]
   },
   "src/js/dashboard.ts": {
-    "file": "assets/dashboard.05540ad6.js",
+    "file": "assets/dashboard.cb9788bc.js",
     "src": "src/js/dashboard.ts",
     "isEntry": true,
     "imports": [
-      "_vendor.2b3b06bc.js",
+      "_vendor.97c4a88b.js",
       "_plugin-vue_export-helper.21dcd24c.js"
     ],
     "css": [
-      "assets/app.b225a30c.css"
+      "assets/app.d59e2403.css"
     ]
   },
-  "_vendor.2b3b06bc.js": {
-    "file": "assets/vendor.2b3b06bc.js"
+  "_vendor.97c4a88b.js": {
+    "file": "assets/vendor.97c4a88b.js"
   },
   "_plugin-vue_export-helper.21dcd24c.js": {
     "file": "assets/plugin-vue_export-helper.21dcd24c.js"

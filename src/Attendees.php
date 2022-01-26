@@ -65,7 +65,7 @@ class Attendees extends Plugin
      *
      * @var string
      */
-    public $schemaVersion = '1.0.0';
+    public $schemaVersion = '1.0.3';
 
     /**
      * Set to `true` if the plugin should have a settings view in the control panel.
