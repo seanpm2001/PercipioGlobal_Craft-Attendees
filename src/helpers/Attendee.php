@@ -49,20 +49,25 @@ class Attendee
     {
         $attendee = new AttendeeModel();
 
-        if($entry['orgUrn']){
+        if($entry['orgUrn'] ?? null){
             $result = Attendees::getInstance()->metaseed->school($entry['orgUrn']);
 
             if($result->suggestions[0]->data ?? null){
-                $attendee->orgName = $result->suggestions[0]->value ?? $entry['name'] ?? '';
+                $attendee->orgName = $result->suggestions[0]->value ?? $entry['orgName'] ?? '';
                 $attendee->postCode = $result->suggestions[0]->data->postcode ?? $entry['postCode'] ?? '';
                 $attendee->priority = $result->suggestions[0]->data->priority ?? $entry['priority'] ?? 0;
                 $attendee->approved = 1;
             }else{
-                $attendee->orgName = $entry['name'] ?? '';
+                $attendee->orgName = $entry['orgName'] ?? '';
                 $attendee->postCode = $entry['postCode'] ?? '';
                 $attendee->priority = $entry['priority'] ?? 0;
                 $attendee->approved = 0;
             }
+        }else{
+            $attendee->orgName = $entry['orgName'] ?? '';
+            $attendee->postCode = $entry['postCode'] ?? '';
+            $attendee->priority = $entry['priority'] ?? 0;
+            $attendee->approved = 0;
         }
 
         $attendee->orgUrn = $entry['orgUrn'] ?? '';
