@@ -2,7 +2,7 @@
     <article class="bg-white p-4 rounded-xl mb-4">
         <p class="font-bold text-lg">Engagement level</p>
         <apexchart
-            height="200"
+            height="150"
             type="bar"
             :options="chartOptions"
             :series="series"
@@ -29,7 +29,7 @@
                 },
                 plotOptions: {
                     bar: {
-                        horizontal: true
+                        horizontal: true,
                     }
                 },
                 theme: {
@@ -37,6 +37,9 @@
                 },
                 legend: {
                     position: 'top'
+                },
+                yaxis: {
+                    show: false
                 }
             })
             const series = ref([{

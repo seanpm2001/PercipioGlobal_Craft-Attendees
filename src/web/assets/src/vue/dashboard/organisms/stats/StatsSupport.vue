@@ -2,6 +2,7 @@
     <article class="bg-white p-4 rounded-xl">
         <p class="font-bold text-lg">Follow on support</p>
         <apexchart
+            height="400"
             type="bar"
             :options="chartOptions"
             :series="series"
@@ -22,11 +23,12 @@ export default defineComponent({
     setup(){
         const chartOptions = ref({
             chart: {
-                id: "follow-on-supprt",
+                id: "follow-on-support",
             },
             plotOptions: {
                 bar: {
-                    horizontal: true
+                    horizontal: true,
+                    height: '10%'
                 }
             },
             theme: {
@@ -39,6 +41,14 @@ export default defineComponent({
                 categories: ['South Korea', 'Canada', 'United Kingdom', 'Netherlands', 'Italy', 'France', 'Japan',
                     'United States', 'China', 'Germany'
                 ],
+            },
+            yaxis: {
+                labels: {
+                    style: {
+                        fontSize: '14px',
+                        fontFamily: 'system-ui,BlinkMacSystemFont,-apple-system,"Segoe UI","Roboto","Oxygen","Ubuntu","Cantarell","Fira Sans","Droid Sans","Helvetica Neue",sans-serif'
+                    }
+                }
             }
         })
         const series = ref([{
