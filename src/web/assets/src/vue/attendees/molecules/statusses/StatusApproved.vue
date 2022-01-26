@@ -47,21 +47,21 @@
            watchEffect(() => {
 
                urnVal.value = props.urn
-               if(!props.urn){
-                   urnVal.value = ''
-               }
+               // if(!props.urn){
+               //     urnVal.value = ''
+               // }
 
                if(!props.disabled){
-                   if(props.approved == 1 && urnVal.value.length > 0) {
+                   if(props.approved == 1 && urnVal.value) {
                        status.value = 1
                    }
-                   else if (props.approved == 0 && urnVal.value.length > 0) {
+                   else if (props.approved == 0 && urnVal.value) {
                        status.value = 2
                    }
-                   else if(props.approved == 1 && urnVal.value.length == 0) {
+                   else if(props.approved == 1 && !urnVal.value) {
                        status.value = 3
                    }
-                   else if(props.approved == 0 && urnVal.value.length == 0) {
+                   else if(props.approved == 0 && !urnVal.value) {
                        status.value = 4
                    }
                    else {
