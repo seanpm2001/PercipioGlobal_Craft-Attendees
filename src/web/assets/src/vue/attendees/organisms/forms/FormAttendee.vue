@@ -1,6 +1,6 @@
 <template>
 
-    <status-approved :approved="parseInt(approved)" :urn="urn" :disabled="school.length === 0" />
+    <status-approved :approved="parseInt(attendeeInput?.approved ?? approved)" :urn="urn" :disabled="school.length === 0" />
 
     <form
         ref="form"
@@ -22,7 +22,7 @@
             <input-school :values="values" @schoolSelect="handleSchoolSelect" @schoolInput="handleSchoolInput" />
             <label class="block mb-6">
                 <span class="text-xs font-bold text-gray-400 block mb-1">School is verified</span>
-                <input-switch name="approved" :checked="approved" @changed="handleSchoolVerifyChange" />
+                <input-switch name="approved" :checked="attendeeInput?.approved ?? approved" @changed="handleSchoolVerifyChange" />
             </label>
         </div>
 
@@ -197,8 +197,8 @@
             const schoolDropdown = ref(null)
             const saveAnother = ref(false)
 
-            const urn = ref( props.values?.urn ?? null)
-            const approved = ref(props.attendeeInput?.approved ?? (urn.value?.length > 0 ? 1 : 0))
+            const urn = ref( props.values?.orgUrn ?? null)
+            const approved = ref(props.values?.approved ?? (urn.value?.length > 0 ? 1 : 0))
             const school = ref(props.values?.orgName ?? '')
             const name = ref(props.attendeeInput?.name ?? props.values?.name ?? '')
             const email = ref(props.attendeeInput?.email ?? props.values?.email ?? '')
