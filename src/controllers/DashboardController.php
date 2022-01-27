@@ -4,6 +4,9 @@ namespace percipiolondon\attendees\controllers;
 
 use craft\web\Controller;
 use percipiolondon\attendees\Attendees;
+use percipiolondon\attendees\records\Attendee as AttendeeRecord;
+use percipiolondon\attendees\records\FollowOnSupport;
+use percipiolondon\attendees\records\FollowOnSupportOptions;
 
 class DashboardController extends Controller
 {
@@ -13,6 +16,7 @@ class DashboardController extends Controller
 
         $events = \craft\elements\Entry::find()
             ->site($site)
+            ->anyStatus()
             ->section(Attendees::getInstance()->settings->eventSection)
             ->all();
 
@@ -27,8 +31,29 @@ class DashboardController extends Controller
             $after = date("U", strtotime('-' . $period . ' Months'));
         }
 
+        $sorted = $this->sortEvents($events, $before, $after);
+        $attendees = [];
+        $followonsupport = [];
+
+        foreach($sorted as $event){
+            $evtAttendees = AttendeeRecord::find()
+                ->where(['eventId' => $event->id])
+                ->all();
+
+            $evtFollow = FollowOnSupport::find()
+                ->where(['eventId' => $event->id])
+                ->all();
+
+            array_push($attendees, ...$evtAttendees);
+            array_push($followonsupport, ...$evtFollow);
+        }
+
+
         return $this->asJson([
-            "events" => $this->sortEvents($events, $before, $after)
+            "events" => $sorted,
+            "attendees" => $attendees,
+            "follow_on_support" => $followonsupport,
+            "follow_on_support_options" => FollowOnSupportOptions::find()->all()
         ]);
     }
 
@@ -53,12 +78,15 @@ class DashboardController extends Controller
                     $eventDates = $event->eventDatesTime->all();
             }
 
-            $eventDays = $this->sortEventDates($eventDates, $before, $after);
+            $eventDays = $this->sortEventDates($eventDates);
 
             //sort date to get nearest first
             if (sizeOf($eventDays) > 0) {
                 $startDate = $eventDays[0]->startDateTime->format('U') + $i;
-                $sortedEvents[$startDate] = $event;
+
+                if($startDate < (int)$before && $startDate > (int)$after){
+                    $sortedEvents[$startDate] = $event;
+                }
             }
         }
 
@@ -67,28 +95,31 @@ class DashboardController extends Controller
         return array_values($sortedEvents);
     }
 
-    private function sortEventDates( $dates, $before, $after ) {
+    private function sortEventDates( $dates ) {
 
         $eventDays = [];
+        $hasFutureEvents = false;
 
         foreach( $dates as $date ) {
-
             if($date->startDateTime && $date->startTime){
+
                 $eventDate = strtotime($date->startDateTime->format('Y-m-d') . ' ' . $date->startTime->format('H:i:s')) ?? null;
 
-//                \Craft::dd(['date' => $eventDate, 'before' => (int)$before, 'after' => (int)$after, 'check' => ($eventDate < (int)$before && $eventDate > (int)$after]);
-
-                if($eventDate < (int)$before && $eventDate > (int)$after){
-                    $date['attendees'] = ['date' => $eventDate, 'before' => (int)$before, 'after' => (int)$after, 'check' => ($eventDate < (int)$before && $eventDate > (int)$after)];
+                if( $eventDate < date('U') ) {
                     $eventDays[] = $date;
+                }else{
+                    $hasFutureEvents = true;
                 }
             }
-
         }
 
-        usort($eventDays, function($a, $b) {
-            return ($a->startDateTime < $b->startDateTime) ? -1 : 1;
-        });
+        if(!$hasFutureEvents){
+            usort($eventDays, function($a, $b) {
+                return ($a->startDateTime < $b->startDateTime) ? -1 : 1;
+            });
+        }else{
+            $eventDays = [];
+        }
 
         return $eventDays;
 

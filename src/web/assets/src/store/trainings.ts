@@ -127,6 +127,7 @@ export const useTrainingsStore = defineStore('trainings', {
                         updatedAttendee.newsletter = formObj?.newsletter
                         updatedAttendee.approved = formObj?.approved
                         updatedAttendee.jobRole = formObj?.jobRole
+                        updatedAttendee.priority = formObj?.priority
                         updatedAttendee.anonymous = formObj?.anonymous
 
                         self.attendees[attendeeIndex] = updatedAttendee

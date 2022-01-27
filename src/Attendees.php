@@ -25,6 +25,7 @@ use nystudio107\pluginvite\services\VitePluginService;
 
 use percipiolondon\attendees\models\Settings;
 use percipiolondon\attendees\assetbundles\craftattendees\AttendeesAsset;
+use percipiolondon\attendees\records\Attendee as AttendeeRecord;
 use percipiolondon\attendees\variables\AttendeesVariable;
 use percipiolondon\attendees\services\Metaseed;
 use yii\base\Event;
@@ -129,8 +130,6 @@ class Attendees extends Plugin
         $this->_registerCraftVariables();
         $this->_registerServices();
 
-        $this->_testDashboard();
-
         Craft::info(
             Craft::t(
                 'craft-attendees',
@@ -220,6 +219,7 @@ class Attendees extends Plugin
                 $event->rules['craft-attendees/trainings/<eventId:\d+>'] = 'craft-attendees/training/detail';
                 $event->rules['craft-attendees/trainings/attendees/<eventId:\d+>/<order\w+>/<limit:\d+>/<offset:\d+>'] = 'craft-attendees/training/attendees';
                 $event->rules['craft-attendees/trainings/logs/<eventId:\d+>'] = 'craft-attendees/log/logs';
+                $event->rules['craft-attendees/trainings/fetch-support-options/<eventId:\d+>'] = 'craft-attendees/training/fetch-support-options';
                 $event->rules['craft-attendees/dashboard/events/<site\w+>/<period:\w+>'] = 'craft-attendees/dashboard/fetch-events';
             }
         );
@@ -264,108 +264,6 @@ class Attendees extends Plugin
     public function clearAllCaches()
     {
 //        self::$plugin->attendees->invalidateCaches();
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    private function _testDashboard()
-    {
-        $site = '*';
-        $period = '3';
-
-        $events = \craft\elements\Entry::find()
-            ->site($site)
-            ->section(Attendees::getInstance()->settings->eventSection)
-            ->all();
-
-        $before = null;
-        $after = null;
-
-        if(strlen($period) > 1){
-            $before = date('U', strtotime('31 july ' . (int)$period ));
-            $after = date('U', strtotime('01 september ' . ((int)$period - 1) ));
-        }else{
-            $before = date("U");
-            $after = date("U", strtotime('-' . $period . ' Months'));
-        }
-
-        Craft::dd($this->sortEvents($events, $before, $after));
-    }
-
-    private function sortEvents($events, $before, $after)
-    {
-        $sortedEvents = [];
-
-        $i = 0;
-        foreach ($events as $event) {
-            $i++;
-            $eventDates = null;
-
-            switch ($event->type->handle)
-            {
-                case 'onlineEvent':
-                    $eventDates = $event->eventDatesTimeOnline->all();
-                    break;
-                case 'hybridEvent':
-                    $eventDates = $event->eventHybridDatesTime->all();
-                    break;
-                default:
-                    $eventDates = $event->eventDatesTime->all();
-            }
-
-            $eventDays = $this->sortEventDates($eventDates, $before, $after);
-
-            //sort date to get nearest first
-            if (sizeOf($eventDays) > 0) {
-                $startDate = $eventDays[0]->startDateTime->format('U') + $i;
-                $sortedEvents[$startDate] = $event;
-            }
-        }
-
-        ksort($sortedEvents);
-
-        return array_values($sortedEvents);
-    }
-
-    private function sortEventDates( $dates, $before, $after ) {
-
-        $eventDays = [];
-
-        foreach( $dates as $date ) {
-
-            if($date->startDateTime && $date->startTime){
-                $eventDate = strtotime($date->startDateTime->format('Y-m-d') . ' ' . $date->startTime->format('H:i:s')) ?? null;
-
-//                \Craft::dd(['date' => $eventDate, 'before' => (int)$before, 'after' => (int)$after, 'check' => ($eventDate < (int)$before && $eventDate > (int)$after]);
-
-                if($eventDate < (int)$before && $eventDate > (int)$after){
-                    echo "<pre>";
-                    var_dump(['date' => $eventDate, 'before' => (int)$before, 'after' => (int)$after, 'check' => ($eventDate < (int)$before && $eventDate > (int)$after)]);
-                    echo "</pre>";
-                    $eventDays[] = $date;
-                }
-            }
-
-        }
-
-        usort($eventDays, function($a, $b) {
-            return ($a->startDateTime < $b->startDateTime) ? -1 : 1;
-        });
-
-        return $eventDays;
-
     }
 
 }
