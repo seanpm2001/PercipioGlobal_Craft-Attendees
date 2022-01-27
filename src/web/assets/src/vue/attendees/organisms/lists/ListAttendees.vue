@@ -10,7 +10,6 @@
             <input-sort @fetch="handleFetch"/>
             <input-actions :csrf="csrf" :attendees="selectedAttendees" @reset="handleReset" />
         </div>
-
     </div>
 
     <div class="grid grid-cols-9 xl:grid-cols-11 bg-gray-100 py-2 items-center">

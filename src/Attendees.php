@@ -25,6 +25,7 @@ use nystudio107\pluginvite\services\VitePluginService;
 
 use percipiolondon\attendees\models\Settings;
 use percipiolondon\attendees\assetbundles\craftattendees\AttendeesAsset;
+use percipiolondon\attendees\records\Attendee as AttendeeRecord;
 use percipiolondon\attendees\variables\AttendeesVariable;
 use percipiolondon\attendees\services\Metaseed;
 use yii\base\Event;
@@ -219,6 +220,7 @@ class Attendees extends Plugin
                 $event->rules['craft-attendees/trainings/attendees/<eventId:\d+>/<order\w+>/<limit:\d+>/<offset:\d+>'] = 'craft-attendees/training/attendees';
                 $event->rules['craft-attendees/trainings/logs/<eventId:\d+>'] = 'craft-attendees/log/logs';
                 $event->rules['craft-attendees/trainings/fetch-support-options/<eventId:\d+>'] = 'craft-attendees/training/fetch-support-options';
+                $event->rules['craft-attendees/dashboard/events/<site\w+>/<period:\w+>'] = 'craft-attendees/dashboard/fetch-events';
             }
         );
     }

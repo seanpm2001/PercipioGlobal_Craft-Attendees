@@ -21,6 +21,7 @@
         "vite": "^2.7.0",
         "vite-plugin-restart": "0.0.2",
         "vue-draggable-next": "^2.1.0",
+        "vue3-apexcharts": "^1.4.0",
         "vue3-click-away": "^1.2.0"
     },
     "scripts": {

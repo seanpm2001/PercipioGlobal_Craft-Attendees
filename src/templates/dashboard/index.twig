@@ -13,7 +13,7 @@
  */
 #}
 
-{% extends "_layouts/cp" %}
+{% extends "craft-attendees/_layouts/_cp" %}
 
 {% set scriptTagOptions = {
     'depends': [
@@ -30,6 +30,7 @@
 
 {# The title of this CP section #}
 {% set title = "Attendees | Dashboard" %}
+{% set selectedSite = craft.app.request.getQueryParam('site')|default(permittedSites[0].handle ?? '*') %}
 
 {# The URL to this plugin's base CP section #}
 {% set pluginCpUrl = url('craft-attendees') %}
@@ -52,20 +53,35 @@
 
 {# Content that should appear in the page header#}
 {% block actionButton %}
+
+    {%- include "craft-attendees/_includes/sites-menu.twig" with {
+        baseUrl: pluginCpUrl ~ '/dashboard',
+        parameter: 'id'
+    } -%}
+
 {% endblock %}
 
 {# The content of the CP Section#}
 {% set content %}
-    {{ craft.viteattendees.register('/src/js/attendees.ts', false, scriptTagOptions) }}
+    {{ craft.viteattendees.register('/src/js/dashboard.ts', false, scriptTagOptions) }}
 
-{#    <img src="{{ iconUrl }}" height="64" width="64" />#}
-    <div class="w-full xl:w-3/4">
-    <p class="textline">The RSN data engagement module is currently being extended and enhanced to a more robust and versatile platform.<br/><br/>
+    {#    <img src="{{ iconUrl }}" height="64" width="64" />#}
+    <!--div class="w-full xl:w-3/4">
+        <p class="textline">The RSN data engagement module is currently being extended and enhanced to a more robust and versatile platform.<br/><br/>
 
         Currently this module is in beta phase and undergoing testing. It should not be used for entering final data - any data added during this testing phase will be deleted.<br/><br/>
 
         Please continue to add / export your data using the existing RSN Data tooling until you are notified that this new platform is ready for use and contains all previously entered data.<br/><br/>
 
         In the mean time, feel free to test this new area out to see how it will work. </p>
+    </div-->
+
+    <div id="dashboard" class="bg-gray-100 p-6 pt-2 -mt-6 -ml-6 relative">
+
+        <header-dashboard></header-dashboard>
+        <stats-dashboard site="{{ selectedSite }}"></stats-dashboard>
+
+        <div class="block bg-gray-100 w-6 left-full pb-6 top-0 h-full absolute"></div>
+        <div class="block bg-gray-100 h-6 top-full left-0 w-full absolute"></div>
     </div>
 {% endset %}

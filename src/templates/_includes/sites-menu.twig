@@ -9,8 +9,8 @@
 {% endfor %}
 
 {% set selectedSite = craft.app.request.getQueryParam('site')|default(permittedSites[0].handle ?? '*') %}
-{% set selectedSiteObj = craft.app.getSites().getSiteByHandle(selectedSite) %}
-
+{% set parameter = parameter|default('slug') %}
+{% set selectedSiteObj = parameter == 'slug' ? craft.app.getSites().getSiteByHandle(selectedSite) : craft.app.getSites().getSiteById(selectedSite) %}
 
 {% if not currentUser.can('editSite:'~(selectedSiteObj.uid ?? '*')) %}
     {% redirect url('craft-attendees/four-o-three') %}
@@ -21,7 +21,7 @@
     <ul class="padded">
         {% for site in permittedSites %}
             {%- set siteEnabled = site.enabled ?? null -%}
-            {% set url = baseUrl ~ '?site=' ~site.handle %}
+            {% set url = baseUrl ~ '?site=' ~ (parameter == 'slug' ? site.handle : site.id) %}
             <li>
                 <a href="{{ url }}" title="{{ site.handle }}">
                     <div class="status {% if siteEnabled %}enabled{%  endif %}"></div>{{ site.name }}

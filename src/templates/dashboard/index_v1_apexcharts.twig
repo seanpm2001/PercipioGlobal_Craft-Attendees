@@ -1,0 +1,258 @@
+{# @var craft \craft\web\twig\variables\CraftVariable #}
+{#
+/**
+ * RSN Data plugin for Craft CMS 3.x
+ *
+ * RSN Data index.twig
+ *
+ * @author    Percipio
+ * @copyright Copyright (c) 2020 Percipio
+ * @link      https://percipio.london
+ * @package   RsnData
+ * @since     1.0.0
+ */
+#}
+{% extends "craft-attendees/_layouts/_cp" %}
+
+{%- import "_includes/forms" as forms -%}
+
+{% set scriptTagOptions = {
+    'depends': [
+        'percipiolondon\\attendees\\assetbundles\\craftattendees\\AttendeesAsset'
+    ],
+} %}
+
+
+{# Link for the ? icon at the bottom of the page #}
+{% set docsUrl = "https://github.com/percipioglobal/craft-attendees/blob/master/README.md" %}
+
+{# The title of this CP section #}
+{% set title = "Attendees | Dashboard" %}
+
+{# The URL to this plugin's base CP section #}
+{% set pluginCpUrl = url('craft-attendees') %}
+
+
+{# The title of this CP section #}
+{%- set title = "Dashboard"|t('craft-attendees') -%}
+{%- set selectedNavItem = 'dashboard' -%}
+{%- set metaseedUrl = craft.app.plugins.getPlugin('rsn-data').settings.metaseedUrl -%}
+{%- set selectedSite = craft.app.request.getQueryParam('site')|default('main') -%}
+{%- set selectedTime = craft.app.request.getQueryParam('time')|default('3') -%}
+{%- set selectedSchools = craft.app.request.getQueryParam('p')|default('0') -%}
+{%- set monthCount = selectedTime -%}
+{%- set eventSite = selectedSite -%}
+{%- set uri = craft.app.request.fullPath() -%}
+
+ {%- set end = date('now')|atom -%}
+
+    {%- switch selectedTime -%}
+    {%- case '1' -%}
+        {%- set start = date('january 01 2019')|atom -%}
+        {%- set monthCount = '30' -%}
+    {%- case '3' -%}
+        {%- set start = date('-3 months')|atom -%}
+    {%- case '6' -%}
+        {%- set start = date('-6 months')|atom -%}
+    {%- case '12' -%}
+        {%- set start = date('-12 months')|atom -%}
+    {%- case '2022' -%}
+        {%- set start = date('01 september 2021')|atom -%}
+        {%- set end = date('31 july 2022')|atom -%}
+        {%- set monthCount = '10' -%}
+    {%- case '2021' -%}
+        {%- set start = date('01 september 2020')|atom -%}
+        {%- set end = date('31 july 2021')|atom -%}
+        {%- set monthCount = '10' -%}
+    {%- case '2020' -%}
+        {%- set start = date('01 september 2019')|atom -%}
+        {%- set end = date('31 july 2020')|atom -%}
+        {%- set monthCount = '10' -%}
+    {%- default -%}
+        {%- set start = date('-3 months')|atom -%}
+    {%- endswitch -%}
+
+    {%- if eventSite == 'main' -%}
+        {%- set eventSite = '*' -%}
+    {%- endif -%}
+
+{# any header buttons #}
+{%- block actionButton -%}
+
+    {%- include "craft-attendees/_includes/sites-menu.twig" with {
+        baseUrl: pluginCpUrl ~ '/dashboard'
+    } -%}
+
+    {%- include "craft-attendees/_includes/time-menu.twig" with {
+        baseUrl: pluginCpUrl ~ '/dashboard',
+        selectedTime: selectedTime,
+        selectedSchools: selectedSchools
+    } -%}
+
+{%- endblock -%}
+
+{%- set content -%}
+
+    <div id="dashboard" class="bg-gray-100 p-6 pt-2 -mt-6 -ml-6 relative">
+
+        <header-dashboard start="{{ start|date('d F, Y') }}" end="{{ end|date('d F, Y ') }}"></header-dashboard>
+
+        {%- set events = craft.entries.section('events')
+            .site(eventSite)
+            .anyStatus()
+            .all() -%}
+
+        {%- set events = sortEvents(events, start, end) -%}
+
+        {%- set allData = [] -%}
+        {%- set allSupport = [] -%}
+        {%- set count = 0 -%}
+
+        {%- for event in events -%}
+
+            {%- set dataEngagement = null -%}
+            {%- set dataEnganged = 0 -%}
+            {%- set dataSustained = 0 -%}
+            {%- set dataEmbedded = 0 -%}
+
+            {%- if event.dataEngagement is iterable and (event.dataEngagement.data is not null and event.dataEngagement.data is iterable) -%}
+                {%- set dataEngagement = event.dataEngagement.data -%}
+                {%- set allData = dataEngagement|merge(allData) -%}
+                {%- set count = count + 1 -%}
+            {%- endif -%}
+
+            {%- if event.dataEngagement is iterable and (event.dataEngagement.support is not null and event.dataEngagement.support is iterable) -%}
+                {%- set supportEngagement = event.dataEngagement.support -%}
+                {%- set allSupport = supportEngagement|merge(allSupport) -%}
+            {%- endif -%}
+
+            {% cache unless currentUser %}
+                {%- if loop.last and allData is not empty -%}
+
+                    {%- set totalSchools = totalSchools(allData) -%}
+                    {%- set avgSchools = avgSchools(allData, count) -%}
+                    {%- set totalPrioritySchools = fetchPriority(allData, metaseedUrl) -%}
+                    {%- set totalAttendees = totalAttendees(allData) -%}
+                    {%- set avgAttendees = avgAttendees(allData, count) -%}
+                    {%- set totalDays = totalDays(allData) -%}
+
+                    {%- set totalEngaged = engagementLevel(allData, 1) -%}
+                    {%- set totalSustained = engagementLevel(allData, 2) -%}
+                    {%- set totalEmbedded = engagementLevel(allData, 3) -%}
+
+                    {% set figures = [
+                        {
+                            type: 'event',
+                            value: count,
+                            average: (count/monthCount)|number_format,
+                            description: 'trainings per month'
+                        },
+                        {
+                            type: 'attendees',
+                            value: totalAttendees,
+                            average: avgAttendees|number_format,
+                            description: 'attendees per training'
+                        },
+                        {
+                            type: 'schools',
+                            value: totalSchools,
+                            average: avgSchools|number_format,
+                            description: 'attendees per training'
+                        },
+                        {
+                            type: 'priority schools',
+                            value: totalPrioritySchools,
+                            average: ((totalPrioritySchools / totalSchools) * 100)|number_format,
+                            description: 'attendees per training'
+                        }
+                    ] %}
+
+                    {% set levels = [
+                        {
+                            name: 'Engaged (1 module)',
+                            data: [totalEngaged]
+                        },
+                        {
+                            name: 'Sustained (2 modules)',
+                            data: [totalSustained]
+                        },
+                        {
+                            name: 'Embedded (3+ modules)',
+                            data: [totalEmbedded]
+                        }
+                    ] %}
+
+                    <stats-figures data="{{ figures|json_encode }}"></stats-figures>
+                    <stats-levels data="{{ levels|json_encode }}"></stats-levels>
+
+                {%- endif -%}
+            {% endcache %}
+
+            {%- if loop.last and allSupport is not empty -%}
+                {%- set followOnSupportCats = followOnSupport(allSupport) -%}
+                <stats-support :data="{{ followOnSupportCats|json_encode }}"></stats-support>
+            {%- endif -%}
+
+            {%- if loop.last and allSupport|length == '0' -%}
+                <div class="widget inline-flex p-1 w-full">
+                    <div class="front w-full">
+                        <div class="pane relative">
+                            <div class="widget-heading">
+                                <h2 class="text-lg font-bold">Follow on support offered not found</h2>
+                                <h6 class="text-xs uppercase" data-time-set>Last 12 months</h6>
+                                <div class="body mt-4">
+                                    <p>No follow on support data has been found for this Research School.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {%- endif -%}
+
+            {%- if loop.last and allData is not empty -%}
+
+                {% set completion = [
+                    {
+                        name: 'Total trainings',
+                        data: [(count / loop.index * 100)|number_format(2)]
+                    },
+                    {
+                        name: 'Total count',
+                        data: [100-(count / loop.index * 100)|number_format(2)]
+                    }
+                ]%}
+                <stats-completion data="{{ completion|json_encode }}"></stats-completion>
+            {%- endif -%}
+
+        {%- endfor -%}
+
+        {%- if events|length == 0 -%}
+            <div class="widget inline-flex p-1 w-full">
+                <div class="front w-full">
+                    <div class="pane">
+                        <div class="widget-heading">
+                            <h2 class="text-lg font-bold">No training events found</h2>
+                            <h6 class="text-xs uppercase" data-time-set>Last 12 months</h6>
+                            <div class="body relative">
+                                <canvas id="chart-engagementCompletion"
+                                        class="chart-js"
+                                        style="max-height: 140px;"
+                                        data-count="0"
+                                        data-total-count="100">
+                                </canvas>
+                                <p class="text-center text-sm"><b>0</b> total training events.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {%- endif -%}
+
+        <div class="block bg-gray-100 w-6 left-full pb-6 top-0 h-full absolute"></div>
+        <div class="block bg-gray-100 h-6 top-full left-0 w-full absolute"></div>
+
+    </div>
+
+
+    {{ craft.viteattendees.register('/src/js/dashboard.ts', false, scriptTagOptions) }}
+{%- endset -%}
