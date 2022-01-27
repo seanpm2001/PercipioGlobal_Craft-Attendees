@@ -35,9 +35,10 @@ class Attendee
         $attendee->name = $request->getBodyParam('name');
         $attendee->email = $request->getBodyParam('email');
         $attendee->jobRole = $request->getBodyParam('jobRole');
-        $attendee->days = $request->getBodyParam('days');
+        $attendee->days = $request->getBodyParam('days') ?? 1;
         $attendee->newsletter = $request->getBodyParam('newsletter') ?? 0;
         $attendee->approved = $request->getBodyParam('approved') ?? 0;
+        $attendee->anonymous = $request->getBodyParam('anonymous') ?? 0;
         $attendee->priority = $request->getBodyParam('priority') ?? 0;
         $attendee->eventId = $request->getBodyParam('event');
         $attendee->siteId = $request->getBodyParam('siteId');
@@ -74,10 +75,11 @@ class Attendee
         $attendee->name = $entry['name'] ?? '';
         $attendee->email = $entry['email'] ?? '';
         $attendee->jobRole = $entry['jobRole'] ?? '';
-        $attendee->days = $entry['days'] ?? '';
+        $attendee->days = $entry['days'] ?? 1;
         $attendee->newsletter = str_contains($entry['newsletter'] ?? 'n', 'y');
         $attendee->eventId = $entry['event'] ?? '';
         $attendee->siteId = $entry['site'] ?? '';
+        $attendee->anonymous = 0;
         $attendee->identifier = $identifier ?? '';
 
         return $attendee;

@@ -14,7 +14,7 @@
                 <span class="inline-flex mb-0">
                     <input type="checkbox" @change="handleCheckbox" v-model="checkedState"/>
                 </span>
-                <span class="inline-flex pl-2 flex-grow" @click="toggle">{{ attendee.orgName }}</span>
+                <span class="inline-block pl-2 flex-grow" @click="toggle">{{ attendee.orgName }}&nbsp;<span v-if="(attendee.priority ?? 0) === 1" class="text-blue-600">&#9873;</span></span>
             </div>
             <div class="col-span-2 box-border p-3 cursor-pointer flex items-center" @click="toggle">
                 {{ attendee.name }}
@@ -72,7 +72,7 @@
                     <div class="grid grid-cols-3 gap-x-4">
                         <div class="mb-6">
                             <span class="text-xs font-bold text-gray-400 block">School / Organisation</span>
-                            <span class="text-base mt-1 block">{{ attendee.orgName }}</span>
+                            <span class="text-base mt-1 block">{{ attendee.orgName }}&nbsp;<span v-if="(attendee.priority ?? 0) === 1" class="text-blue-600">&#9873;</span></span>
                         </div>
                         <div class="mb-6">
                             <span class="text-xs font-bold text-gray-400 block">School or organisation post code</span>
@@ -88,15 +88,17 @@
                     <div class="grid grid-cols-3 gap-x-4">
                         <div class="mb-6">
                             <span class="text-xs font-bold text-gray-400 block">Name of the attendee</span>
-                            <span class="text-base mt-1 block">{{ attendee.name }}</span>
+                            <span class="text-base mt-1 block italic text-gray-400" v-if="attendee?.anonymous == 1">Anonymous attendee</span>
+                            <span class="text-base mt-1 block" v-if="attendee?.anonymous !== 1">{{ attendee.name }}</span>
                         </div>
                         <div class="mb-6">
                             <span class="text-xs font-bold text-gray-400 block">Email address of attendee</span>
-                            <span class="text-base mt-1 block">{{ attendee.email }}</span>
+                            <span class="text-base mt-1 block italic text-gray-400" v-if="attendee?.anonymous == 1">Anonymous attendee</span>
+                            <span class="text-base mt-1 block" v-if="attendee?.anonymous !== 1">{{ attendee.email }}</span>
                         </div>
                         <div class="mb-6">
-                            <span class="text-xs font-bold text-gray-400 block">Subscribed for the newsletter?</span>
-                            <span class="text-base mt-1 block">{{ attendee.newsletter == 1 ? 'Yes' : 'No' }}</span>
+                            <span class="text-xs font-bold text-gray-400 block">Attendee is anonymous?</span>
+                            <span class="text-base mt-1 block">{{ attendee.anonymous == 1 ? 'Yes' : 'No' }}</span>
                         </div>
                     </div>
 
@@ -108,6 +110,10 @@
                         <div class="mb-6">
                             <span class="text-xs font-bold text-gray-400 block">Modules attended</span>
                             <span class="text-base mt-1 block">{{ attendee.days }}</span>
+                        </div>
+                        <div class="mb-6">
+                            <span class="text-xs font-bold text-gray-400 block">Subscribed for the newsletter?</span>
+                            <span class="text-base mt-1 block">{{ attendee.newsletter == 1 ? 'Yes' : 'No' }}</span>
                         </div>
                     </div>
 
@@ -133,7 +139,7 @@
 
         </div>
 
-        <popup-verify-attendee v-if="showVerifyPopup" :csrf="csrf" :attendee="attendee" :show="showVerifyPopup" @hidePopup="handleHidePopup" />
+        <popup-verify-attendee v-if="showVerifyPopup" :csrf="csrf" :attendee="attendee" :show="showVerifyPopup" @hidePopup="handleHidePopup" @edit="handleEditPopup" />
     </div>
 </template>
 
@@ -241,6 +247,13 @@
                 emit('tick', props.attendee.id)
             }
 
+            const handleEditPopup = () => {
+                showDeletePopup.value = false
+                showVerifyPopup.value = false
+                edit.value = true;
+                expanded.value = true;
+            }
+
             watchEffect(() => {
                 if(formSubmitted.value && attendeeSuccess.value){
                     edit.value = false
@@ -269,6 +282,7 @@
                 handleDelete,
                 handleHidePopup,
                 handleCheckbox,
+                handleEditPopup
             }
 
         }

@@ -102,7 +102,7 @@
 
                         {% if event.type == 'onlineEvent' %}
                             {% set eventTimetable = event.eventDatesTimeOnline.inReverse().one() %}
-                        {% if event.type == 'hybridEvent' %}
+                        {% elseif event.type == 'hybridEvent' %}
                             {% set eventTimetable = event.eventHybridDatesTime.inReverse().one() %}
                         {% else %}
                             {% set eventTimetable = event.eventDatesTime ? event.eventDatesTime.inReverse().one() : null %}

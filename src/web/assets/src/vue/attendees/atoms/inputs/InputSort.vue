@@ -1,6 +1,7 @@
 <template>
     <div class="relative" v-click-away="onClickAway">
-        <button class="bg-white text-blue-600 font-bold py-2 px-3 text-sm rounded-lg cursor-pointer flex items-center" @click="handleActionsToggle">Sort By: Date Created <span class="inline-block ml-1 text-lg -mt-2" style="margin-bottom:0!important">⌄</span></button>
+        <button class="bg-white text-blue-600 font-bold py-2 px-3 text-sm rounded-lg cursor-pointer flex items-center" @click="handleActionsToggle">Sort By:
+            {{ selected.label }} <span class="inline-block ml-1 text-lg -mt-2" style="margin-bottom:0!important">⌄</span></button>
         <transition leave-active-class="transition ease-in duration-100" leave-from-class="opacity-100" leave-to-class="opacity-0">
             <ul class="absolute top-full left-0 z-10 min-w-40 bg-white drop-shadow-xl rounded-md mt-2" v-if="show">
                 <li class="whitespace-nowrap" v-for="option in actions" :key="option.action">
@@ -61,6 +62,7 @@ export default defineComponent({
                 label: 'Verified'
             }
         ])
+        const selected = ref(actions.value[0])
 
         const handleActionsToggle = () => {
             show.value = !show.value
@@ -68,6 +70,7 @@ export default defineComponent({
 
         const handleSort = (action) => {
             show.value = false
+            selected.value = actions.value.find(a => a.action === action)
             emit('fetch', action)
         }
 
@@ -75,7 +78,7 @@ export default defineComponent({
             show.value = false
         }
 
-        return { loading, order, actions, show, onClickAway, handleActionsToggle, handleSort }
+        return { loading, order, actions, show, selected, onClickAway, handleActionsToggle, handleSort }
     }
 })
 </script>

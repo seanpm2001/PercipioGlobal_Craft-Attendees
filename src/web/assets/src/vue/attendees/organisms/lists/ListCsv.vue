@@ -3,9 +3,9 @@
     <section class="bg-gray-100 p-6 pt-10 -ml-6 relative mt-10">
 
         <div class="w-full flex field">
-            <div class="heading flex-grow">
-                <label class="text-xl inline-block w-full mb-2">Map fields into the correct data</label>
-                <span>Choose the fields to import into the attendees from the CSV file by dragging them<br/>in the appropriate order. Click on the ✕ to delete an unused field.</span>
+            <div class="heading flex-grow pr-10">
+                <label class="text-xl inline-block w-full mb-2">Map fields into the correct order</label>
+                <span>The left column displays the fields from your CSV upload. Drag your fields and arrange them to match the expected input in the Attendees fields in the right column. Click the ✕ icon to delete any columns not required for the upload.</span>
             </div>
 
             <button class="bg-gray-300 text-gray-800 font-bold py-2 px-3 text-sm rounded-lg cursor-pointer" @click="handleCancel">Cancel</button>
@@ -178,9 +178,9 @@
                 },
                 {
                     id: 7,
-                    name: 'Attending Modules',
+                    name: 'Modules attended',
                     required: true,
-                    info: 'Number between 1 - 10'
+                    info: 'Number between 1 - 15'
                 },
                 {
                     id: 8,
