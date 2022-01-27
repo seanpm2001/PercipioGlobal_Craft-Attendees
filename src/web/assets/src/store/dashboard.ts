@@ -21,8 +21,6 @@ export const useDashboardStore = defineStore('trainings', {
             const site = this.site
             const period = this.period
 
-            console.log("period",period)
-
             axios({
                 method: 'get',
                 url: `${ENDPOINT}/craft-attendees/dashboard/events/${site}/${period}`,

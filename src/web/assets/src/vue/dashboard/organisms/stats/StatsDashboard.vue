@@ -32,7 +32,7 @@
             const store = useDashboardStore();
             const { events } = storeToRefs(store)
 
-            store.site = props.site == '*' ? 'main' : props.site
+            store.site = props.site == '*' ? 2 : props.site
 
             store.fetchEvents()
         }

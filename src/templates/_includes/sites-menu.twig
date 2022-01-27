@@ -8,7 +8,8 @@
     {% endif %}
 {% endfor %}
 
-{% set selectedSite = craft.app.request.getQueryParam('site')|default(permittedSites[0].handle ?? '*') %}
+{% set selectedSite = craft.app.request.getQueryParam('site')|default(permittedSites[0].id ?? '2') %}
+
 {% set parameter = parameter|default('slug') %}
 {% set selectedSiteObj = parameter == 'slug' ? craft.app.getSites().getSiteByHandle(selectedSite) : craft.app.getSites().getSiteById(selectedSite) %}
 
