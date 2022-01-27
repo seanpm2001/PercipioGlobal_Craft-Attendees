@@ -40,11 +40,6 @@ class Attendee extends ActiveRecord
         $rules[] = [['orgName','name','jobRole'], 'required', 'when' => function($model){
             return $model->anonymous === 0;
         }];
-//        $rules[] = ['anonymous', function($attribute, $params){
-//            if($this->$attribute === 1){
-//
-//            }
-//        }];
         $rules[] = ['email', function($attribute, $params, Validator $validator){
             $preg = "/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,})$/i";
 
