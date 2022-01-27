@@ -17,10 +17,12 @@
                 <span class="inline-block pl-2 flex-grow" @click="toggle">{{ attendee.orgName }}&nbsp;<span v-if="(attendee.priority ?? 0) === 1" class="text-blue-600">&#9873;</span></span>
             </div>
             <div class="col-span-2 box-border p-3 cursor-pointer flex items-center" @click="toggle">
-                {{ attendee.name }}
+                <span v-if="attendee?.anonymous == 1" class="italic text-gray-400">Anonymous attendee</span>
+                <span v-else>{{ attendee.name }}</span>
             </div>
             <div class="col-span-1 xl:col-span-3 box-border p-3 cursor-pointer flex items-center" @click="toggle">
-                <span class="w-full whitespace-nowrap text-ellipsis overflow-hidden">{{ attendee.email }}</span>
+                <span v-if="attendee?.anonymous == 1" class="italic text-gray-400">Anonymous attendee</span>
+                <span v-else class="w-full whitespace-nowrap text-ellipsis overflow-hidden">{{ attendee.email }}</span>
             </div>
             <div class="box-border p-3 cursor-pointer flex items-center" @click="toggle">
                 {{ attendee.days }}
