@@ -2,16 +2,18 @@
     <article class="bg-white p-4 rounded-xl mb-4">
         <p class="font-bold text-lg">Engagement level</p>
         <apexchart
-            v-if="!loading"
+            v-if="!loading && attendees?.length > 0"
             height="150"
             type="bar"
             :options="chartOptions"
             :series="series"
         ></apexchart>
 
+        <p v-if="!loading && attendees?.length === 0" class="text-xl w-full inline-block text-center text-gray-400">There is no data to preview</p>
+
         <span :class="[
             'block w-full text-center py-2',
-            loading ? 'opacity-0' : ''
+            loading || attendees?.length === 0 ? 'opacity-0' : ''
         ]">Showing the split of engagement levels across all events in this time period</span>
 
         <span v-if="loading" class="block relative flex items-center justify-center w-full" style="height:150px">
@@ -101,7 +103,7 @@
             })
 
 
-            return { loading, chartOptions, series }
+            return { loading, chartOptions, series, attendees }
         }
     })
 </script>

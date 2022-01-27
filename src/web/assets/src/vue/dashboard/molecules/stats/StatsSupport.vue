@@ -2,16 +2,20 @@
     <article class="bg-white p-4 rounded-xl mb-4">
         <p class="font-bold text-lg">Follow on support</p>
         <apexchart
-            v-if="!loading"
+            v-if="!loading && followOnSupport?.length > 0"
             height="800px"
             type="bar"
             :options="chartOptions"
             :series="series"
         ></apexchart>
 
+        <p v-if="!loading && followOnSupport?.length === 0" class="text-xl w-full inline-block text-center text-gray-400 flex items-center justify-center w-full block" style="height:800px">
+            <span>There is no data to preview</span>
+        </p>
+
         <span :class="[
             'block w-full text-center py-2',
-            loading ? 'opacity-0' : ''
+            loading || followOnSupport?.length === 0 ? 'opacity-0' : ''
         ]">Showing what types of follow on support have been offered.</span>
 
         <span v-if="loading" class="block relative flex items-center justify-center w-full" style="height:800px">
@@ -92,7 +96,6 @@
                     }
 
                     chartOptions.value.xaxis.categories = options
-                    console.log("test",chartOptions.value.xaxis.categories,options)
 
                     series.value[0].data = []
                     Object.values(support).forEach((entry,i) => {
@@ -102,7 +105,7 @@
                 }
             })
 
-            return { chartOptions, series, loading }
+            return { chartOptions, series, loading, followOnSupport }
         }
     })
 </script>

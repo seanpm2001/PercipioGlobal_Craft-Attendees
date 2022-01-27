@@ -25,6 +25,7 @@
 
             const handlePeriodChanged = (evt) => {
                 store.period = parseInt(evt.currentTarget.value)
+                store.fetchEvents()
             }
 
             return { period, handlePeriodChanged }

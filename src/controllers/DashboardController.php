@@ -10,51 +10,111 @@ use percipiolondon\attendees\records\FollowOnSupportOptions;
 
 class DashboardController extends Controller
 {
-    public function actionFetchEvents(string $site = '*', string $period = '3')
+    public function actionFetchEvents(string $site = '', string $period = '3')
     {
-        $site = $site === 'main' ? '*' : $site;
-
-        $events = \craft\elements\Entry::find()
-            ->site($site)
-            ->anyStatus()
-            ->section(Attendees::getInstance()->settings->eventSection)
-            ->all();
-
-        $before = null;
-        $after = null;
+        $site = $site === '2' ? '' : $site;
 
         if(strlen($period) > 1){
-            $before = date('U', strtotime('31 july ' . (int)$period ));
-            $after = date('U', strtotime('01 september ' . ((int)$period - 1) ));
+            $end = strtotime('31 july ' . (int)$period );
+            $start = strtotime('01 september ' . ((int)$period - 1) );
         }else{
-            $before = date("U");
-            $after = date("U", strtotime('-' . $period . ' Months'));
+            $end = strtotime('today');
+            $start = strtotime('-' . $period . ' Months');
         }
 
-        $sorted = $this->sortEvents($events, $before, $after);
+        $whereSiteId = strlen($site) > 0 ? 'AND siteId = ' . $site : '';
+
+        $connection = \Yii::$app->getDb();
+        $command = $connection->createCommand("
+            SELECT entries.id FROM entries
+                INNER JOIN matrixblocks ON matrixblocks.ownerId = entries.id
+                WHERE matrixblocks.id IN
+                (
+                    SELECT elementId
+                       FROM matrixcontent_eventdatestime
+                        WHERE UNIX_TIMESTAMP(field_eventDate_startDateTime) BETWEEN " . $start . " AND  " . $end . "
+                        " . $whereSiteId . "
+                    UNION ALL
+                      SELECT elementId
+                       FROM matrixcontent_eventdatestimeonline
+                       WHERE UNIX_TIMESTAMP(field_eventDate_startDateTime) BETWEEN " . $start . " AND  " . $end . "
+                        " . $whereSiteId . "
+                    UNION ALL
+                      SELECT elementId
+                       FROM matrixcontent_eventhybriddatestime
+                       WHERE UNIX_TIMESTAMP(field_eventDate_startDateTime) BETWEEN " . $start . " AND  " . $end . "
+                        " . $whereSiteId . "
+                    )
+        ");
+
+        $result = $command->queryAll();
+
+        $events = $this->_returnUniqueProperty($result, 'id');
+
         $attendees = [];
         $followonsupport = [];
 
-        foreach($sorted as $event){
+        foreach($events as $event){
+
             $evtAttendees = AttendeeRecord::find()
-                ->where(['eventId' => $event->id])
+                ->where(['eventId' => $event['id']])
                 ->all();
 
             $evtFollow = FollowOnSupport::find()
-                ->where(['eventId' => $event->id])
+                ->where(['eventId' => $event['id']])
                 ->all();
 
             array_push($attendees, ...$evtAttendees);
             array_push($followonsupport, ...$evtFollow);
         }
 
-
         return $this->asJson([
-            "events" => $sorted,
+            "events" => $events,
             "attendees" => $attendees,
             "follow_on_support" => $followonsupport,
             "follow_on_support_options" => FollowOnSupportOptions::find()->all()
         ]);
+
+//        $events = \craft\elements\Entry::find()
+//            ->site($site)
+//            ->anyStatus()
+//            ->section(Attendees::getInstance()->settings->eventSection)
+//            ->all();
+//
+//        $before = null;
+//        $after = null;
+//
+//        if(strlen($period) > 1){
+//            $before = date('U', strtotime('31 july ' . (int)$period ));
+//            $after = date('U', strtotime('01 september ' . ((int)$period - 1) ));
+//        }else{
+//            $before = date("U");
+//            $after = date("U", strtotime('-' . $period . ' Months'));
+//        }
+//
+//        $sorted = $this->sortEvents($events, $before, $after);
+//        $attendees = [];
+//        $followonsupport = [];
+//
+//        foreach($sorted as $event){
+//            $evtAttendees = AttendeeRecord::find()
+//                ->where(['eventId' => $event->id])
+//                ->all();
+//
+//            $evtFollow = FollowOnSupport::find()
+//                ->where(['eventId' => $event->id])
+//                ->all();
+//
+//            array_push($attendees, ...$evtAttendees);
+//            array_push($followonsupport, ...$evtFollow);
+//        }
+//
+//        return $this->asJson([
+//            "events" => $sorted,
+//            "attendees" => $attendees,
+//            "follow_on_support" => $followonsupport,
+//            "follow_on_support_options" => FollowOnSupportOptions::find()->all()
+//        ]);
     }
 
     private function sortEvents($events, $before, $after)
@@ -123,5 +183,11 @@ class DashboardController extends Controller
 
         return $eventDays;
 
+    }
+
+    private static function _returnUniqueProperty($array, $property)
+    {
+        $tempArray = array_unique(array_column($array, $property));
+        return array_values(array_intersect_key($array, $tempArray));
     }
 }

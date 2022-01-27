@@ -3,16 +3,18 @@
         <p class="font-bold text-lg">Engagement Data Completion</p>
 
         <apexchart
-            v-if="!loading"
+            v-if="!loading && attendees?.length > 0"
             height="150"
             type="bar"
             :options="chartOptions"
             :series="series"
         ></apexchart>
 
+        <p v-if="!loading && attendees?.length === 0" class="text-xl w-full inline-block text-center text-gray-400">There is no data to preview</p>
+
         <span :class="[
             'block w-full text-center py-2',
-            loading ? 'opacity-0' : ''
+            loading || attendees?.length === 0 ? 'opacity-0' : ''
         ]"><strong>{{ events?.length }}</strong> total training events, <strong>{{ allAttendees }}</strong> have attendees and ({{ events?.length * totalAttendeesAreApproved }}%) are verified.</span>
 
         <span v-if="loading" class="block relative flex items-center justify-center w-full" style="height:150px">
@@ -120,7 +122,7 @@
                 }
             })
 
-            return { loading, chartOptions, series, events, allAttendees, totalAttendeesAreApproved }
+            return { loading, chartOptions, series, events, allAttendees, totalAttendeesAreApproved, attendees }
         }
     })
 </script>

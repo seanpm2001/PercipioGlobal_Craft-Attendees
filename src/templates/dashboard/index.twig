@@ -55,7 +55,8 @@
 {% block actionButton %}
 
     {%- include "craft-attendees/_includes/sites-menu.twig" with {
-        baseUrl: pluginCpUrl ~ '/dashboard'
+        baseUrl: pluginCpUrl ~ '/dashboard',
+        parameter: 'id'
     } -%}
 
 {% endblock %}
