@@ -127,6 +127,7 @@ export const useTrainingsStore = defineStore('trainings', {
                         updatedAttendee.newsletter = formObj?.newsletter
                         updatedAttendee.approved = formObj?.approved
                         updatedAttendee.jobRole = formObj?.jobRole
+                        updatedAttendee.anonymous = formObj?.anonymous
 
                         self.attendees[attendeeIndex] = updatedAttendee
                     }else{
@@ -157,6 +158,7 @@ export const useTrainingsStore = defineStore('trainings', {
             .then(function (response) {
                 self.loading = false
                 self.totalAttendees = parseInt(response?.data?.meta?.total)
+                console.log(response?.data?.attendees)
                 self.attendees = offset !== 0 ? self.attendees.concat(response?.data?.attendees) : response?.data?.attendees
             });
         },

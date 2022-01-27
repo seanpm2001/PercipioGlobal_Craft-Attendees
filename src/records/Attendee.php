@@ -22,6 +22,7 @@ use yii\validators\Validator;
  * @property string $eventId;
  * @property string $approved;
  * @property string $identifier;
+ * @property string $anonymous;
  **/
 
 class Attendee extends ActiveRecord
@@ -35,7 +36,15 @@ class Attendee extends ActiveRecord
     {
         $rules = parent::rules();
 
-        $rules[] = [['orgName','name','jobRole','days','eventId'], 'required'];
+        $rules[] = [['days','eventId'], 'required'];
+        $rules[] = [['orgName','name','jobRole'], 'required', 'when' => function($model){
+            return $model->anonymous === 0;
+        }];
+//        $rules[] = ['anonymous', function($attribute, $params){
+//            if($this->$attribute === 1){
+//
+//            }
+//        }];
         $rules[] = ['email', function($attribute, $params, Validator $validator){
             $preg = "/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,})$/i";
 

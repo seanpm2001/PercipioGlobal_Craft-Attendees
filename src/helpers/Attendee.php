@@ -38,6 +38,7 @@ class Attendee
         $attendee->days = $request->getBodyParam('days') ?? 1;
         $attendee->newsletter = $request->getBodyParam('newsletter') ?? 0;
         $attendee->approved = $request->getBodyParam('approved') ?? 0;
+        $attendee->anonymous = $request->getBodyParam('anonymous') ?? 0;
         $attendee->priority = $request->getBodyParam('priority') ?? 0;
         $attendee->eventId = $request->getBodyParam('event');
         $attendee->siteId = $request->getBodyParam('siteId');
@@ -78,6 +79,7 @@ class Attendee
         $attendee->newsletter = str_contains($entry['newsletter'] ?? 'n', 'y');
         $attendee->eventId = $entry['event'] ?? '';
         $attendee->siteId = $entry['site'] ?? '';
+        $attendee->anonymous = 0;
         $attendee->identifier = $identifier ?? '';
 
         return $attendee;

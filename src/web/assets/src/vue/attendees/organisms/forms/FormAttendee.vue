@@ -18,7 +18,7 @@
         <input type="hidden" name="siteId" :value="site">
         <input type="hidden" name="attendeeId" :value="attendeeInput?.id ?? values?.id ?? ''">
 
-        <div class="grid grid-cols-3 gap-x-4">
+        <div class="grid grid-cols-3 gap-x-4 border-b border-blue-100 mb-6 border-solid">
             <input-school :values="values" @schoolSelect="handleSchoolSelect" @schoolInput="handleSchoolInput" />
             <label class="block mb-6">
                 <span class="text-xs font-bold text-gray-400 block mb-1">School is verified</span>
@@ -29,31 +29,41 @@
         <div class="grid grid-cols-3 gap-x-4">
             <label class="block mb-6">
                 <span class="text-xs font-bold text-gray-400 block mb-1">Name of attendee <span class="text-blue-500">*</span></span>
-                <input
-                    name="name"
-                    :value="attendeeInput?.name ?? values?.name ?? ''"
-                    :class="[
-                        'block w-full px-2 py-2 text-sm text-gray-600 appearance-none box-border bg-gray-100 rounded-lg',
-                        attendeeFormErrors?.name ? 'border-solid border-red-300' : 'border-solid border-gray-100'
-                    ]"
-                    placeholder="Enter the name of the attendee"
-                />
+                <div class="relative">
+                    <input
+                        name="name"
+                        :value="name"
+                        :class="[
+                            'block w-full px-2 py-2 text-sm text-gray-600 appearance-none box-border bg-gray-100 rounded-lg',
+                            attendeeFormErrors?.name ? 'border-solid border-red-300' : 'border-solid border-gray-100'
+                        ]"
+                        placeholder="Enter the name of the attendee"
+                    />
+                    <span v-if="anonymous" class="bg-gray-100 absolute left-0 top-0 w-full h-full rounded-lg flex">
+                        <span class="italic text-gray-400 px-2" style="margin-bottom:0px!important;">Anonymous attendee</span>
+                    </span>
+                </div>
             </label>
             <label class="block mb-6">
                 <span class="text-xs font-bold text-gray-400 block mb-1">Email address of attendee <span class="text-blue-500">*</span></span>
-                <input
-                    name="email"
-                    :value="attendeeInput?.email ?? values?.email ?? ''"
-                    :class="[
-                        'block w-full px-2 py-2 text-sm text-gray-600 appearance-none box-border bg-gray-100 rounded-lg',
-                        attendeeFormErrors?.email ? 'border-solid border-red-300' : 'border-solid border-gray-100'
-                    ]"
-                    placeholder="Enter the email of the attendee"
-                />
+                <div class="relative">
+                    <input
+                        name="email"
+                        :value="email"
+                        :class="[
+                            'block w-full px-2 py-2 text-sm text-gray-600 appearance-none box-border bg-gray-100 rounded-lg',
+                            attendeeFormErrors?.email ? 'border-solid border-red-300' : 'border-solid border-gray-100'
+                        ]"
+                        placeholder="Enter the email of the attendee"
+                    />
+                    <span v-if="anonymous" class="bg-gray-100 absolute left-0 top-0 w-full h-full rounded-lg flex">
+                        <span class="italic text-gray-400 px-2" style="margin-bottom:0px!important;">Anonymous attendee</span>
+                    </span>
+                </div>
             </label>
             <label class="block mb-6">
-                <span class="text-xs font-bold text-gray-400 block mb-1">Subscribe for the newsletter</span>
-                <input-switch name="newsletter" :checked="attendeeInput?.newsletter ?? values?.newsletter ?? 0" />
+                <span class="text-xs font-bold text-gray-400 block mb-1">Attendee is anonymous?</span>
+                <input-switch name="anonymous" :checked="attendeeInput?.anonymous ?? values?.anonymous ?? 0" @changed="handleAnonymous" />
             </label>
         </div>
 
@@ -63,11 +73,11 @@
 
                 <select
                     name="jobRole"
-                    :value="attendeeInput?.jobRole ?? values?.jobRole ?? ''"
+                    :value="jobRole"
                     :class="[
-                        'block h-10 px-1 rounded-md bg-gray-100 w-full',
-                        attendeeFormErrors?.jobRole ? 'border-solid border-red-300' : 'border-none'
-                    ]"
+                    'block h-10 px-1 rounded-md bg-gray-100 w-full',
+                    attendeeFormErrors?.jobRole ? 'border-solid border-red-300' : 'border-none'
+                ]"
                 >
                     <option value="" default disabled class="text-gray-400">Select the job role of the attendee</option>
                     <option value="na">Not Applicable</option>
@@ -103,6 +113,10 @@
                     <option value="14">14</option>
                     <option value="15">15</option>
                 </select>
+            </label>
+            <label class="block mb-6">
+                <span class="text-xs font-bold text-gray-400 block mb-1">Subscribe for the newsletter</span>
+                <input-switch name="newsletter" :checked="newsletter ?? 0" />
             </label>
         </div>
 
@@ -177,12 +191,19 @@
         },
         setup( props, {emit} ){
             const form = ref(null)
-            const schoolDropdown = ref(null)
             const errors = ref(null)
-            const urn = ref( props.values?.urn ?? null)
+            const schoolDropdown = ref(null)
             const saveAnother = ref(false)
+
+            const urn = ref( props.values?.urn ?? null)
             const approved = ref(props.attendeeInput?.approved ?? (urn.value?.length > 0 ? 1 : 0))
             const school = ref(props.values?.orgName ?? '')
+            const name = ref(props.attendeeInput?.name ?? props.values?.name ?? '')
+            const email = ref(props.attendeeInput?.email ?? props.values?.email ?? '')
+            const jobRole = ref(props.attendeeInput?.jobRole ?? props.values?.jobRole ?? '')
+            const newsletter = ref(props.attendeeInput?.newsletter ?? props.values?.newsletter ?? 0)
+            const anonymous = ref(props.attendeeInput?.anonymous ?? props.values?.anonymous ?? 0)
+
             const store = useTrainingsStore()
             const {
                 attendeeInput,
@@ -234,6 +255,18 @@
                 approved.value = approved.value == 1 ? 0 : 1
             }
 
+            const handleAnonymous = (val) => {
+                anonymous.value = val
+
+                if(val === 1){
+                    newsletter.value = 0
+                    name.value = ''
+                    email.value = ''
+                    jobRole.value = 'na'
+                }
+
+            }
+
             watchEffect(() => {
                 form.value?.querySelectorAll('input[name="orgName"]')[0].focus()
 
@@ -250,6 +283,11 @@
                 loading,
                 showForm,
                 urn,
+                name,
+                email,
+                jobRole,
+                newsletter,
+                anonymous,
                 approved,
                 school,
                 handleSubmitButton,
@@ -258,7 +296,8 @@
                 keyup,
                 handleSchoolInput,
                 handleSchoolSelect,
-                handleSchoolVerifyChange
+                handleSchoolVerifyChange,
+                handleAnonymous
             };
 
         }
