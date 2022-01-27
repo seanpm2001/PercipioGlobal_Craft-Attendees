@@ -32,9 +32,10 @@
                 <div class="relative">
                     <input
                         name="name"
-                        :value="name"
+                        :value="attendeeInput?.name ?? name"
                         :class="[
                             'block w-full px-2 py-2 text-sm text-gray-600 appearance-none box-border bg-gray-100 rounded-lg',
+                            anonymous ? 'pointer-event-none' : '',
                             attendeeFormErrors?.name ? 'border-solid border-red-300' : 'border-solid border-gray-100'
                         ]"
                         placeholder="Enter the name of the attendee"
@@ -45,13 +46,14 @@
                 </div>
             </label>
             <label class="block mb-6">
-                <span class="text-xs font-bold text-gray-400 block mb-1">Email address of attendee <span class="text-blue-500">*</span></span>
+                <span class="text-xs font-bold text-gray-400 block mb-1">Email address of attendee</span>
                 <div class="relative">
                     <input
                         name="email"
-                        :value="email"
+                        :value="attendeeInput?.email ?? email"
                         :class="[
                             'block w-full px-2 py-2 text-sm text-gray-600 appearance-none box-border bg-gray-100 rounded-lg',
+                            anonymous ? 'pointer-event-none' : '',
                             attendeeFormErrors?.email ? 'border-solid border-red-300' : 'border-solid border-gray-100'
                         ]"
                         placeholder="Enter the email of the attendee"
@@ -73,7 +75,7 @@
 
                 <select
                     name="jobRole"
-                    :value="jobRole"
+                    :value="attendeeInput?.jobRole ?? jobRole"
                     :class="[
                     'block h-10 px-1 rounded-md bg-gray-100 w-full',
                     attendeeFormErrors?.jobRole ? 'border-solid border-red-300' : 'border-none'
