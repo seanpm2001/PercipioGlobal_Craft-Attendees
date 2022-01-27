@@ -94,6 +94,7 @@ class TrainingController extends Controller
         $success = $attendee->save(true);
         $savedAttendee = AttendeeRecord::find()
             ->where(['eventId' => $attendee->eventId, 'name' => $attendee->name, 'orgName' => $attendee->orgName, 'email' => $attendee->email])
+            ->orderBy('dateCreated DESC')
             ->one();
 
         $response = (object)[
