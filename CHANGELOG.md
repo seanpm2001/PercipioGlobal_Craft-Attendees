@@ -20,6 +20,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Added
 - Added the dashboard view
 
-## 1.0.4 - 2022-01-21
+## 1.0.4 - 2022-01-28
 ### Fix
 - Fixed the events query
+
+## 1.0.5 - 2022-01-28
+### Fix
+- Update dashboard event fetching and sorting through Twig
