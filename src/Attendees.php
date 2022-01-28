@@ -23,6 +23,7 @@ use craft\services\Plugins;
 
 use nystudio107\pluginvite\services\VitePluginService;
 
+use percipiolondon\attendees\helpers\EventSortExtension;
 use percipiolondon\attendees\models\Settings;
 use percipiolondon\attendees\assetbundles\craftattendees\AttendeesAsset;
 use percipiolondon\attendees\records\Attendee as AttendeeRecord;
@@ -129,6 +130,11 @@ class Attendees extends Plugin
         $this->_registerCpRoutes();
         $this->_registerCraftVariables();
         $this->_registerServices();
+
+        if(Craft::$app->request->getIsCpRequest()){
+            $eventSortExtension = new EventSortExtension();
+            Craft::$app->view->registerTwigExtension($eventSortExtension);
+        }
 
         Craft::info(
             Craft::t(

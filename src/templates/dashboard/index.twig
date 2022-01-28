@@ -43,6 +43,8 @@
 {% endfor %}
 
 {% set selectedSite = craft.app.request.getQueryParam('site')|default(permittedSites[0].id ?? '*') %}
+{% set selectedTime = craft.app.request.getQueryParam('time')|default('3') %}
+{% set settings = craft.app.getPlugins().getPlugin('craft-attendees').getSettings() %}
 
 {# The URL to this plugin's base CP section #}
 {% set pluginCpUrl = url('craft-attendees') %}
@@ -63,6 +65,7 @@
     { label: "Dashboard"|t('craft-attendees'), url: url(pluginCpUrl ~ '/dashboard') },
 ] %}
 
+
 {# Content that should appear in the page header#}
 {% block actionButton %}
 
@@ -77,22 +80,31 @@
 {% set content %}
     {{ craft.viteattendees.register('/src/js/dashboard.ts', false, scriptTagOptions) }}
 
+    {% if selectedSite == '2' %}
+        {% set events = craft.entries.section(settings.eventSection)
+            .site('*')
+            .anyStatus()
+            .all()
+        %}
+    {% else %}
+        {% set events = craft.entries.section(settings.eventSection)
+            .siteId(selectedSite)
+            .anyStatus()
+            .all()
+        %}
+    {% endif %}
 
-   {#    <img src="{{ iconUrl }}" height="64" width="64" />#}
-    <!--div class="w-full xl:w-3/4">
-        <p class="textline">The RSN data engagement module is currently being extended and enhanced to a more robust and versatile platform.<br/><br/>
-
-        Currently this module is in beta phase and undergoing testing. It should not be used for entering final data - any data added during this testing phase will be deleted.<br/><br/>
-
-        Please continue to add / export your data using the existing RSN Data tooling until you are notified that this new platform is ready for use and contains all previously entered data.<br/><br/>
-
-        In the mean time, feel free to test this new area out to see how it will work. </p>
-    </div-->
+    {% set ids = sort(events, selectedTime) %}
 
     <div id="dashboard" class="bg-gray-100 p-6 pt-2 -mt-6 -ml-6 relative">
 
-        <header-dashboard></header-dashboard>
-        <stats-dashboard site="{{ selectedSite }}"></stats-dashboard>
+        <header-dashboard>
+            {%- include "craft-attendees/_includes/time-menu.twig" with {
+                baseUrl: pluginCpUrl ~ '/dashboard',
+                parameter: 'id'
+            } -%}
+        </header-dashboard>
+        <stats-dashboard site="{{ selectedSite }}" ids="{{ ids|json_encode }}"></stats-dashboard>
 
         <div class="block bg-gray-100 w-6 left-full pb-6 top-0 h-full absolute"></div>
         <div class="block bg-gray-100 h-6 top-full left-0 w-full absolute"></div>

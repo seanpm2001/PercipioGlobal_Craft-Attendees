@@ -2,6 +2,7 @@
 
 namespace percipiolondon\attendees\controllers;
 
+use Craft;
 use craft\web\Controller;
 use percipiolondon\attendees\Attendees;
 use percipiolondon\attendees\records\Attendee as AttendeeRecord;
@@ -99,5 +100,38 @@ class DashboardController extends Controller
             "follow_on_support_options" => FollowOnSupportOptions::find()->all()
         ]);
 
+    }
+
+    public function actionFetch()
+    {
+        $this->requireLogin();
+        $request = Craft::$app->getRequest();
+
+        $ids = $request->getBodyParam('events');
+
+        $events = json_decode($ids);
+        $attendees = [];
+        $followonsupport = [];
+
+        foreach($events as $event){
+
+            $evtAttendees = AttendeeRecord::find()
+                ->where(['eventId' => $event])
+                ->all();
+
+            $evtFollow = FollowOnSupport::find()
+                ->where(['eventId' => $event])
+                ->all();
+
+            array_push($attendees, ...$evtAttendees);
+            array_push($followonsupport, ...$evtFollow);
+        }
+
+        return $this->asJson([
+            "events" => $events,
+            "attendees" => $attendees,
+            "follow_on_support" => $followonsupport,
+            "follow_on_support_options" => FollowOnSupportOptions::find()->all()
+        ]);
     }
 }

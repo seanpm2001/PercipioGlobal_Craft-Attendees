@@ -2,7 +2,8 @@
 
 {% js %}
     window.Attendee = {{ {
-        "cpUrl": cpUrl()
+        "cpUrl": cpUrl(),
+        "csrf": craft.app.request.csrfToken
     }|json_encode|raw }}
 {% endjs %}
 

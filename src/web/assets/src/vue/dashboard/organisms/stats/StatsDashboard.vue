@@ -26,15 +26,18 @@
             site: {
                 type: String,
                 required: true
+            },
+            ids: {
+                type: String,
+                required: true
             }
         },
         setup(props){
             const store = useDashboardStore();
-            const { events } = storeToRefs(store)
 
             store.site = props.site == '*' ? 2 : props.site
 
-            store.fetchEvents()
+            store.fetchEvents(props.ids)
         }
     });
 

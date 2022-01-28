@@ -2,6 +2,7 @@ import { defineStore } from "pinia"
 import axios from 'axios'
 
 const ENDPOINT = window?.Attendee?.cpUrl ?? 'https://researchschool.org.uk/cp'
+const CSRF = window?.Attendee?.csrf ?? ''
 
 export const useDashboardStore = defineStore('trainings', {
     state:() => ({
@@ -14,16 +15,22 @@ export const useDashboardStore = defineStore('trainings', {
         loading: false
     }),
     actions: {
-        fetchEvents(){
+        fetchEvents(ids){
             const self = this;
             this.loading = true;
 
             const site = this.site
             const period = this.period
 
+            const obj = {
+                CRAFT_CSRF_TOKEN : CSRF,
+                events: ids,
+            }
+
             axios({
-                method: 'get',
-                url: `${ENDPOINT}/craft-attendees/dashboard/events/${site}/${period}`,
+                method: 'post',
+                url: `${ENDPOINT}/actions/craft-attendees/dashboard/fetch`,
+                data: obj
             })
             .then(function (response) {
                 self.loading = false
@@ -32,6 +39,18 @@ export const useDashboardStore = defineStore('trainings', {
                 self.followOnSupport = response?.data?.follow_on_support
                 self.followOnSupportOptions = response?.data?.follow_on_support_options
             });
+
+            // axios({
+            //     method: 'get',
+            //     url: `${ENDPOINT}/craft-attendees/dashboard/events/${site}/${period}`,
+            // })
+            // .then(function (response) {
+            //     self.loading = false
+            //     self.events = response?.data?.events
+            //     self.attendees = response?.data?.attendees
+            //     self.followOnSupport = response?.data?.follow_on_support
+            //     self.followOnSupportOptions = response?.data?.follow_on_support_options
+            // });
         },
     }
 })
