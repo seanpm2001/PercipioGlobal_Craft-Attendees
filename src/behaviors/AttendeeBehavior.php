@@ -1,19 +1,19 @@
 <?php
 
-namespace percipiolondon\craftattendees\behaviors;
+namespace percipiolondon\attendees\behaviors;
 
-use percipiolondon\craftattendees\elements\Attendee;
-use percipiolondon\craftattendees\elements\db\AttendeeQuery;
+use percipiolondon\attendees\records\Attendee;
 use yii\base\Behavior;
+use yii\db\ActiveQuery;
 
 class AttendeeBehavior extends Behavior
 {
-    public function attendees($criteria = null): AttendeeQuery
+    public function attendees($criteria = null): ActiveQuery
     {
         $query = Attendee::find();
 
         if($criteria) {
-            \Craft::configure($query, $criteria);
+            $query->where(['eventId' => $criteria]);
         }
 
         return $query;

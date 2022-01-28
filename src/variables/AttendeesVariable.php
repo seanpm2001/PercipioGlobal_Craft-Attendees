@@ -1,10 +1,10 @@
 <?php
 
-namespace percipiolondon\craftattendees\variables;
+namespace percipiolondon\attendees\variables;
 
 use Craft;
 
-use percipiolondon\craftattendees\Craftattendees;
+use percipiolondon\attendees\Craftattendees;
 
 use nystudio107\pluginvite\variables\ViteVariableInterface;
 use nystudio107\pluginvite\variables\ViteVariableTrait;

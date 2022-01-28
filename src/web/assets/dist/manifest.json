@@ -1,0 +1,43 @@
+{
+  "src/js/attendees.ts": {
+    "file": "assets/attendees.957033f0.js",
+    "src": "src/js/attendees.ts",
+    "isEntry": true,
+    "imports": [
+      "_vendor.289525c3.js",
+      "_plugin-vue_export-helper.d3242fce.js"
+    ],
+    "css": [
+      "assets/app.d0108630.css"
+    ]
+  },
+  "src/js/trainings.ts": {
+    "file": "assets/trainings.1a9e8f97.js",
+    "src": "src/js/trainings.ts",
+    "isEntry": true,
+    "css": [
+      "assets/app.d0108630.css"
+    ]
+  },
+  "src/js/dashboard.ts": {
+    "file": "assets/dashboard.3de526a6.js",
+    "src": "src/js/dashboard.ts",
+    "isEntry": true,
+    "imports": [
+      "_vendor.289525c3.js",
+      "_plugin-vue_export-helper.d3242fce.js"
+    ],
+    "css": [
+      "assets/app.d0108630.css"
+    ]
+  },
+  "_vendor.289525c3.js": {
+    "file": "assets/vendor.289525c3.js"
+  },
+  "_plugin-vue_export-helper.d3242fce.js": {
+    "file": "assets/plugin-vue_export-helper.d3242fce.js",
+    "imports": [
+      "_vendor.289525c3.js"
+    ]
+  }
+}

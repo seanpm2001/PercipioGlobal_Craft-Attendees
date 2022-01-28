@@ -16,11 +16,27 @@
 {% extends "craft-attendees/_layouts/_cp" %}
 {% import "_includes/forms" as forms %}
 
+{% set scriptTagOptions = {
+    'depends': [
+        'percipiolondon\\attendees\\assetbundles\\craftattendees\\AttendeesAsset'
+    ],
+} %}
 
-{% do view.registerAssetBundle("percipiolondon\\craftattendees\\assetbundles\\trainingscpsection\\TrainingsCPSectionAsset") %}
+{%- set permittedSites = [] %}
+
+{% for site in craft.app.sites.getAllSites() %}
+    {%- set permitted = currentUser.can('editSite:'~site.uid) -%}
+
+    {%- if permitted -%}
+        {% set permittedSites = permittedSites|merge([site]) %}
+    {% endif %}
+{% endfor %}
+
+
+{#{% do view.registerAssetBundle("percipiolondon\\craftattendees\\assetbundles\\trainingscpsection\\TrainingsCPSectionAsset") %}#}
 
 {% set pluginCpUrl = url('craft-attendees') %}
-{% set selectedSite = craft.app.request.getQueryParam('site')|default('main') %}
+{% set selectedSite = craft.app.request.getQueryParam('site')|default(permittedSites[0].handle ?? '*') %}
 {% set settings = craft.app.getPlugins().getPlugin('craft-attendees').getSettings() %}
 {% set title = "Trainings" %}
 {% set selectedSubnavItem = 'trainings' %}
@@ -30,102 +46,162 @@
     { label: "Trainings"|t('craft-attendees'), url: url(pluginCpUrl ~ '/trainings') },
 ] %}
 
+{% set searchQuery = craft.app.request.getParam('q') ?? '' %}
+{% set orderQuery = craft.app.request.getParam('order') ?? 'desc' %}
+
 {% set events = craft.entries.section(settings.eventSection)
+    .search(searchQuery)
+    .site(selectedSite)
     .anyStatus()
-    .all()
+    .limit(20)
 %}
+
+{% block toolbar %}
+    <div class="flex-grow texticon search icon clearable">
+        <form class="fullwidth flex" action="{{ url(pluginCpUrl ~ '/trainings') }}">
+            <input type="search" name="q" aria-label="Search" placeholder="Search" class="text fullwidth">
+            <input type="hidden" name="site" value="{{ selectedSite }}" />
+            <button type="submit" class="btn submit icon search">Search</button>
+        </form>
+    </div>
+{% endblock %}
 
 {# Content that should appear in the page header#}
 {% block actionButton %}
-    {% include "rsn-data/_includes/sites-menu" with {
-        baseUrl: pluginCpUrl ~ '/' ~ selectedSubnavItem,
-        currentSiteId: currentSite.id,
-        currentSiteHandle: currentSite.handle,
-        currentSiteName:  currentSite.name
+    {% include "craft-attendees/_includes/sites-menu" with {
+        baseUrl: pluginCpUrl ~ '/' ~ selectedSubnavItem
     } %}
 {% endblock %}
 
 {# The content of the CP Section#}
 {% set content %}
 
-    <div class="tableview tablepane">
-        <table class="data fullwidth">
-            <thead>
-            <tr>
-                <th scope="col" data-attribute="title" class="orderable" style="width:35%">Training</th>
-                <th scope="col" data-attribute="category" class="orderable">Type</th>
-                <th scope="col" data-attribute="eventDate" class="ordered desc">Event Date</th>
-                <th scope="col" data-attribute="attendees" class="orderable">Attendees</th>
-                <th scope="col" data-attribute="engagement" class="orderable">Engagement</th>
-            </tr>
-            </thead>
-            <tbody>
+    {% if not settings.eventSection %}
+        There's no section selected in the settings. Please provide the correct section
+    {% else %}
 
-                {% for event in events %}
+        {% paginate events as pageInfo, pageEntries %}
 
-                    {% if event.type == 'onlineEvent' %}
-                        {% set eventTimetable = event.eventDatesTimeOnline.inReverse().one() %}
+        <div class="tableview tablepane">
+            <table class="data fullwidth">
+                <thead>
+                <tr>
+                    <th scope="col" data-attribute="title" style="width:35%">Training</th>
+                    <th scope="col" data-attribute="category">Type</th>
+                    <th scope="col" data-attribute="eventDate" class="relative">
+                        Event Date
+{#                        <a href="{{ url(pluginCpUrl ~ '/trainings') }}{{ craft.app.request.queryString|length > 0 ? '?' ~ craft.app.request.queryString ~ '&order=desc' : '?order=desc' }}" class="block absolute left-0 top-0 w-full h-full z-10"></a>#}
+                    </th>
+                    <th scope="col" data-attribute="attendees">Attendees</th>
+                    <th scope="col" data-attribute="engagement">Engagement</th> <!--  class="orderable" -->
+                </tr>
+                </thead>
+                <tbody>
+
+                    {% for event in pageEntries %}
+
+                        {% if event.type == 'onlineEvent' %}
+                            {% set eventTimetable = event.eventDatesTimeOnline.inReverse().one() %}
+                        {% elseif event.type == 'hybridEvent' %}
+                            {% set eventTimetable = event.eventHybridDatesTime.inReverse().one() %}
+                        {% else %}
+                            {% set eventTimetable = event.eventDatesTime ? event.eventDatesTime.inReverse().one() : null %}
+                        {% endif %}
+
+                        {% set eventDate = eventTimetable.startDateTime ?? '' %}
+                        {% if eventDate %}
+                            {% set eventDate = eventTimetable.startDateTime|date('d/n/Y') %}
+                        {% endif %}
+
+                        {% set dataEngagement = null %}
+                        {% set dataEnganged = 0 %}
+                        {% set dataSustained = 0 %}
+                        {% set dataEmbedded = 0 %}
+
+                        <tr data-id="{{ event.id }}" tabindex="0">
+                            <td data-title="{{event.slug }} " data-titlecell="">
+                                <div class="element small hasstatus"
+                                     data-type="craft\elements\Entry"
+                                     data-id="{{ event.id }}"
+                                     data-status="{{  event.enabled ? 'enabled' : 'disabled' }}"
+                                     data-label="{{ event.title }}"
+                                     data-url="{{ event.url }}"
+                                     title="{{ event.title }}">
+                                    <span class="status {{ event.enabled ? 'enabled' : 'disabled' }}"></span>
+                                    <div class="label">
+                                        <span class="title">
+                                            <a href="{{ pluginCpUrl ~ '/' ~ selectedSubnavItem ~ '/' ~ event.id }}">{{ event.title }}</a>
+                                        </span>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td data-titleType>
+                                {% set categoryName = event.eventCategories.one().title ?? null %}
+                                <span>{{- categoryName -}}</span>
+                            </td>
+                            <td data-title="date" data-attr="date">
+                                <span>{{ eventDate }} </span>
+                            </td>
+                            <td data-title="Attendees">
+                                <span>{{ craft.attendees(event.id).count() }} </span>
+                            </td>
+                            <td>
+                                <div class="progress">
+                                    <div class="meter bg-red" title="Engaged {{ dataEnganged }}%">
+                                        <span style="width: {{ dataEnganged }}%"></span>
+                                    </div>
+                                    <div class="meter bg-orange" title="Sustained {{ dataSustained }}%">
+                                        <span style="width: {{ dataSustained }}%"></span>
+                                    </div>
+                                    <div class="meter bg-blue" title="Embedded {{ dataEmbedded }}%">
+                                        <span style="width: {{ dataEmbedded }}%"></span>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    {% endif %}
+
+    {{ craft.viteattendees.register('/src/js/trainings.ts', false, scriptTagOptions) }}
+{% endset %}
+
+{% set prevLabel = prevLabel ?? 'Previous Page'|t('app') %}
+{% set nextLabel = nextLabel ?? 'Next Page'|t('app') %}
+{% set itemLabel = "event" %}
+{% set itemsLabel = "events" %}
+
+{% set footer %}
+
+    {% if settings.eventSection %}
+        <div class="flex pagination">
+            <a href="{{ pageInfo.prevUrl ?? '#' }}" class="page-link prev-page {{ pageInfo.prevUrl ? '' : 'disabled' }}" title="Previous Page"></a>
+            <a href="{{ pageInfo.nextUrl ?? '#' }}" class="page-link next-page {{ pageInfo.nextUrl ? '' : 'disabled' }}" title="Next Page"></a>
+            <div class="page-info">
+                {% if pageInfo.total %}
+                    {% if itemLabel and itemsLabel %}
+                        {{ "{first, number}-{last, number} of {total, number} {total, plural, =1{{item}} other{{items}}}"|t('app', {
+                            first: pageInfo.first,
+                            last: pageInfo.last,
+                            total: pageInfo.total,
+                            item: itemLabel,
+                            items: itemsLabel
+                        }) }}
                     {% else %}
-                        {% set eventTimetable = event.eventDatesTime ? event.eventDatesTime.inReverse().one() : null %}
+                        {{ "{first}-{last} of {total}"|t('app', {
+                            first: pageInfo.first|number,
+                            last: pageInfo.last|number,
+                            total: pageInfo.total|number
+                        }) }}
                     {% endif %}
-
-                    {% set eventDate = eventTimetable.startDateTime ?? '' %}
-                    {% if eventDate %}
-                        {% set eventDate = eventTimetable.startDateTime|date('d/n/Y') %}
-                    {% endif %}
-
-                    {% set dataEngagement = null %}
-                    {% set dataEnganged = 0 %}
-                    {% set dataSustained = 0 %}
-                    {% set dataEmbedded = 0 %}
-
-                    <tr data-id="{{ event.id }}" tabindex="0">
-                        <td data-title="{{event.slug }} " data-titlecell="">
-                            <div class="element small hasstatus"
-                                 data-type="craft\elements\Entry"
-                                 data-id="{{ event.id }}"
-                                 data-status="{{  event.enabled ? 'enabled' : 'disabled' }}"
-                                 data-label="{{ event.title }}"
-                                 data-url="{{ event.url }}"
-                                 title="{{ event.title }}">
-                                <span class="status {{ event.enabled ? 'enabled' : 'disabled' }}"></span>
-                                <div class="label">
-                                    <span class="title">
-                                        <a href="{{ pluginCpUrl ~ '/' ~ selectedSubnavItem ~ '/' ~ event.id }}">{{ event.title }}</a>
-                                    </span>
-                                </div>
-                            </div>
-                        </td>
-
-                        <td data-titleType>
-                            {% set categoryName = event.eventCategories.one().title ?? null %}
-                            <span>{{- categoryName -}}</span>
-                            <span>CategoryName</span>
-                        </td>
-                        <td data-title="date" data-attr="date">
-                            <span>{{ eventDate }} </span>
-                        </td>
-                        <td data-title="Attendees">
-                            <span>{{ dataEngagement|length }} </span>
-                        </td>
-                        <td>
-                            <div class="progress">
-                                <div class="meter bg-red" title="Engaged {{ dataEnganged }}%">
-                                    <span style="width: {{ dataEnganged }}%"></span>
-                                </div>
-                                <div class="meter bg-orange" title="Sustained {{ dataSustained }}%">
-                                    <span style="width: {{ dataSustained }}%"></span>
-                                </div>
-                                <div class="meter bg-blue" title="Embedded {{ dataEmbedded }}%">
-                                    <span style="width: {{ dataEmbedded }}%"></span>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-
-{#    {{ dump(craft.attendees()) }}#}
+                {% else %}
+                    {{ noResultsLabel ?? 'No results'|t('app') }}
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
 {% endset %}

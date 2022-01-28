@@ -8,7 +8,7 @@
  * @copyright Copyright (c) 2021 percipiolondon
  */
 
-namespace percipiolondon\craftattendees\assetbundles\trainingscpsection;
+namespace percipiolondon\attendees\assetbundles\trainingscpsection;
 
 use Craft;
 use craft\web\AssetBundle;
@@ -43,7 +43,7 @@ class TrainingsCPSectionAsset extends AssetBundle
     public function init()
     {
         // define the path that your publishable resources live
-        $this->sourcePath = "@percipiolondon/craftattendees/assetbundles/trainingscpsection/dist";
+        $this->sourcePath = "@percipiolondon/attendees/assetbundles/trainingscpsection/dist";
 
         // define the dependencies
         $this->depends = [

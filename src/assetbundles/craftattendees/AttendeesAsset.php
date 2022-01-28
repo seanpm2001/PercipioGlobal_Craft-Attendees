@@ -8,7 +8,7 @@
  * @copyright Copyright (c) 2021 percipiolondon
  */
 
-namespace percipiolondon\craftattendees\assetbundles\craftattendees;
+namespace percipiolondon\attendees\assetbundles\craftattendees;
 
 use Craft;
 use craft\web\AssetBundle;
@@ -43,7 +43,7 @@ class AttendeesAsset extends AssetBundle
     public function init()
     {
         // define the path that your publishable resources live
-        $this->sourcePath = "@percipiolondon/timeloop/web/assets/dist";
+        $this->sourcePath = "@percipiolondon/attendees/web/assets/dist";
 
         // define the dependencies
         $this->depends = [

@@ -1,6 +1,12 @@
 {% extends "_layouts/cp" %}
 
-{% do view.registerAssetBundle("percipiolondon\\craftattendees\\assetbundles\\craftattendees\\CraftattendeesAsset") %}
+{% js %}
+    window.Attendee = {{ {
+        "cpUrl": cpUrl(),
+        "csrf": craft.app.request.csrfToken
+    }|json_encode|raw }}
+{% endjs %}
+
 
 {% set subnav = {
     "dashboard": { label: "Dashboard"|t('craft-attendees'), url: url(pluginCpUrl ~ '/dashboard') },

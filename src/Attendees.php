@@ -8,26 +8,27 @@
  * @copyright Copyright (c) 2021 percipiolondon
  */
 
-namespace percipiolondon\craftattendees;
+namespace percipiolondon\attendees;
+
+use craft\events\RegisterUrlRulesEvent;
+use craft\web\twig\variables\CraftVariable;
+use craft\web\UrlManager;
+use percipiolondon\attendees\behaviors\AttendeeBehavior;
 
 use Craft;
 use craft\base\Plugin;
-use craft\events\PluginEvent;
-use craft\events\RegisterComponentTypesEvent;
-use craft\events\RegisterUrlRulesEvent;
 use craft\services\Elements;
+use craft\events\RegisterComponentTypesEvent;
 use craft\services\Plugins;
-use craft\web\twig\variables\CraftVariable;
-use craft\web\UrlManager;
 
 use nystudio107\pluginvite\services\VitePluginService;
 
-use percipiolondon\craftattendees\assetbundles\craftattendees\AttendeesAsset;
-use percipiolondon\craftattendees\behaviors\AttendeeBehavior;
-use percipiolondon\craftattendees\elements\Attendee as AttendeesElement;
-use percipiolondon\craftattendees\models\Settings;
-use percipiolondon\craftattendees\variables\AttendeesVariable;
-
+use percipiolondon\attendees\helpers\EventSortExtension;
+use percipiolondon\attendees\models\Settings;
+use percipiolondon\attendees\assetbundles\craftattendees\AttendeesAsset;
+use percipiolondon\attendees\records\Attendee as AttendeeRecord;
+use percipiolondon\attendees\variables\AttendeesVariable;
+use percipiolondon\attendees\services\Metaseed;
 use yii\base\Event;
 
 /**
@@ -45,7 +46,7 @@ use yii\base\Event;
  * @since     1.0.0
  *
  */
-class Craftattendees extends Plugin
+class Attendees extends Plugin
 {
     // Static Properties
     // =========================================================================
@@ -66,7 +67,7 @@ class Craftattendees extends Plugin
      *
      * @var string
      */
-    public $schemaVersion = '1.0.0';
+    public $schemaVersion = '1.0.4';
 
     /**
      * Set to `true` if the plugin should have a settings view in the control panel.
@@ -91,7 +92,7 @@ class Craftattendees extends Plugin
     public function __construct($id, $parent = null, array $config = [])
     {
         $config['components'] = [
-            'attendees' => Craftattendees::class,
+            'attendees' => Attendees::class,
             'vite' => [
                 'class' => VitePluginService::class,
                 'assetClass' => AttendeesAsset::class,
@@ -128,17 +129,12 @@ class Craftattendees extends Plugin
 
         $this->_registerCpRoutes();
         $this->_registerCraftVariables();
-        $this->_registerElementTypes();
+        $this->_registerServices();
 
-        // Register variable
-        Event::on(CraftVariable::class, CraftVariable::EVENT_INIT, function (Event $event) {
-            /** @var CraftVariable $variable */
-            $variable = $event->sender;
-            $variable->set('attendees', [
-                'class' => AttendeesVariable::class,
-                'viteService' => $this->vite,
-            ]);
-        });
+        if(Craft::$app->request->getIsCpRequest()){
+            $eventSortExtension = new EventSortExtension();
+            Craft::$app->view->registerTwigExtension($eventSortExtension);
+        }
 
         Craft::info(
             Craft::t(
@@ -195,11 +191,11 @@ class Craftattendees extends Plugin
             'label' => Craft::t('craft-attendees', 'Dashboard'),
             'url' => 'craft-attendees/dashboard'
         ];
-
-        $nav['subnav']['data-export'] = [
-            'label' => Craft::t('craft-attendees', 'Data Export'),
-            'url' => 'craft-attendees/data-export'
-        ];
+//
+//        $nav['subnav']['data-export'] = [
+//            'label' => Craft::t('craft-attendees', 'Data Export'),
+//            'url' => 'craft-attendees/data-export'
+//        ];
 
         $nav['subnav']['trainings'] = [
             'label' => Craft::t('craft-attendees', 'Trainings'),
@@ -227,12 +223,34 @@ class Craftattendees extends Plugin
             UrlManager::EVENT_REGISTER_CP_URL_RULES,
             function (RegisterUrlRulesEvent $event) {
                 $event->rules['craft-attendees/trainings/<eventId:\d+>'] = 'craft-attendees/training/detail';
+                $event->rules['craft-attendees/trainings/attendees/<eventId:\d+>/<order\w+>/<limit:\d+>/<offset:\d+>'] = 'craft-attendees/training/attendees';
+                $event->rules['craft-attendees/trainings/logs/<eventId:\d+>'] = 'craft-attendees/log/logs';
+                $event->rules['craft-attendees/trainings/fetch-support-options/<eventId:\d+>'] = 'craft-attendees/training/fetch-support-options';
+                $event->rules['craft-attendees/dashboard/events/<site\w+>/<period:\w+>'] = 'craft-attendees/dashboard/fetch-events';
             }
         );
     }
 
+    private function _registerServices()
+    {
+        $this->setComponents([
+            'metaseed' => Metaseed::class
+        ]);
+
+    }
+
     private function _registerCraftVariables()
     {
+        // Register variable
+        Event::on(CraftVariable::class, CraftVariable::EVENT_INIT, function (Event $event) {
+            /** @var CraftVariable $variable */
+            $variable = $event->sender;
+            $variable->set('viteattendees', [
+                'class' => AttendeesVariable::class,
+                'viteService' => $this->vite,
+            ]);
+        });
+
         Event::on(
             CraftVariable::class,
             CraftVariable::EVENT_INIT,
@@ -246,15 +264,12 @@ class Craftattendees extends Plugin
         );
     }
 
-    private function _registerElementTypes()
+    /**
+     * Clear all the caches!
+     */
+    public function clearAllCaches()
     {
-        Event::on(
-            Elements::class,
-            Elements::EVENT_REGISTER_ELEMENT_TYPES,
-            function (RegisterComponentTypesEvent $event) {
-                $event->types[] = AttendeesElement::class;
-            }
-        );
+//        self::$plugin->attendees->invalidateCaches();
     }
 
 }

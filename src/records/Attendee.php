@@ -1,9 +1,12 @@
 <?php
 
-namespace percipiolondon\craftattendees\records;
+namespace percipiolondon\attendees\records;
 
-use percipiolondon\craftattendees\db\Table;
+use Craft;
+
+use percipiolondon\attendees\db\Table;
 use yii\db\ActiveRecord;
+use yii\validators\Validator;
 
 /**
  * @property int $siteId;
@@ -13,7 +16,13 @@ use yii\db\ActiveRecord;
  * @property string $days;
  * @property string $newsletter;
  * @property string $orgName;
+ * @property string $orgUrn;
  * @property string $postCode;
+ * @property string $priority;
+ * @property string $eventId;
+ * @property string $approved;
+ * @property string $identifier;
+ * @property string $anonymous;
  **/
 
 class Attendee extends ActiveRecord
@@ -21,5 +30,30 @@ class Attendee extends ActiveRecord
     public static function tableName()
     {
         return Table::ATTENDEES;
+    }
+
+    public function rules()
+    {
+        $rules = parent::rules();
+
+        $rules[] = [['days','eventId'], 'required'];
+        $rules[] = [['orgName','name','jobRole'], 'required', 'when' => function($model){
+            return $model->anonymous === 0;
+        }];
+        $rules[] = ['email', function($attribute, $params, Validator $validator){
+            $preg = "/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,})$/i";
+
+            // Valid email
+            if (!preg_match($preg, $this->$attribute)) {
+                $error = Craft::t('craft-attendees', '"{value}" is not a valid email address.', [
+                    'attribute' => $attribute,
+                    'value' => $this->$attribute,
+                ]);
+
+                $validator->addError($this, $attribute, $error);
+            }
+        }];
+
+        return $rules;
     }
 }

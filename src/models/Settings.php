@@ -1,6 +1,6 @@
 <?php
 
-namespace percipiolondon\craftattendees\models;
+namespace percipiolondon\attendees\models;
 
 use craft\base\Model;
 

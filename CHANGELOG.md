@@ -6,4 +6,25 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## 1.0.0 - 2021-12-09
 ### Added
-- Initial release
+- Initial release to create and import attendees for a specific training.
+
+## 1.0.1 - 2022-01-14
+### Added
+- Migration to add a priority school
+
+## 1.0.2 - 2022-01-21
+### Added
+- Migration to add a priority school
+
+## 1.0.3 - 2022-01-21
+### Added
+- Added the dashboard view
+
+## 1.0.4 - 2022-01-28
+### Fix
+- Fixed the events query
+
+## 1.0.5 - 2022-01-28
+### Fix
+- Update dashboard event fetching and sorting through Twig
+- Composer update

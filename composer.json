@@ -2,7 +2,7 @@
     "name": "percipiolondon/craft-attendees",
     "description": "A plugin to manage attendees to an event",
     "type": "craft-plugin",
-    "version": "1.0.0",
+    "version": "1.0.6",
     "keywords": [
         "craft",
         "cms",
@@ -25,7 +25,8 @@
     ],
     "require": {
         "craftcms/cms": "^3.3.0",
-        "nystudio107/craft-plugin-vite": "^1.0.0"
+        "nystudio107/craft-plugin-vite": "^1.0.0",
+        "league/csv": "^8.2 || ^9.0"
     },
     "require-dev": {
         "codeception/codeception": "^3.0",
@@ -33,7 +34,7 @@
     },
     "autoload": {
         "psr-4": {
-            "percipiolondon\\craftattendees\\": "src/"
+            "percipiolondon\\attendees\\": "src/"
         }
     },
     "extra": {
@@ -43,6 +44,6 @@
         "developerUrl": "https://percipio.london",
         "documentationUrl": "https://github.com/percipioglobal/craft-attendees/blob/master/README.md",
         "changelogUrl": "https://raw.githubusercontent.com/percipioglobal/craft-attendees/master/CHANGELOG.md",
-        "class": "percipiolondon\\craftattendees\\Craftattendees"
+        "class": "percipiolondon\\attendees\\Attendees"
     }
 }

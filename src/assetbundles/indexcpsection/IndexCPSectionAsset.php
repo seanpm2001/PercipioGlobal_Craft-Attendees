@@ -8,7 +8,7 @@
  * @copyright Copyright (c) 2021 percipiolondon
  */
 
-namespace percipiolondon\craftattendees\assetbundles\indexcpsection;
+namespace percipiolondon\attendees\assetbundles\indexcpsection;
 
 use Craft;
 use craft\web\AssetBundle;

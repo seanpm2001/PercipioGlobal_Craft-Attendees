@@ -16,18 +16,23 @@
 {% extends "craft-attendees/_layouts/_cp" %}
 {% import "_includes/forms" as forms %}
 
-
-{% do view.registerAssetBundle("percipiolondon\\craftattendees\\assetbundles\\trainingscpsection\\TrainingsCPSectionAsset") %}
+{% set scriptTagOptions = {
+    'depends': [
+        'percipiolondon\\attendees\\assetbundles\\craftattendees\\AttendeesAsset'
+    ],
+} %}
 
 {% set pluginCpUrl = url('craft-attendees') %}
 {% set settings = craft.app.getPlugins().getPlugin('craft-attendees').getSettings() %}
 {% set selectedSubnavItem = 'trainings' %}
-{%- set fullPageForm = true -%}
 {% set eventTypes = {
     'onlineEvent': 'Online Event',
     'locationEvent': 'Location Event',
     'hybridEvent': 'Hybrid Event'
 } %}
+
+{% set csvUrl = view.getAssetManager().getPublishedUrl('@percipiolondon/attendees/assetbundles/trainingscpsection/dist', true) ~ '/assets/demo.csv' %}
+{#{%- set fullPageForm = true -%}#}
 
 {% set title = "Trainings | Attendees" %}
 
@@ -38,111 +43,43 @@
 
 {# Content that should appear in the page header#}
 {% block actionButton %}
-    <a href="{{ cpUrl() ~ '/' ~ settings.eventSection ~ '/' ~ event.slug }}" class="btn">{{ "Edit Event"|t('craft-attendees') }}</a>
-    <input type="submit" data-action="craft-attendees/training/save" class="btn submit" value="{{ 'Save'|t('craft-attendees') }}">
+    <div>
+        <a target="_blank" href="{{ cpUrl() ~ '/entries/' ~ settings.eventSection ~ '/' ~ event.id ~ '-' ~ event.slug }}" class="btn">{{ "Edit Event"|t('craft-attendees') }}</a>
+    </div>
 {% endblock %}
 
 {# The content of the CP Section#}
 {% set content %}
-    <input type="hidden" name="action" value="craft-attendees/training/save">
 
-    <div class="training">
-        <h1>{{ event.title }}</h1>
-        <h6 class="event-meta">
-            <span>{{ eventTypes[event.type.handle] ?? '' }}</span>
-            <span>&nbsp;&nbsp;-&nbsp;&nbsp;</span>
-            <span>{{ event.eventCategories.one().title ?? '' }}</span>
-        </h6>
-        <p>{{ event.description }}</p>
+    <div id="training">
 
-        <hr/>
-
-        <div class="event-actions">
-            <a href="#" class="btn">{{ "Import"|t('craft-attendees') }}</a>
+        <div class="flex">
+            <h1 class="inline-fex flex-grow">{{ event.title }}</h1>
+            <div>
+                {% include "craft-attendees/_includes/current-site" with {
+                    currentSite: event.site
+                } %}
+            </div>
         </div>
+        <p>{{ event.description }}</p>
+        <h6 class="{{ (eventTypes[event.type.handle] ?? '') or (event.eventCategories.one().title ?? '') ? 'inline-block mb-4 space-x-2 mt-2' : '' }}">
+            {% if eventTypes[event.type.handle] ?? '' %}
+                <span class="inline-block rounded-full bg-gray-700 text-white px-4 py-2">{{ eventTypes[event.type.handle] ?? '' }}</span>
+            {% endif %}
+            {% if event.eventCategories.one().title ?? '' %}
+                <span class="inline-block rounded-full bg-gray-700 text-white px-4 py-2">{{ event.eventCategories.one().title ?? '' }}</span>
+            {% endif %}
+        </h6>
 
-        {{ forms.editableTableField({
-            id: 'attendee-data',
-            class: '',
-            name: 'attendee[data]',
-            label: 'Attendees' |t,
-            instructions: "Use <b>+</b> button below to add a row for each attendee, if multiple people from the same organisation participated, each should be added on a new line." |t,
-            required: false,
-            static: false,
-            cols: {
-                status: {
-                    class: "thin action rsn-status",
-                    heading: "" |t,
-                    type: "singleline",
-                    value: 0,
-                },
-                school: {
-                    class: "action rsn-autocomplete orderable",
-                    heading: "School / Organisation" |t,
-                    type: "singleline",
-                    placeholder: "click to activate",
-                    width: '35%',
-                },
-                schooldata: {
-                    class: "rsn-data",
-                    type: "hidden",
-                },
-                postcode: {
-                    class: "rsn-postcode orderable",
-                    heading: "Post code" |t,
-                    type: "text",
-                    width: '10%',
-                },
-                name: {
-                    class: "rsn-name orderable",
-                    heading: "Name of attendee" |t,
-                    type: "text",
-                    width: '20%',
-                },
-                email: {
-                    class: "rsn-email",
-                    heading: "Email" |t,
-                    type: "text",
-                    width: '25%',
-                },
-                role: {
-                    class: "rsn-role",
-                    heading: "Role" |t,
-                    type: "select",
-                    options: {
-                        "": "Select one",
-                        "na": "Not Applicable",
-                        "support": "Support Staff" |t,
-                        "leader-middle": "Middle leader" |t,
-                        "leader": "Leadership" |t,
-                        "teacher": "Teacher" |t,
-                    },
-                },
-                attendance: {
-                    class: "rsn-attendance",
-                    heading: "Days Attended" |t,
-                    type: "select",
-                    options: {
-                        "1": "1",
-                        "2": "2",
-                        "3": "3",
-                        "4": "4",
-                        "5": "5",
-                        "6": "6",
-                        "7": "7",
-                        "8": "8",
-                        "9": "9",
-                        "10": "10",
-                    },
-                },
-                optin: {
-                    class: "rsn-mailing",
-                    heading: "Newsletter" |t,
-                    type: "lightswitch",
-                    width: "1%",
-                },
-            },
-            addRowLabel: "Add another attendee" |t,
-        }) }}
+        <tabpane-attendees
+            csrf="{{ craft.app.request.csrfToken }}"
+            event="{{ event.id }}"
+            site="{{ event.siteId }}"
+            active="{{ tab ?? '' }}"
+            csv="{{ csvUrl }}"
+        ></tabpane-attendees>
+
     </div>
+
+    {{ craft.viteattendees.register('/src/js/attendees.ts', false, scriptTagOptions) }}
 {% endset %}

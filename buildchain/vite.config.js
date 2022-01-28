@@ -12,7 +12,9 @@ export default ({ command }) => ({
         outDir: '../src/web/assets/dist',
         rollupOptions: {
             input: {
-                timeloop: '/src/js/attendees.ts',
+                attendees: '/src/js/attendees.ts',
+                trainings: '/src/js/trainings.ts',
+                dashboard: '/src/js/dashboard.ts',
             },
             output: {
                 sourcemap: true

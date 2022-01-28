@@ -1,0 +1,84 @@
+{# @var craft \craft\web\twig\variables\CraftVariable #}
+{#
+/**
+ * craft-attendees plugin for Craft CMS 3.x
+ *
+ * craft-attendees index.twig
+ *
+ * @author    percipiolondon
+ * @copyright Copyright (c) 2021 percipiolondon
+ * @link      https://percipio.london
+ * @package   Craftattendees
+ * @since     1.0.0
+ */
+#}
+
+{% extends "craft-attendees/_layouts/_cp" %}
+{% import "_includes/forms" as forms %}
+
+{% set scriptTagOptions = {
+    'depends': [
+        'percipiolondon\\attendees\\assetbundles\\craftattendees\\AttendeesAsset'
+    ],
+} %}
+
+{% do view.registerAssetBundle("percipiolondon\\attendees\\assetbundles\\trainingscpsection\\TrainingsCPSectionAsset") %}
+
+{% set pluginCpUrl = url('craft-attendees') %}
+{% set settings = craft.app.getPlugins().getPlugin('craft-attendees').getSettings() %}
+{% set selectedSubnavItem = 'trainings' %}
+{% set eventTypes = {
+    'onlineEvent': 'Online Event',
+    'locationEvent': 'Location Event',
+    'hybridEvent': 'Hybrid Event'
+} %}
+{#{%- set fullPageForm = true -%}#}
+
+{% set title = "Trainings | Attendees | Import" %}
+
+{% set crumbs = [
+    { label: "Attendees", url: url(pluginCpUrl) },
+    { label: "Trainings"|t('craft-attendees'), url: url(pluginCpUrl ~ '/trainings') },
+] %}
+
+{# Content that should appear in the page header#}
+{% block actionButton %}
+{% endblock %}
+
+{# The content of the CP Section#}
+{% set content %}
+
+    <div id="training">
+
+        <div class="flex">
+            <h1 class="inline-fex flex-grow">{{ event.title }}</h1>
+            <div>
+                {% include "craft-attendees/_includes/current-site" with {
+                    currentSite: event.site
+                } %}
+            </div>
+        </div>
+        <p>{{ event.description }}</p>
+        <h6 class="{{ (eventTypes[event.type.handle] ?? '') or (event.eventCategories.one().title ?? '') ? 'inline-block mb-4 space-x-2 mt-2' : '' }}">
+            {% if eventTypes[event.type.handle] ?? '' %}
+                <span class="inline-block rounded-full bg-gray-700 text-white px-4 py-2">{{ eventTypes[event.type.handle] ?? '' }}</span>
+            {% endif %}
+            {% if event.eventCategories.one().title ?? '' %}
+                <span class="inline-block rounded-full bg-gray-700 text-white px-4 py-2">{{ event.eventCategories.one().title ?? '' }}</span>
+            {% endif %}
+        </h6>
+
+        <list-csv
+            headers="{{ headers|json_encode}}"
+            filename="{{ filename }}"
+            parent="{{ pluginCpUrl ~ '/' ~ selectedSubnavItem ~ '/' ~ event.id }}"
+            event="{{ event|json_encode }}"
+            filepath="{{ filepath }}"
+            csrf="{{ craft.app.request.csrfToken }}"
+            site="{{ event.siteId }}"
+        ></list-csv>
+
+    </div>
+
+    {{ craft.viteattendees.register('/src/js/attendees.ts', false, scriptTagOptions) }}
+{% endset %}
