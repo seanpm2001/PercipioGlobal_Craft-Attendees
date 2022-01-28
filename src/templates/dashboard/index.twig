@@ -30,7 +30,19 @@
 
 {# The title of this CP section #}
 {% set title = "Attendees | Dashboard" %}
-{% set selectedSite = craft.app.request.getQueryParam('site')|default(permittedSites[0].handle ?? '*') %}
+
+
+{%- set permittedSites = [] %}
+
+{% for site in craft.app.sites.getAllSites() %}
+    {%- set permitted = currentUser.can('editSite:'~site.uid) -%}
+
+    {%- if permitted -%}
+        {% set permittedSites = permittedSites|merge([site]) %}
+    {% endif %}
+{% endfor %}
+
+{% set selectedSite = craft.app.request.getQueryParam('site')|default(permittedSites[0].id ?? '*') %}
 
 {# The URL to this plugin's base CP section #}
 {% set pluginCpUrl = url('craft-attendees') %}
