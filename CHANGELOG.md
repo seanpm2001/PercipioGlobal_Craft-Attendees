@@ -6,4 +6,16 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## 1.0.0 - 2021-12-09
 ### Added
-- Initial release
+- Initial release to create and import attendees for a specific training.
+
+## 1.0.1 - 2022-01-14
+### Added
+- Migration to add a priority school
+
+## 1.0.2 - 2022-01-21
+### Added
+- Migration to add a priority school
+
+## 1.0.2 - 2022-01-21
+### Added
+- Added the dashboard view
