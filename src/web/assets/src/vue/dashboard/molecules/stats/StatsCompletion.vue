@@ -15,7 +15,7 @@
         <span :class="[
             'block w-full text-center py-2',
             loading || attendees?.length === 0 ? 'opacity-0' : ''
-        ]"><strong>{{ events?.length }}</strong> total training events, <strong>{{ allAttendees }}</strong> have attendees and ({{ events?.length * totalAttendeesAreApproved }}%) are verified.</span>
+        ]"><strong>{{ events?.length }}</strong> total training events, <strong>{{ allAttendees }}</strong> have attendees and ({{ (events?.length / 100) * totalAttendeesAreApproved }}%) are verified.</span>
 
         <span v-if="loading" class="block relative flex items-center justify-center w-full" style="height:150px">
             <svg class="animate-spin ml-2 mt-1 h-8 w-8 text-gray-400 inline-block -mt-px" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" style="margin-bottom: 0!important;">
