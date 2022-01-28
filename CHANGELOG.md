@@ -16,6 +16,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Added
 - Migration to add a priority school
 
-## 1.0.2 - 2022-01-21
+## 1.0.3 - 2022-01-21
 ### Added
 - Added the dashboard view
+
+## 1.0.4 - 2022-01-21
+### Fix
+- Fixed the events query
