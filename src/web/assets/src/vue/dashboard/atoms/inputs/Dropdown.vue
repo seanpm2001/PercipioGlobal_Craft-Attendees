@@ -3,6 +3,7 @@
         name="period"
         class="block h-10 px-1 rounded-md bg-gray-300 border-gray-300"
         v-model="period"
+        :disabled="loading"
         @change="handlePeriodChanged"
     >
         <option value="2022">Academic Year (2021/22)</option>
@@ -21,14 +22,14 @@
     export default defineComponent({
         setup(){
             const store = useDashboardStore()
-            const { period } = storeToRefs(store)
+            const { loading, period } = storeToRefs(store)
 
             const handlePeriodChanged = (evt) => {
                 store.period = parseInt(evt.currentTarget.value)
                 store.fetchEvents()
             }
 
-            return { period, handlePeriodChanged }
+            return { loading, period, handlePeriodChanged }
         }
     })
 </script>

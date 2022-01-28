@@ -2,7 +2,7 @@
     <!-- https://dribbble.com/shots/15774046-Nexudus-Corporate-VC-Dashboards -->
     <div class="grid grid-cols-2 xl:grid-cols-4 gap-4">
 
-        <stat v-if="events && !loading" :value="events.length" :average="averageEvents()" type="event" description="trainings per month" />
+        <stat v-if="events && !loading" :value="events.length" :average="averageEvents()" type="events" description="trainings per month" />
         <stat-empty v-else />
 
         <stat v-if="attendees && !loading" :value="attendees.length" :average="averageAttendees()" type="attendees" description="attendees per training" />
@@ -50,7 +50,7 @@
                     return r;
                 }, Object.create(null));
 
-                return isNaN(Object.keys(attendeePrioritySchools).length) ? Object.keys(attendeePrioritySchools).length : 0
+                return isNaN(Object.keys(attendeePrioritySchools).length) ? 0 : Object.keys(attendeePrioritySchools).length
             }
 
             const averageEvents = () => {
@@ -64,18 +64,32 @@
                     return r;
                 }, Object.create(null));
 
-                 return Object.keys(attendeeEvents).length
+                let average = Object.values(attendeeEvents).map(s => s.length)
+                average = Math.ceil(average.reduce( ( p, c ) => p + c, 0 ) / average.length)
+
+                return isNaN(average) ? 0 : average
             }
 
             const averageSchools = () => {
                 const attendeeSchools = attendees.value.reduce(function (r, a) {
-                    r[a.orgName] = r[a.orgName] || [];
-                    r[a.orgName].push(a);
+                    r[a.eventId] = r[a.eventId] || [];
+                    r[a.eventId].push(a);
                     return r;
                 }, Object.create(null));
 
-                let average = Object.values(attendeeSchools).map(s => s.length)
-                average = Math.ceil(average.reduce( ( p, c ) => p + c, 0 ) / average.length)
+                let uniqueAverage = 0
+                for(const key in attendeeSchools){
+
+                    const uniqueSchool = attendeeSchools[key].reduce(function (r, a) {
+                        r[a.orgName] = r[a.orgName] || [];
+                        r[a.orgName].push(a);
+                        return r;
+                    }, Object.create(null));
+
+                    uniqueAverage += Object.keys(uniqueSchool).length
+                }
+
+                const average = Math.ceil(uniqueAverage / Object.keys(attendeeSchools)?.length)
 
                 return isNaN(average) ? 0 : average
             }
