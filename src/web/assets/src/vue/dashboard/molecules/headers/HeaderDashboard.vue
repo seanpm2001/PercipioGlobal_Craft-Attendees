@@ -20,32 +20,42 @@
         components: {
             'dropdown': Dropdown,
         },
+        props: {
+          start: {
+              type: String,
+              required: true
+          },
+        end: {
+          type: String,
+            required: true
+        }
+        },
         setup(){
             const store = useDashboardStore()
-            const { period } = storeToRefs(store)
-            const start = ref('-')
-            const end = ref('-')
+            const { loading } = storeToRefs(store)
 
-            watchEffect(() => {
-                if(period.value){
+            return { loading }
 
-                    if(period.value < 12){
-                        let today = new Date()
-                        end.value = today.getDate() + ' ' + today.toLocaleString('default', { month: 'long' }) + ' ' + today.getFullYear()
+            // watchEffect(() => {
+            //     if(period.value){
+            //
+            //         if(period.value < 12){
+            //             let today = new Date()
+            //             end.value = today.getDate() + ' ' + today.toLocaleString('default', { month: 'long' }) + ' ' + today.getFullYear()
+            //
+            //             today.setMonth(today.getMonth() - period.value)
+            //             start.value = today.getDate() + ' ' + today.toLocaleString('default', { month: 'long' }) + ' ' + today.getFullYear()
+            //         }else{
+            //             let endOfSchool = new Date(`31 july ${period.value}`)
+            //             let startOfSchool = new Date(`01 september ${period.value - 1}`)
+            //
+            //             end.value = endOfSchool.getDate() + ' ' + endOfSchool.toLocaleString('default', { month: 'long' }) + ' ' + endOfSchool.getFullYear()
+            //             start.value = startOfSchool.getDate() + ' ' + startOfSchool.toLocaleString('default', { month: 'long' }) + ' ' + startOfSchool.getFullYear()
+            //         }
+            //     }
+            // })
 
-                        today.setMonth(today.getMonth() - period.value)
-                        start.value = today.getDate() + ' ' + today.toLocaleString('default', { month: 'long' }) + ' ' + today.getFullYear()
-                    }else{
-                        let endOfSchool = new Date(`31 july ${period.value}`)
-                        let startOfSchool = new Date(`01 september ${period.value - 1}`)
-
-                        end.value = endOfSchool.getDate() + ' ' + endOfSchool.toLocaleString('default', { month: 'long' }) + ' ' + endOfSchool.getFullYear()
-                        start.value = startOfSchool.getDate() + ' ' + startOfSchool.toLocaleString('default', { month: 'long' }) + ' ' + startOfSchool.getFullYear()
-                    }
-                }
-            })
-
-            return { start, end }
+            // return { start, end }
         }
     });
 
