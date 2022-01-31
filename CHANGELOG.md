@@ -27,4 +27,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## 1.0.5 - 2022-01-28
 ### Fix
 - Update dashboard event fetching and sorting through Twig
+  
+### Changed
 - Composer update
+
+## 1.0.6 - 2022-01-31
+### Fix
+- Fixed the date not updating after selecting a different period
