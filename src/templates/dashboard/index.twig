@@ -65,6 +65,22 @@
     { label: "Dashboard"|t('craft-attendees'), url: url(pluginCpUrl ~ '/dashboard') },
 ] %}
 
+{%- set end = date('now')|atom -%}
+{%- switch selectedTime -%}
+    {%- case '6' -%}
+        {%- set start = date('-6 months')|atom -%}
+    {%- case '2022' -%}
+        {%- set start = date('01 september 2021')|atom -%}
+        {%- set end = date('31 july 2022')|atom -%}
+    {%- case '2021' -%}
+        {%- set start = date('01 september 2020')|atom -%}
+        {%- set end = date('31 july 2021')|atom -%}
+    {%- case '2020' -%}
+        {%- set start = date('01 september 2019')|atom -%}
+        {%- set end = date('31 july 2020')|atom -%}
+    {%- default -%}
+        {%- set start = date('-3 months')|atom -%}
+{%- endswitch -%}
 
 {# Content that should appear in the page header#}
 {% block actionButton %}
@@ -98,7 +114,7 @@
 
     <div id="dashboard" class="bg-gray-100 p-6 pt-2 -mt-6 -ml-6 relative">
 
-        <header-dashboard>
+        <header-dashboard start="{{ start|date('d F, Y ') }}" end="{{ end|date('d F, Y ') }}">
             {%- include "craft-attendees/_includes/time-menu.twig" with {
                 baseUrl: pluginCpUrl ~ '/dashboard',
                 parameter: 'id'
