@@ -2,7 +2,7 @@
     "name": "percipiolondon/craft-attendees",
     "description": "A plugin to manage attendees to an event",
     "type": "craft-plugin",
-    "version": "1.0.6.1",
+    "version": "1.0.7",
     "keywords": [
         "craft",
         "cms",
@@ -24,7 +24,7 @@
         }
     ],
     "require": {
-        "craftcms/cms": "^3.3.0",
+        "craftcms/cms": "^3.6.0",
         "nystudio107/craft-plugin-vite": "^1.0.0",
         "league/csv": "^8.2 || ^9.0"
     },
