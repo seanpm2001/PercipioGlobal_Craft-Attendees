@@ -4,7 +4,7 @@ DOCKERRUN=docker container run \
 	    --name ${CONTAINER} \
 	    --rm \
 	    -t \
-        --network plugin-playground_default \
+        --network craft-plugin-playground_default \
         -p 3001:3001 \
 		-e CPPFLAGS="-DPNG_ARM_NEON_OPT=0" \
         -v `pwd`/../:/app \
