@@ -17,7 +17,7 @@
                 <span class="text-emerald-600 inline-block">✓ {{ success.length }}</span>
             </div>
             <div class="p-3 font-bold" @click="toggle">
-                {{log[0].totalLines}}
+                {{ log.totalLines }}
             </div>
             <div class="col-span-2 p-3 cursor-pointer" @click="toggle">
                 {{ filename }}

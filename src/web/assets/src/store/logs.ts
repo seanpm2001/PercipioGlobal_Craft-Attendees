@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
 
-const ENDPOINT = window?.Attendee?.cpUrl ?? 'https://researchschool.org.uk/cp'
+const ENDPOINT = window.Attendee?.cpUrl ?? 'https://researchschool.org.uk/cp'
 
 export const useLogsStore = defineStore( 'logs', {
     state: () => ({
@@ -19,7 +19,7 @@ export const useLogsStore = defineStore( 'logs', {
             })
             .then(function (response) {
                 self.loading = false
-                self.logs = response?.data?.logs
+                self.logs = response.data.logs
             });
         }
     }

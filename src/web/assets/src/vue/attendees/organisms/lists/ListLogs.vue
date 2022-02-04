@@ -1,3 +1,50 @@
+<script lang="ts">
+    import { defineComponent, reactive, ref, watchEffect, onUnmounted } from 'vue'
+    import { useLogsStore } from '@/store/logs'
+    import { storeToRefs } from 'pinia'
+    import ListItemLog from '@/vue/attendees/molecules/list-items/ListItemLog.vue'
+    import ListItemAttendee from '*.vue'
+
+    export default defineComponent({
+        components: {
+            'list-item-log': ListItemLog,
+        },
+        props: {
+            event: {
+                type: String,
+                required: true
+            },
+        },
+        setup(props){
+            const store = useLogsStore()
+            const { logs, loading } = storeToRefs(store)
+            const limit = ref(100)
+            const offset = ref(0)
+            const groupedLogs = ref({})
+            const interval = ref(null)
+
+            store.fetchLogs(props.event, limit.value, offset.value)
+
+            watchEffect(() => {
+
+                if(logs.value){
+                    groupedLogs.value = logs.value.reduce((r, a) => {
+                        r[a.filepath] = [...r[a.filepath] || [], a];
+                        return r;
+                    }, {});
+                }
+
+            })
+
+            const refresh = () => {
+                store.fetchLogs(props.event, limit.value, offset.value)
+            }
+
+            return { groupedLogs, loading, logs, refresh }
+        }
+    })
+</script>
+
 <template>
 
     <div class="grid grid-cols-9 bg-gray-100 py-2 items-center">
@@ -19,7 +66,9 @@
         <div class="col-span-2 p-3 text-left text-xs font-semibold text-gray-600 uppercase">
             Date
         </div>
-        <div>&nbsp;</div>
+        <div>
+            <button class="bg-emerald-300 text-emerald-800 font-bold py-2 px-3 text-xs rounded-lg cursor-pointer" @click="refresh">Refresh Logs</button>
+        </div>
     </div>
 
     <div class="rounded-xl bg-white overflow-hidden min-h-16">
@@ -43,53 +92,3 @@
     </div>
 
 </template>
-
-<script lang="ts">
-    import {defineComponent, ref, watchEffect, onUnmounted} from 'vue'
-    import { useLogsStore } from '@/store/logs'
-    import { storeToRefs } from 'pinia'
-    import ListItemLog from '@/vue/attendees/molecules/list-items/ListItemLog.vue';
-    import ListItemAttendee from "*.vue";
-
-    export default defineComponent({
-        components: {
-            'list-item-log': ListItemLog,
-        },
-        props: {
-            event: {
-                type: String,
-                required: true
-            },
-        },
-        setup(props){
-            const store = useLogsStore()
-            const { logs, loading } = storeToRefs(store)
-            const limit = ref(100)
-            const offset = ref(0)
-            const groupedLogs = ref({})
-            const interval = ref(null);
-
-            store.fetchLogs(props.event, limit.value, offset.value)
-
-            watchEffect(() => {
-
-                if(logs.value){
-                    groupedLogs.value = logs.value.reduce((r, a) => {
-                        r[a.filepath] = [...r[a.filepath] || [], a];
-                        return r;
-                    }, {});
-                }
-            })
-
-            onUnmounted(() => {
-                clearInterval(interval.value)
-            })
-
-            interval.value = setInterval(() => {
-                store.fetchLogs(props.event, limit.value, offset.value)
-            }, 2000)
-
-            return { groupedLogs, loading }
-        }
-    })
-</script>

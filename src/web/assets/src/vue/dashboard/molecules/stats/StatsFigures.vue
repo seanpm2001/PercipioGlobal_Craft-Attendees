@@ -21,8 +21,8 @@
     import {defineComponent} from "vue"
     import Stat from '@/vue/dashboard/atoms/stats/Stat.vue'
     import StatEmpty from '@/vue/dashboard/atoms/stats/StatEmpty.vue'
-    import {useDashboardStore} from "@/store/dashboard";
-    import {storeToRefs} from "pinia";
+    import { useDashboardStore } from '@/store/dashboard'
+    import { storeToRefs } from 'pinia'
 
     export default defineComponent({
         components: {
@@ -44,13 +44,15 @@
             }
 
             const priority = () => {
-                const attendeePrioritySchools = attendees.value.reduce(function (r, a) {
-                    r[a.priority] = r[a.priority] || [];
-                    r[a.priority].push(a);
-                    return r;
-                }, Object.create(null));
+                const prioritySchools = attendees.value.filter(attendee => attendee.priority === 1)
 
-                return isNaN(Object.keys(attendeePrioritySchools).length) ? 0 : Object.keys(attendeePrioritySchools).length
+                return Object.keys(prioritySchools).length
+            }
+
+            const averagePrioritySchools = () => {
+                const prioritySchools = attendees.value.filter(attendee => attendee.priority === 1)
+
+                return Object.keys(prioritySchools).length / events.value.length
             }
 
             const averageEvents = () => {
@@ -92,22 +94,6 @@
                 const average = Math.ceil(uniqueAverage / Object.keys(attendeeSchools)?.length)
 
                 return isNaN(average) ? 0 : average
-            }
-
-            const averagePrioritySchools = () => {
-                let attendeeSchools = attendees.value.filter(at => at.priority === 1)
-
-                attendeeSchools = attendeeSchools.reduce(function (r, a) {
-                    r[a.eventId] = r[a.eventId] || [];
-                    r[a.eventId].push(a);
-                    return r;
-                }, Object.create(null));
-
-                let average = Object.values(attendeeSchools).map(s => s.length)
-                average = Math.ceil(average.reduce( ( p, c ) => p + c, 0 ) / average.length)
-
-                return isNaN(average) ? 0 : average
-
             }
 
             return { loading, events, attendees, schools, priority, averageEvents, averageAttendees, averageSchools, averagePrioritySchools }
