@@ -2,7 +2,10 @@
 
 namespace percipiolondon\attendees\helpers;
 
+use Craft;
+
 use Twig\Extension\AbstractExtension;
+
 
 class EventSortExtension extends AbstractExtension
 {
@@ -21,7 +24,7 @@ class EventSortExtension extends AbstractExtension
         if(strlen($period) > 1){
             $before = date('U', strtotime('31 july ' . (int)$period ));
             $after = date('U', strtotime('01 september ' . ((int)$period - 1) ));
-        }else{
+        } else {
             $before = date("U");
             $after = date("U", strtotime('-' . $period . ' Months'));
         }

@@ -32,8 +32,8 @@ class Attendee
         $attendee->orgName = $request->getBodyParam('orgName');
         $attendee->orgUrn = $request->getBodyParam('orgUrn');
         $attendee->postCode = $request->getBodyParam('postCode');
-        $attendee->name = $request->getBodyParam('name');
-        $attendee->email = $request->getBodyParam('email');
+        $attendee->name = trim($request->getBodyParam('name'));
+        $attendee->email = trim($request->getBodyParam('email'));
         $attendee->jobRole = $request->getBodyParam('jobRole');
         $attendee->days = $request->getBodyParam('days') ?? 1;
         $attendee->newsletter = $request->getBodyParam('newsletter') ?? 0;
@@ -49,9 +49,10 @@ class Attendee
     public static function populateAttendeeFromArray( array $entry, string $identifier): AttendeeModel
     {
         $attendee = new AttendeeModel();
+        $csvOrgUrn = is_numeric($entry['orgUrn'] ?? null) ? (int)$entry['orgUrn'] : null;
 
-        if($entry['orgUrn'] ?? null){
-            $result = Attendees::getInstance()->metaseed->school($entry['orgUrn']);
+        if($csvOrgUrn){
+            $result = Attendees::getInstance()->metaseed->school($csvOrgUrn);
 
             if($result->suggestions[0]->data ?? null){
                 $attendee->orgName = $result->suggestions[0]->value ?? $entry['orgName'] ?? '';
@@ -64,7 +65,7 @@ class Attendee
                 $attendee->priority = $entry['priority'] ?? 0;
                 $attendee->approved = 0;
             }
-        }else{
+        } else {
             $attendee->orgName = $entry['orgName'] ?? '';
             $attendee->postCode = $entry['postCode'] ?? '';
             $attendee->priority = $entry['priority'] ?? 0;
@@ -72,8 +73,8 @@ class Attendee
         }
 
         $attendee->orgUrn = $entry['orgUrn'] ?? '';
-        $attendee->name = $entry['name'] ?? '';
-        $attendee->email = $entry['email'] ?? '';
+        $attendee->name = trim($entry['name']) ?? '';
+        $attendee->email = trim($entry['email']) ?? '';
         $attendee->jobRole = $entry['jobRole'] ?? '';
         $attendee->days = $entry['days'] ?? 1;
         $attendee->newsletter = str_contains($entry['newsletter'] ?? 'n', 'y');
