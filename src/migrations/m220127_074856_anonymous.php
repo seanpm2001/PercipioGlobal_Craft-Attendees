@@ -17,7 +17,7 @@ class m220127_074856_anonymous extends Migration
     public function safeUp()
     {
         // Place migration code here...
-        $this->addColumn(Table::ATTENDEES, 'anonymous', $this->boolean());
+        $this->addColumn(Table::ATTENDEES, 'anonymous', $this->boolean()->defaulValue(0));
     }
 
     /**

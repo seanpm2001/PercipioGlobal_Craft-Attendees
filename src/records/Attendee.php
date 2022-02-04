@@ -13,15 +13,15 @@ use yii\validators\Validator;
  * @property string $name;
  * @property string $email;
  * @property string $jobRole;
- * @property string $days;
- * @property string $newsletter;
+ * @property int $days;
+ * @property bool $newsletter;
  * @property string $orgName;
- * @property string $orgUrn;
- * @property string $postCode;
- * @property string $priority;
- * @property string $eventId;
- * @property string $approved;
- * @property string $identifier;
+ * @property int|null $orgUrn;
+ * @property string|null $postCode;
+ * @property bool $priority;
+ * @property int $eventId;
+ * @property bool $approved;
+ * @property string|null $identifier;
  * @property string $anonymous;
  **/
 
@@ -36,7 +36,7 @@ class Attendee extends ActiveRecord
     {
         $rules = parent::rules();
 
-        $rules[] = [['days','eventId'], 'required'];
+        $rules[] = [['days','eventId', 'priority'], 'required'];
         $rules[] = [['orgName','name','jobRole'], 'required', 'when' => function($model){
             return $model->anonymous === 0;
         }];

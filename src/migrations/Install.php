@@ -5,6 +5,7 @@ namespace percipiolondon\attendees\migrations;
 use Craft;
 use craft\db\Migration;
 use craft\helpers\MigrationHelper;
+
 use percipiolondon\attendees\db\Table;
 
 /**
@@ -78,10 +79,12 @@ class Install extends Migration
                     'jobRole' => $this->string(255)->notNull(),
                     'days' => $this->integer()->notNull(),
                     'newsletter' => $this->boolean()->defaultValue(0),
+                    'priority' => $this->boolean()->defaultValue(0),
                     'approved' => $this->boolean()->defaultValue(0),
                     'siteId' => $this->integer()->notNull(),
                     'eventId' => $this->integer()->notNull(),
                     'identifier' => $this->string(255),
+                    'anonymous' => $this->boolean()->defaultValue(0),
                 ]
             );
         }
