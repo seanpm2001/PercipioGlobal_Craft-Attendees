@@ -29,7 +29,7 @@
 {% set docsUrl = "https://github.com/percipioglobal/craft-attendees/blob/master/README.md" %}
 
 {# The title of this CP section #}
-{% set title = "Attendees | Dashboard" %}
+{% set title = "Dashboard" %}
 
 
 {%- set permittedSites = [] %}
@@ -55,7 +55,7 @@
 {% set subnav = {
     "dashboard": { label: "Dashboard"|t('craft-attendees'), url: url(pluginCpUrl ~ '/dashboard') },
     "trainings": { label: "Trainings"|t('craft-attendees'), url: url(pluginCpUrl ~ '/trainings') },
-    "data-export": { label: "DataExport"|t('craft-attendees'), url: url(pluginCpUrl ~ '/data-export') },
+    "export": { label: "Export"|t('craft-attendees'), url: url(pluginCpUrl ~ '/export') },
 
 } %}
 {% set selectedSubnavItem = 'dashboard' %}
