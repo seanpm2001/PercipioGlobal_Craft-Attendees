@@ -12,6 +12,7 @@ use craft\web\Controller;
 use League\Csv\Statement;
 use percipiolondon\attendees\Attendees;
 use percipiolondon\attendees\jobs\CreateAttendeeJob;
+use percipiolondon\attendees\models\Export as ExportModel;
 use craft\helpers\Queue;
 use yii\web\Response;
 use yii\web\UploadedFile;
@@ -36,26 +37,15 @@ class CsvController extends Controller
 
         $request = Craft::$app->getRequest();
 
-        $type = $request->getBodyParam('type');
-        $school = $request->getBodyParam('school');
-        $start = $request->getBodyParam('start');
-        $end = $request->getBodyParam('end');
-        $site = $request->getBodyParam('site');
+        $exportModel = new ExportModel();
+        $exportModel->type = $request->getBodyParam('type');
+        $exportModel->school = $request->getBodyParam('school');
+        $exportModel->start = $request->getBodyParam('start');
+        $exportModel->end = $request->getBodyParam('end');
+        $exportModel->site = $request->getBodyParam('site');
+        $exportModel->tag = $request->getBodyParam('tag');
 
-        $exporter = Attendees::getInstance()->export->export($type, $school, $start, $end, $site);
-
-//        $query = AttendeeRecord::find();
-//        $start = (new \DateTime('first day of this month'))->format(\DateTime::ATOM);
-//        $end = (new \DateTime('last day of this month'))->format(\DateTime::ATOM);
-//        $query = \craft\elements\Entry::find()->section('events')->nextUpcomingEvent(['and', ">= {$start}", "< {$end}"])->all();
-//
-//        $exporter = new CsvGrid([
-//            'query' => $query,
-//            'maxEntriesPerFile' => 2000, // limit max rows per single file
-//            'resultConfig' => [
-//                'forceArchive' => true
-//            ],
-//        ]);
+        $exporter = Attendees::getInstance()->export->export($exportModel);
 
         return $exporter->export()->send('data-engagement-'.date("dmY-His").'.zip');
     }

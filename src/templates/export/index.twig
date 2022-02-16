@@ -13,7 +13,7 @@
  */
 #}
 
-{% extends "_layouts/cp" %}
+{% extends "craft-attendees/_layouts/_cp" %}
 {% import "_includes/forms" as forms %}
 
 {% set scriptTagOptions = {
@@ -75,13 +75,9 @@
     {{ craft.viteattendees.register('/src/js/export.ts', false, scriptTagOptions) }}
 
     <div id="export">
-        {#    https://github.com/yii2tech/csv-grid#}
-        <h2 class="pt-4">{{ "Export data from the trainings"|t('craft-attendees') }}</h2>
-
         <form-export
             csrf="{{ craft.app.request.csrfToken }}"
             site="{{ selectedSite == '2' ? '*' : selectedSite }}"
         ></form-export>
-
     </div>
 {% endset %}

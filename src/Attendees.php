@@ -27,6 +27,7 @@ use percipiolondon\attendees\records\Attendee as AttendeeRecord;
 use percipiolondon\attendees\variables\AttendeesVariable;
 use percipiolondon\attendees\services\Metaseed;
 use percipiolondon\attendees\services\Export;
+use percipiolondon\attendees\services\FullNameParser;
 use yii\base\Event;
 
 /**
@@ -234,6 +235,7 @@ class Attendees extends Plugin
         $this->setComponents([
             'metaseed' => Metaseed::class,
             'export' => Export::class,
+            'nameparser' => FullNameParser::class
         ]);
 
     }
