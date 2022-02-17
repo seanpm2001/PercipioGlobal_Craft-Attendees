@@ -1,14 +1,15 @@
 {
   "src/js/attendees.ts": {
-    "file": "assets/attendees.8542c661.js",
+    "file": "assets/attendees.b50d34c4.js",
     "src": "src/js/attendees.ts",
     "isEntry": true,
     "imports": [
       "_vendor.bd85c310.js",
-      "_plugin-vue_export-helper.6466da38.js"
+      "_trainings.96c469cc.js",
+      "_plugin-vue_export-helper.21dcd24c.js"
     ],
     "css": [
-      "assets/app.d0108630.css"
+      "assets/app.9b9c10d7.css"
     ]
   },
   "src/js/trainings.ts": {
@@ -16,26 +17,42 @@
     "src": "src/js/trainings.ts",
     "isEntry": true,
     "css": [
-      "assets/app.d0108630.css"
+      "assets/app.9b9c10d7.css"
     ]
   },
   "src/js/dashboard.ts": {
-    "file": "assets/dashboard.802c3ebc.js",
+    "file": "assets/dashboard.ccbba5cf.js",
     "src": "src/js/dashboard.ts",
     "isEntry": true,
     "imports": [
       "_vendor.bd85c310.js",
-      "_plugin-vue_export-helper.6466da38.js"
+      "_plugin-vue_export-helper.21dcd24c.js",
+      "_trainings.96c469cc.js"
     ],
     "css": [
-      "assets/app.d0108630.css"
+      "assets/app.9b9c10d7.css"
+    ]
+  },
+  "src/js/export.ts": {
+    "file": "assets/export.89fc5ab7.js",
+    "src": "src/js/export.ts",
+    "isEntry": true,
+    "imports": [
+      "_vendor.bd85c310.js",
+      "_plugin-vue_export-helper.21dcd24c.js"
+    ],
+    "css": [
+      "assets/app.9b9c10d7.css"
     ]
   },
   "_vendor.bd85c310.js": {
     "file": "assets/vendor.bd85c310.js"
   },
-  "_plugin-vue_export-helper.6466da38.js": {
-    "file": "assets/plugin-vue_export-helper.6466da38.js",
+  "_plugin-vue_export-helper.21dcd24c.js": {
+    "file": "assets/plugin-vue_export-helper.21dcd24c.js"
+  },
+  "_trainings.96c469cc.js": {
+    "file": "assets/trainings.96c469cc.js",
     "imports": [
       "_vendor.bd85c310.js"
     ]
