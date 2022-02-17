@@ -5,12 +5,13 @@ use percipiolondon\attendees\Attendees;
 use yii\base\Component;
 use yii\data\ArrayDataProvider;
 use yii2tech\csvgrid\CsvGrid;
-use percipiolondon\attendees\records\Attendee as AttendeeRecord;
 use percipiolondon\attendees\models\Export as ExportModel;
 use Craft;
 
 class Export extends Component
 {
+    public $MAX_ENTRIES_PER_FILE = 2000;
+
     public function export(ExportModel $exportModel): CsvGrid
     {
         switch($exportModel->type){
@@ -59,7 +60,7 @@ class Export extends Component
                 ['attribute' => 'mailingList'],
                 ['attribute' => 'anonymous'],
             ],
-            'maxEntriesPerFile' => 2000, // limit max rows per single file
+            'maxEntriesPerFile' => $this->MAX_ENTRIES_PER_FILE,
             'resultConfig' => [
                 'forceArchive' => true
             ],
@@ -83,7 +84,7 @@ class Export extends Component
                 ['attribute' => 'training'],
                 ['attribute' => 'lastTrainingDate']
             ],
-            'maxEntriesPerFile' => 2000, // limit max rows per single file
+            'maxEntriesPerFile' => $this->MAX_ENTRIES_PER_FILE,
             'resultConfig' => [
                 'forceArchive' => true
             ],
@@ -124,7 +125,7 @@ class Export extends Component
                 ['attribute' => 'fullname'],
                 ['attribute' => 'email']
             ],
-            'maxEntriesPerFile' => 2000, // limit max rows per single file
+            'maxEntriesPerFile' => $this->MAX_ENTRIES_PER_FILE,
             'resultConfig' => [
                 'forceArchive' => true
             ],
@@ -145,12 +146,45 @@ class Export extends Component
         }
 
         $response = Attendees::getInstance()->metaseed->attendeeSchools($urns);
-        Craft::dd($response);
 
-        $query = AttendeeRecord::find();
         return new CsvGrid([
-            'query' => $query,
-            'maxEntriesPerFile' => 2000, // limit max rows per single file
+            'dataProvider' => new ArrayDataProvider([
+                'allModels' => isset($response['data'][0]['urn']) ? $response['data'] : []
+            ]),
+            'columns' => [
+                ['attribute' => 'urn'],
+                ['attribute' => 'la'],
+                ['attribute' => 'laNum'],
+                ['attribute' => 'estab'],
+                ['attribute' => 'schName'],
+                ['attribute' => 'street'],
+                ['attribute' => 'locality'],
+                ['attribute' => 'town'],
+                ['attribute' => 'region'],
+                ['attribute' => 'postcode'],
+                ['attribute' => 'status'],
+                ['attribute' => 'type'],
+                ['attribute' => 'phase'],
+                ['attribute' => 'ageFrom'],
+                ['attribute' => 'ageTo'],
+                ['attribute' => 'pup'],
+                ['attribute' => 'ppPup'],
+                ['attribute' => 'pupBoys'],
+                ['attribute' => 'pupGirls'],
+                ['attribute' => 'percFsm'],
+                ['attribute' => 'ppPerc'],
+                ['attribute' => 'ppAllocation'],
+                ['attribute' => 'headTitle'],
+                ['attribute' => 'headFirstName'],
+                ['attribute' => 'headLastName'],
+                ['attribute' => 'headRole'],
+                ['attribute' => 'schTel'],
+                ['attribute' => 'ntp_eligible'],
+                ['attribute' => 'priority'],
+                ['attribute' => 'censusDate'],
+                ['attribute' => 'lastUpdated'],
+            ],
+            'maxEntriesPerFile' => $this->MAX_ENTRIES_PER_FILE,
             'resultConfig' => [
                 'forceArchive' => true
             ],
@@ -173,12 +207,45 @@ class Export extends Component
         $urns = array_unique($urns);
 
         $response = Attendees::getInstance()->metaseed->attendeeSchools($urns);
-        Craft::dd($response);
 
-        $query = AttendeeRecord::find();
         return new CsvGrid([
-            'query' => $query,
-            'maxEntriesPerFile' => 2000, // limit max rows per single file
+            'dataProvider' => new ArrayDataProvider([
+                'allModels' => isset($response['data'][0]['urn']) ? $response['data'] : []
+            ]),
+            'columns' => [
+                ['attribute' => 'urn'],
+                ['attribute' => 'la'],
+                ['attribute' => 'laNum'],
+                ['attribute' => 'estab'],
+                ['attribute' => 'schName'],
+                ['attribute' => 'street'],
+                ['attribute' => 'locality'],
+                ['attribute' => 'town'],
+                ['attribute' => 'region'],
+                ['attribute' => 'postcode'],
+                ['attribute' => 'status'],
+                ['attribute' => 'type'],
+                ['attribute' => 'phase'],
+                ['attribute' => 'ageFrom'],
+                ['attribute' => 'ageTo'],
+                ['attribute' => 'pup'],
+                ['attribute' => 'ppPup'],
+                ['attribute' => 'pupBoys'],
+                ['attribute' => 'pupGirls'],
+                ['attribute' => 'percFsm'],
+                ['attribute' => 'ppPerc'],
+                ['attribute' => 'ppAllocation'],
+                ['attribute' => 'headTitle'],
+                ['attribute' => 'headFirstName'],
+                ['attribute' => 'headLastName'],
+                ['attribute' => 'headRole'],
+                ['attribute' => 'schTel'],
+                ['attribute' => 'ntp_eligible'],
+                ['attribute' => 'priority'],
+                ['attribute' => 'censusDate'],
+                ['attribute' => 'lastUpdated'],
+            ],
+            'maxEntriesPerFile' => $this->MAX_ENTRIES_PER_FILE,
             'resultConfig' => [
                 'forceArchive' => true
             ],

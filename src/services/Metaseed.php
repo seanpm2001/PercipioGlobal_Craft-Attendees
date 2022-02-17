@@ -24,7 +24,7 @@ class Metaseed extends Component
         }
     }
 
-    public function attendeeSchools($urns): \stdClass
+    public function attendeeSchools($urns): array
     {
 
         try {
@@ -40,7 +40,7 @@ class Metaseed extends Component
                 ]
             );
 
-            return json_decode($response->getBody()->getContents());
+            return json_decode($response->getBody()->getContents(), true);
         } catch(\Exception $e) {
             Craft::error("Something went wrong: {$e->getMessage()}", __METHOD__);
         }
