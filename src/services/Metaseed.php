@@ -26,16 +26,21 @@ class Metaseed extends Component
 
     public function attendeeSchools($urns): \stdClass
     {
+
         try {
             $endpoint = 'https://api.v2.metaseed.io/urns';
             $client = new Client();
 
-            $response = $client->request('post', $endpoint, [
-                'orgUrn' => json_encode($urns)
-            ]);
-            $result = $response->getBody()->getContents();
+            $response = $client->post(
+                $endpoint,
+                [
+                    'form_params' => array(
+                        'orgUrn' => implode(', ', $urns)
+                    )
+                ]
+            );
 
-            return json_decode($result);
+            return json_decode($response->getBody()->getContents());
         } catch(\Exception $e) {
             Craft::error("Something went wrong: {$e->getMessage()}", __METHOD__);
         }
