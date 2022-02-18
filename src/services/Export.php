@@ -22,10 +22,10 @@ class Export extends Component
                 $exporter = $this->_buildSubscriptionsExport($exportModel->start, $exportModel->end, $exportModel->site, $exportModel->school, $exportModel->tag);
                 break;
             case 'school-attendee':
-                $exporter = $this->_buildSchoolAttendeeExport($exportModel->start, $exportModel->end, $exportModel->site, $exportModel->tag);
+                $exporter = $this->_buildSchoolAttendeeExport($exportModel->start, $exportModel->end, $exportModel->site, $exportModel->school, $exportModel->tag);
                 break;
             case 'school-unique':
-                $exporter = $this->_buildSchoolUniqueExport($exportModel->start, $exportModel->end, $exportModel->site, $exportModel->tag);
+                $exporter = $this->_buildSchoolUniqueExport($exportModel->start, $exportModel->end, $exportModel->site, $exportModel->school, $exportModel->tag);
                 break;
             default:
                 $exporter = $this->_buildAttendeesExport($exportModel->start, $exportModel->end, $exportModel->site, $exportModel->school, $exportModel->tag);
@@ -132,10 +132,10 @@ class Export extends Component
         ]);
     }
 
-    private function _buildSchoolAttendeeExport(string $start, string $end, string $site, string $tag): CsvGrid
+    private function _buildSchoolAttendeeExport(string $start, string $end, string $site, string $priority, string $tag): CsvGrid
     {
         $connection = \Yii::$app->getDb();
-        $sql = $this->attendeeSchoolsQuery($site, $start, $end, $tag);
+        $sql = $this->attendeeSchoolsQuery($site, $start, $end, $priority, $tag);
         $command = $connection->createCommand($sql);
         $results = $command->queryAll();
 
@@ -191,10 +191,10 @@ class Export extends Component
         ]);
     }
 
-    private function _buildSchoolUniqueExport(string $start, string $end, string $site, string $tag): CsvGrid
+    private function _buildSchoolUniqueExport(string $start, string $end, string $site, string $priority, string $tag): CsvGrid
     {
         $connection = \Yii::$app->getDb();
-        $sql = $this->attendeeSchoolsQuery($site, $start, $end, $tag);
+        $sql = $this->attendeeSchoolsQuery($site, $start, $end, $priority, $tag);
         $command = $connection->createCommand($sql);
         $results = $command->queryAll();
 
@@ -352,7 +352,7 @@ class Export extends Component
         ';
     }
 
-    protected function attendeeSchoolsQuery(string $site, string $start, string $end, string $tag): string
+    protected function attendeeSchoolsQuery(string $site, string $start, string $end, string $priority, string $tag): string
     {
         $siteWhere = $site != '*' ? 'AND s.id = '.$site : '';
         $siteTag = strlen($tag) > 0 ? 'AND e.id IN(
@@ -364,6 +364,7 @@ class Export extends Component
                 ON c.elementId = r.targetId
                 WHERE c.title = "'.$tag.'"
         )' : '';
+        $prior = $priority == 'prior' ? 'AND a.priority = "1"' : '';
 
         return '
             SELECT orgUrn
@@ -446,12 +447,12 @@ class Export extends Component
                         ORDER BY lastTrainingDate DESC
                     ) as export
                 )
-                AND priority = "1"
+                '. $prior .'
                 ORDER BY eventID ASC
         ';
     }
 
-    protected function eventsQuery(string $site, string $start, string $end, string $tag): string
+    protected function eventsQuery(string $site, string $start, string $end, string $priority, string $tag): string
     {
         $siteWhere = $site != '*' ? 'AND s.id = '.$site : '';
         $siteTag = strlen($tag) > 0 ? 'AND e.id IN(
@@ -463,6 +464,7 @@ class Export extends Component
                 ON c.elementId = r.targetId
                 WHERE c.title = "'.$tag.'"
         )' : '';
+        $prior = $priority == 'prior' ? 'WHERE a.priority = "1"' : '';
 
         return '
             SELECT eventId, RSN, Training, MAX(lastTraingingDate) AS lastTrainingDate FROM
