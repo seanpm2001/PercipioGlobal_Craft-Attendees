@@ -15,7 +15,7 @@
         <span :class="[
             'block w-full text-center py-2',
             loading || attendees?.length === 0 ? 'opacity-0' : ''
-        ]"><strong>{{ totals['events'] }}</strong> total training events, <strong>{{ allAttendees }}</strong> have attendees and ({{ ((totalAttendeesAreApproved / totalAttendeesAreDispproved) * 100).toFixed(2).replace(/[.,]00$/, "") }}%) are verified.</span>
+        ]"><strong>{{ totals['events'] }}</strong> total training events, <strong>{{ allAttendees }}</strong> have attendees and ({{ average }}%) are verified.</span>
 
         <span v-if="loading" class="block relative flex items-center justify-center w-full" style="height:150px">
             <svg class="animate-spin ml-2 mt-1 h-8 w-8 text-gray-400 inline-block -mt-px" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" style="margin-bottom: 0!important;">
@@ -88,6 +88,7 @@
             const totalAttendeesAreApproved = ref(0)
             const totalAttendeesAreDisapproved = ref(0)
             const totalAttendeesAreDispproved = ref(0)
+            const average = ref(0)
 
             watchEffect(() => {
 
@@ -116,13 +117,15 @@
                     totalAttendeesAreApproved.value = attendees.value.length
                     totalAttendeesAreDispproved.value = unverifiedAttendees.value.length
 
+                    average.value = ((totalAttendeesAreApproved.value/(totalAttendeesAreApproved.value + totalAttendeesAreDispproved.value))*100).toFixed(2).replace(/[.,]00$/, "")
+
                     series.value[0]['data'][0] = totalAttendeesAreDispproved.value
                     series.value[1]['data'][0] = totalAttendeesAreApproved.value
 
                 }
             })
 
-            return { loading, chartOptions, series, totals, allAttendees, totalAttendeesAreApproved, totalAttendeesAreDispproved, attendees }
+            return { loading, chartOptions, series, totals, average, allAttendees, totalAttendeesAreApproved, totalAttendeesAreDispproved, attendees }
         }
     })
 </script>
