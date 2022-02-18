@@ -34,8 +34,7 @@
                     <option default value="attendee">Attendee Data</option>
                     <option default value="event">Event ID reference table</option>
                     <option default value="subscriptions">Mailing list subscribers</option>
-                    <option default value="school-attendee">School data per attendee</option>
-                    <option default value="school-unique">School data unique</option>
+                    <option default value="school-attendee">School data</option>
                 </select>
             </label>
             <label class="col-span-2 pr-4">
