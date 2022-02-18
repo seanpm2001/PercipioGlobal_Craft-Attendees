@@ -15,7 +15,7 @@
         <span :class="[
             'block w-full text-center py-2',
             loading || attendees?.length === 0 ? 'opacity-0' : ''
-        ]"><strong>{{ totals['events'] }}</strong> total training events, <strong>{{ allAttendees }}</strong> have attendees and ({{ (totalAttendeesAreApproved / allAttendees) * 100 }}%) are verified.</span>
+        ]"><strong>{{ totals['events'] }}</strong> total training events, <strong>{{ allAttendees }}</strong> have attendees and ({{ ((totalAttendeesAreApproved / totalAttendeesAreDispproved) * 100).toFixed(2).replace(/[.,]00$/, "") }}%) are verified.</span>
 
         <span v-if="loading" class="block relative flex items-center justify-center w-full" style="height:150px">
             <svg class="animate-spin ml-2 mt-1 h-8 w-8 text-gray-400 inline-block -mt-px" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" style="margin-bottom: 0!important;">
@@ -76,7 +76,7 @@
                     name: 'Attendees (unverified)',
                     data: [0]
                 }, {
-                    name: 'Attendees (100% verified)',
+                    name: 'Attendees (verified)',
                     data: [0]
                 }]
             )
@@ -86,6 +86,8 @@
             const allAttendees = ref(0)
             const totalAttendees = ref(0)
             const totalAttendeesAreApproved = ref(0)
+            const totalAttendeesAreDisapproved = ref(0)
+            const totalAttendeesAreDispproved = ref(0)
 
             watchEffect(() => {
 
@@ -96,36 +98,31 @@
                         completion[''+attendees.value[key].eventId] = (completion[''+attendees.value[key].eventId] ?? 0) + 1
                     }
 
-                    console.log("------start")
                     let completionApproved = []
                     for(const key in unverifiedAttendees.value){
-                        console.log(unverifiedAttendees.value[key].eventId)
-                        console.log(unverifiedAttendees.value[key])
                         completionApproved[''+unverifiedAttendees.value[key].eventId] = (completionApproved[''+unverifiedAttendees.value[key].eventId] ?? 0) + 1
                     }
-                    console.log("------end")
 
                     totalAttendeesAreApproved.value = Object.keys(completion).length
 
                     let unapprovedCount = 0
                     for(const key in completionApproved){
-                        console.log(Object.keys(completion).indexOf(key), key)
                         if(Object.keys(completion).indexOf(key) < 0){
                             unapprovedCount++
                         }
                     }
 
-                    console.log("unapprovedCount",completionApproved)
+                    allAttendees.value = Object.keys(completion).length + unapprovedCount
+                    totalAttendeesAreApproved.value = attendees.value.length
+                    totalAttendeesAreDispproved.value = unverifiedAttendees.value.length
 
-                    allAttendees.value = totalAttendeesAreApproved.value + unapprovedCount
-
-                    series.value[0]['data'][0] = unapprovedCount
+                    series.value[0]['data'][0] = totalAttendeesAreDispproved.value
                     series.value[1]['data'][0] = totalAttendeesAreApproved.value
 
                 }
             })
 
-            return { loading, chartOptions, series, totals, allAttendees, totalAttendeesAreApproved, attendees }
+            return { loading, chartOptions, series, totals, allAttendees, totalAttendeesAreApproved, totalAttendeesAreDispproved, attendees }
         }
     })
 </script>

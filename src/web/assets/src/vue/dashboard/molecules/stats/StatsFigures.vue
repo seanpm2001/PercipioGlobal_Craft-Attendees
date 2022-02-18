@@ -11,14 +11,14 @@
         <stat v-if="attendees && !loading" :value="parseInt(totals['schools'] ?? 0)" :average="parseFloat(averageSchools())" type="schools" description="schools per training" />
         <stat-empty v-else />
 
-        <stat v-if="attendees && !loading" :value="parseInt(totals['priority'] ?? 0)" :average="parseFloat(averagePrioritySchools())" type="priority schools" description="priority schools per training" />
+        <stat v-if="attendees && !loading" :value="priority" :average="parseFloat(averagePrioritySchools())" type="priority schools" description="priority schools per training" />
         <stat-empty v-else />
 
     </div>
 </template>
 
 <script lang="ts">
-    import {defineComponent} from "vue"
+    import {defineComponent, ref, watchEffect} from "vue"
     import Stat from '@/vue/dashboard/atoms/stats/Stat.vue'
     import StatEmpty from '@/vue/dashboard/atoms/stats/StatEmpty.vue'
     import { useDashboardStore } from '@/store/dashboard'
@@ -32,58 +32,37 @@
         setup(){
             const store = useDashboardStore();
             const { loading, events, attendees, period, totals } = storeToRefs(store)
+            const priority = ref(0)
 
             const averagePrioritySchools = () => {
-                // const prioritySchools = totalsattendees.value.filter(attendee => attendee.priority === 1)
-                return parseFloat(totals.value['priority'] / totals.value['events']).toFixed(2).replace(/[.,]00$/, "");
-
-                // return parseFloat(Object.keys(prioritySchools).length / events.value.length).toFixed(2).replace(/[.,]00$/, "");
+                const AVprioritySchools = parseFloat(priority.value / totals.value['events'])
+                return isNaN(AVprioritySchools) ? 0 : parseFloat(AVprioritySchools).toFixed(2).replace(/[.,]00$/, "");
             }
 
             const averageEvents = () => {
-                return Math.ceil(events.value.length/period.value).toFixed(2).replace(/[.,]00$/, "");
+                const AVevents = Math.ceil(events.value.length/period.value)
+                return isNaN(events) ? 0 : events.toFixed(2).replace(/[.,]00$/, "");
             }
 
             const averageAttendees = () => {
-                return parseFloat(totals.value['attendees']/totals.value['events']).toFixed(2).replace(/[.,]00$/, "");
-                //  const attendeeEvents = attendees.value.reduce(function (r, a) {
-                //     r[a.eventId] = r[a.eventId] || [];
-                //     r[a.eventId].push(a);
-                //     return r;
-                // }, Object.create(null));
-                //
-                // let average = Object.values(attendeeEvents).map(s => s.length)
-                // average = Math.ceil(average.reduce( ( p, c ) => p + c, 0 ) / average.length).toFixed(2).replace(/[.,]00$/, "");
-                //
-                // return isNaN(average) ? 0 : average
+                const AVattendees = totals.value['attendees']/totals.value['events']
+                return isNaN(AVattendees) ? 0 : parseFloat(AVattendees).toFixed(2).replace(/[.,]00$/, "");
             }
 
             const averageSchools = () => {
-                return parseFloat(totals.value['schools']/totals.value['events']).toFixed(2).replace(/[.,]00$/, "");
-                // const attendeeSchools = attendees.value.reduce(function (r, a) {
-                //     r[a.eventId] = r[a.eventId] || [];
-                //     r[a.eventId].push(a);
-                //     return r;
-                // }, Object.create(null));
-                //
-                // let uniqueAverage = 0
-                // for(const key in attendeeSchools){
-                //
-                //     const uniqueSchool = attendeeSchools[key].reduce(function (r, a) {
-                //         r[a.orgName] = r[a.orgName] || [];
-                //         r[a.orgName].push(a);
-                //         return r;
-                //     }, Object.create(null));
-                //
-                //     uniqueAverage += Object.keys(uniqueSchool).length
-                // }
-                //
-                // const average = Math.ceil(uniqueAverage / Object.keys(attendeeSchools)?.length).toFixed(2).replace(/[.,]00$/, "");
-                //
-                // return isNaN(average) ? 0 : average
+                const AVschools = totals.value['schools']/totals.value['events']
+                return isNaN(AVschools) ? 0 : parseFloat(AVschools).toFixed(2).replace(/[.,]00$/, "");
             }
 
-            return { loading, events, attendees, totals, averageEvents, averageAttendees, averageSchools, averagePrioritySchools }
+
+            watchEffect(() => {
+                if(attendees.value){
+                    priority.value = attendees.value.filter(a => a.priority == 1).length
+                }
+            })
+
+
+            return { loading, events, attendees, totals, priority, averageEvents, averageAttendees, averageSchools, averagePrioritySchools }
         }
     })
 </script>

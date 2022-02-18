@@ -32,12 +32,12 @@ class DashboardController extends Controller
         $whereSiteId = strlen($site) > 0 ? 'AND c.siteId = ' . $site : '';
         $connection = \Yii::$app->getDb();
 
+//            SUM(priority) AS totalPriority
         $sql = "
             SELECT
             DISTINCT(eventId) AS id,
             COUNT(DISTINCT(attendeeId)) AS totalAttendees,
-            COUNT(DISTINCT(orgUrn)) AS totalSchools,
-            SUM(priority) AS totalPriority
+            COUNT(DISTINCT(orgUrn)) AS totalSchools
             FROM
             (
                 SELECT e.id AS eventId, a.id AS attendeeId, a.priority, a.orgUrn
@@ -141,7 +141,7 @@ class DashboardController extends Controller
             $totals['events'] = $totals['events'] + 1;
             $totals['attendees'] = $totals['attendees'] + $event['totalAttendees'];
             $totals['schools'] = $totals['schools'] + $event['totalSchools'];
-            $totals['priority'] = $totals['priority'] + $event['totalPriority'];
+//            $totals['priority'] = $totals['priority'] + $event['totalPriority'];
 
             array_push($attendees,...$evtAttendees);
             array_push($unverifiedAttendees, ...$evtUnverifiedAttendees);
