@@ -84,24 +84,49 @@
 
                 if(followOnSupport.value){
 
-                    let support = []
-                    let options = []
-
-                    for(const key in followOnSupport.value){
-                        for(const l in followOnSupport.value[key]){
-                            support[''+followOnSupport.value[key][l].optionId] = (support[''+followOnSupport.value[key][l].optionId] ?? 0) + 1
+                    if(followOnSupport.value){
+                        const support = followOnSupport.value.reduce(function (r, a) {
+                            r[a.optionId] = r[a.optionId] || [];
+                            r[a.optionId].push(a);
+                            return r;
+                        }, Object.create(null));
+                        let options = []
+                        for(const value in support){
+                            options.push(followOnSupportOptions.value.find(op => op.id == value)?.name);
                         }
+                        chartOptions.value.xaxis.categories = options
+                        series.value[0].data = []
+                        Object.values(support).forEach((entry,i) => {
+                            series.value[0].data.push(entry.length)
+                        })
                     }
 
-                    for(const value in support ){
-                        options.push(followOnSupportOptions.value.find(op => op.id == support[value])?.name);
-                    }
-                    chartOptions.value.xaxis.categories = options
-
-                    series.value[0].data = []
-                    Object.values(support).forEach((entry,i) => {
-                        series.value[0].data.push(entry)
-                    })
+                    // for(const key in followOnSupportOptions.value){
+                    //     console.log(followOnSupportOptions.value[key].id)
+                    //     let match = followOnSupport.value.find(s => s.optionId == followOnSupportOptions.value[key].id)
+                    //     console.log("match",match)
+                    // }
+                    //
+                    // console.log(followOnSupport.value)
+                    //
+                    // let support = []
+                    // let options = []
+                    //
+                    // for(const key in followOnSupport.value){
+                    //     for(const l in followOnSupport.value[key]){
+                    //         support[''+followOnSupport.value[key][l].optionId] = (support[''+followOnSupport.value[key][l].optionId] ?? 0) + 1
+                    //     }
+                    // }
+                    //
+                    // for(const value in support ){
+                    //     options.push(followOnSupportOptions.value.find(op => op.id == support[value])?.name);
+                    // }
+                    // chartOptions.value.xaxis.categories = options
+                    //
+                    // series.value[0].data = []
+                    // Object.values(support).forEach((entry,i) => {
+                    //     series.value[0].data.push(entry)
+                    // })
 
                 }
             })

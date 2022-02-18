@@ -143,9 +143,11 @@ class DashboardController extends Controller
             $totals['schools'] = $totals['schools'] + $event['totalSchools'];
             $totals['priority'] = $totals['priority'] + $event['totalPriority'];
 
-            $attendees[] = $evtAttendees;
-            $followonsupport[] = $evtFollow;
-            $unverifiedAttendees[] = $evtUnverifiedAttendees;
+            array_push($attendees,...$evtAttendees);
+            array_push($unverifiedAttendees, ...$evtUnverifiedAttendees);
+            array_push($followonsupport, ...$evtFollow);
+
+//            $unverifiedAttendees[] = $evtUnverifiedAttendees;
         }
 
         return $this->asJson([
