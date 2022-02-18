@@ -2,16 +2,16 @@
     <!-- https://dribbble.com/shots/15774046-Nexudus-Corporate-VC-Dashboards -->
     <div class="grid grid-cols-2 xl:grid-cols-4 gap-4">
 
-        <stat v-if="events && !loading" :value="events.length" :average="averageEvents()" type="events" description="trainings per month" />
+        <stat v-if="events && !loading" :value="parseInt(totals['events'] ?? events.length)" :average="parseFloat(averageEvents())" type="events" description="trainings per month" />
         <stat-empty v-else />
 
-        <stat v-if="attendees && !loading" :value="attendees.length" :average="averageAttendees()" type="attendees" description="attendees per training" />
+        <stat v-if="attendees && !loading" :value="parseInt(totals['attendees'] ?? attendees.length)" :average="parseFloat(averageAttendees())" type="attendees" description="attendees per training" />
         <stat-empty v-else />
 
-        <stat v-if="attendees && !loading" :value="schools()" :average="averageSchools()" type="schools" description="schools per training" />
+        <stat v-if="attendees && !loading" :value="parseInt(totals['schools'] ?? 0)" :average="parseFloat(averageSchools())" type="schools" description="schools per training" />
         <stat-empty v-else />
 
-        <stat v-if="attendees && !loading" :value="priority()" :average="averagePrioritySchools()" type="priority schools" description="priority schools per training" />
+        <stat v-if="attendees && !loading" :value="parseInt(totals['priority'] ?? 0)" :average="parseFloat(averagePrioritySchools())" type="priority schools" description="priority schools per training" />
         <stat-empty v-else />
 
     </div>
@@ -31,28 +31,13 @@
         },
         setup(){
             const store = useDashboardStore();
-            const { loading, events, attendees, period } = storeToRefs(store)
-
-            const schools = () => {
-                const attendeeSchools = attendees.value.reduce(function (r, a) {
-                    r[a.orgName] = r[a.orgName] || [];
-                    r[a.orgName].push(a);
-                    return r;
-                }, Object.create(null));
-
-                return Object.keys(attendeeSchools).length
-            }
-
-            const priority = () => {
-                const prioritySchools = attendees.value.filter(attendee => attendee.priority === 1)
-
-                return Object.keys(prioritySchools).length
-            }
+            const { loading, events, attendees, period, totals } = storeToRefs(store)
 
             const averagePrioritySchools = () => {
-                const prioritySchools = attendees.value.filter(attendee => attendee.priority === 1)
+                // const prioritySchools = totalsattendees.value.filter(attendee => attendee.priority === 1)
+                return parseFloat(totals.value['priority'] / totals.value['events']).toFixed(2).replace(/[.,]00$/, "");
 
-                return parseFloat(Object.keys(prioritySchools).length / events.value.length).toFixed(2).replace(/[.,]00$/, "");
+                // return parseFloat(Object.keys(prioritySchools).length / events.value.length).toFixed(2).replace(/[.,]00$/, "");
             }
 
             const averageEvents = () => {
@@ -60,43 +45,45 @@
             }
 
             const averageAttendees = () => {
-                 const attendeeEvents = attendees.value.reduce(function (r, a) {
-                    r[a.eventId] = r[a.eventId] || [];
-                    r[a.eventId].push(a);
-                    return r;
-                }, Object.create(null));
-
-                let average = Object.values(attendeeEvents).map(s => s.length)
-                average = Math.ceil(average.reduce( ( p, c ) => p + c, 0 ) / average.length).toFixed(2).replace(/[.,]00$/, "");
-
-                return isNaN(average) ? 0 : average
+                return parseFloat(totals.value['attendees']/totals.value['events']).toFixed(2).replace(/[.,]00$/, "");
+                //  const attendeeEvents = attendees.value.reduce(function (r, a) {
+                //     r[a.eventId] = r[a.eventId] || [];
+                //     r[a.eventId].push(a);
+                //     return r;
+                // }, Object.create(null));
+                //
+                // let average = Object.values(attendeeEvents).map(s => s.length)
+                // average = Math.ceil(average.reduce( ( p, c ) => p + c, 0 ) / average.length).toFixed(2).replace(/[.,]00$/, "");
+                //
+                // return isNaN(average) ? 0 : average
             }
 
             const averageSchools = () => {
-                const attendeeSchools = attendees.value.reduce(function (r, a) {
-                    r[a.eventId] = r[a.eventId] || [];
-                    r[a.eventId].push(a);
-                    return r;
-                }, Object.create(null));
-
-                let uniqueAverage = 0
-                for(const key in attendeeSchools){
-
-                    const uniqueSchool = attendeeSchools[key].reduce(function (r, a) {
-                        r[a.orgName] = r[a.orgName] || [];
-                        r[a.orgName].push(a);
-                        return r;
-                    }, Object.create(null));
-
-                    uniqueAverage += Object.keys(uniqueSchool).length
-                }
-
-                const average = Math.ceil(uniqueAverage / Object.keys(attendeeSchools)?.length).toFixed(2).replace(/[.,]00$/, "");
-
-                return isNaN(average) ? 0 : average
+                return parseFloat(totals.value['schools']/totals.value['events']).toFixed(2).replace(/[.,]00$/, "");
+                // const attendeeSchools = attendees.value.reduce(function (r, a) {
+                //     r[a.eventId] = r[a.eventId] || [];
+                //     r[a.eventId].push(a);
+                //     return r;
+                // }, Object.create(null));
+                //
+                // let uniqueAverage = 0
+                // for(const key in attendeeSchools){
+                //
+                //     const uniqueSchool = attendeeSchools[key].reduce(function (r, a) {
+                //         r[a.orgName] = r[a.orgName] || [];
+                //         r[a.orgName].push(a);
+                //         return r;
+                //     }, Object.create(null));
+                //
+                //     uniqueAverage += Object.keys(uniqueSchool).length
+                // }
+                //
+                // const average = Math.ceil(uniqueAverage / Object.keys(attendeeSchools)?.length).toFixed(2).replace(/[.,]00$/, "");
+                //
+                // return isNaN(average) ? 0 : average
             }
 
-            return { loading, events, attendees, schools, priority, averageEvents, averageAttendees, averageSchools, averagePrioritySchools }
+            return { loading, events, attendees, totals, averageEvents, averageAttendees, averageSchools, averagePrioritySchools }
         }
     })
 </script>

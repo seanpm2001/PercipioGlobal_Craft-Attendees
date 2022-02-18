@@ -15,7 +15,7 @@
         <span :class="[
             'block w-full text-center py-2',
             loading || attendees?.length === 0 ? 'opacity-0' : ''
-        ]"><strong>{{ events?.length }}</strong> total training events, <strong>{{ allAttendees }}</strong> have attendees and ({{ (events?.length / 100) * totalAttendeesAreApproved }}%) are verified.</span>
+        ]"><strong>{{ totals['events'] }}</strong> total training events, <strong>{{ allAttendees }}</strong> have attendees and ({{ ((totals['events'] / 100) * totalAttendeesAreApproved) * 100 }}%) are verified.</span>
 
         <span v-if="loading" class="block relative flex items-center justify-center w-full" style="height:150px">
             <svg class="animate-spin ml-2 mt-1 h-8 w-8 text-gray-400 inline-block -mt-px" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" style="margin-bottom: 0!important;">
@@ -73,7 +73,7 @@
                 colors:  ['#2b63eb', '#113795']
             })
             const series = ref([{
-                    name: 'Attendees',
+                    name: 'Attendees (unverified)',
                     data: [0]
                 }, {
                     name: 'Attendees (100% verified)',
@@ -82,7 +82,7 @@
             )
 
             const store = useTrainingsStore()
-            const { loading, events, attendees } = storeToRefs(store)
+            const { loading, totals, attendees, unverifiedAttendees } = storeToRefs(store)
             const allAttendees = ref(0)
             const totalAttendees = ref(0)
             const totalAttendeesAreApproved = ref(0)
@@ -91,30 +91,22 @@
 
                 if(attendees.value){
 
-                    const attendeeEvents = attendees.value.reduce(function (r, a) {
-                        r[a.eventId] = r[a.eventId] || [];
-                        r[a.eventId].push(a);
-                        return r;
-                    }, Object.create(null));
-
-                    allAttendees.value = Object.keys(attendeeEvents).length
-
-                    Object.values(attendeeEvents).forEach((entry, i) => {
-                        totalAttendees.value = totalAttendees.value + entry.length
-
-                        let approved = true
-
-                        for(const key in entry){
-                            if(entry[key].approved != 1){
-                                approved = false
-                            }
+                    let completion = []
+                    for(const key in attendees.value){
+                        for(const l in attendees.value[key]){
+                            completion[''+attendees.value[key][l].eventId] = (completion[''+attendees.value[key][l].eventId] ?? 0) + 1
                         }
+                    }
 
-                        if(approved){
-                            totalAttendeesAreApproved.value = totalAttendeesAreApproved.value + 1;
+                    let completionApproved = []
+                    for(const key in unverifiedAttendees.value){
+                        for(const l in unverifiedAttendees.value[key]){
+                            completionApproved[''+unverifiedAttendees.value[key][l].eventId] = (completionApproved[''+unverifiedAttendees.value[key][l].eventId] ?? 0) + 1
                         }
+                    }
 
-                    })
+                    allAttendees.value = Object.keys(completion).length + Object.keys(completionApproved).length
+                    totalAttendeesAreApproved.value = Object.keys(completion).length
 
                     series.value[0]['data'][0] = allAttendees.value
                     series.value[1]['data'][0] = totalAttendeesAreApproved.value
@@ -122,7 +114,7 @@
                 }
             })
 
-            return { loading, chartOptions, series, events, allAttendees, totalAttendeesAreApproved, attendees }
+            return { loading, chartOptions, series, totals, allAttendees, totalAttendeesAreApproved, attendees }
         }
     })
 </script>

@@ -2,7 +2,7 @@
     <div class="flex w-full sticky z-20 bg-gray-100 bg-opacity-70 py-4 backdrop-blur" style="top:50px;">
         <p class="text-xl font-bold inline-block flex-grow" style="margin-bottom:0!important">Showing data from <strong>{{ start }}</strong> to <strong>{{ end }}</strong></p>
         <div style="margin-top:0!important">
-            <!--dropdown></dropdown-->
+            <dropdown></dropdown>
             <slot></slot>
         </div>
     </div>

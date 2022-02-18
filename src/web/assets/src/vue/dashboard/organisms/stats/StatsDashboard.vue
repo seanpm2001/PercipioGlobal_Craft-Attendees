@@ -27,10 +27,10 @@
                 type: String,
                 required: true
             },
-            ids: {
-                type: String,
-                required: true
-            }
+            // ids: {
+            //     type: String,
+            //     required: true
+            // }
         },
         setup(props){
             const store = useDashboardStore();
