@@ -52,11 +52,11 @@
             const averagePrioritySchools = () => {
                 const prioritySchools = attendees.value.filter(attendee => attendee.priority === 1)
 
-                return Object.keys(prioritySchools).length / events.value.length
+                return parseFloat(Object.keys(prioritySchools).length / events.value.length).toFixed(2).replace(/[.,]00$/, "");
             }
 
             const averageEvents = () => {
-                return Math.ceil(events.value.length/period.value)
+                return Math.ceil(events.value.length/period.value).toFixed(2).replace(/[.,]00$/, "");
             }
 
             const averageAttendees = () => {
@@ -67,7 +67,7 @@
                 }, Object.create(null));
 
                 let average = Object.values(attendeeEvents).map(s => s.length)
-                average = Math.ceil(average.reduce( ( p, c ) => p + c, 0 ) / average.length)
+                average = Math.ceil(average.reduce( ( p, c ) => p + c, 0 ) / average.length).toFixed(2).replace(/[.,]00$/, "");
 
                 return isNaN(average) ? 0 : average
             }
@@ -91,7 +91,7 @@
                     uniqueAverage += Object.keys(uniqueSchool).length
                 }
 
-                const average = Math.ceil(uniqueAverage / Object.keys(attendeeSchools)?.length)
+                const average = Math.ceil(uniqueAverage / Object.keys(attendeeSchools)?.length).toFixed(2).replace(/[.,]00$/, "");
 
                 return isNaN(average) ? 0 : average
             }
