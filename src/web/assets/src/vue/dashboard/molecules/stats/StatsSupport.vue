@@ -83,23 +83,24 @@
             watchEffect(() => {
 
                 if(followOnSupport.value){
-                    const support = followOnSupport.value.reduce(function (r, a) {
-                        r[a.optionId] = r[a.optionId] || [];
-                        r[a.optionId].push(a);
-                        return r;
-                    }, Object.create(null));
 
+                    let support = []
                     let options = []
 
-                    for(const value in support){
-                        options.push(followOnSupportOptions.value.find(op => op.id == value)?.name);
+                    for(const key in followOnSupport.value){
+                        for(const l in followOnSupport.value[key]){
+                            support[''+followOnSupport.value[key][l].optionId] = (support[''+followOnSupport.value[key][l].optionId] ?? 0) + 1
+                        }
                     }
 
+                    for(const value in support ){
+                        options.push(followOnSupportOptions.value.find(op => op.id == support[value])?.name);
+                    }
                     chartOptions.value.xaxis.categories = options
 
                     series.value[0].data = []
                     Object.values(support).forEach((entry,i) => {
-                        series.value[0].data.push(entry.length)
+                        series.value[0].data.push(entry)
                     })
 
                 }

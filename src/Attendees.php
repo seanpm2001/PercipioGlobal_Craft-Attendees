@@ -17,9 +17,6 @@ use percipiolondon\attendees\behaviors\AttendeeBehavior;
 
 use Craft;
 use craft\base\Plugin;
-use craft\services\Elements;
-use craft\events\RegisterComponentTypesEvent;
-use craft\services\Plugins;
 
 use nystudio107\pluginvite\services\VitePluginService;
 
@@ -29,6 +26,8 @@ use percipiolondon\attendees\assetbundles\craftattendees\AttendeesAsset;
 use percipiolondon\attendees\records\Attendee as AttendeeRecord;
 use percipiolondon\attendees\variables\AttendeesVariable;
 use percipiolondon\attendees\services\Metaseed;
+use percipiolondon\attendees\services\Export;
+use percipiolondon\attendees\services\FullNameParser;
 use yii\base\Event;
 
 /**
@@ -191,11 +190,11 @@ class Attendees extends Plugin
             'label' => Craft::t('craft-attendees', 'Dashboard'),
             'url' => 'craft-attendees/dashboard'
         ];
-//
-//        $nav['subnav']['data-export'] = [
-//            'label' => Craft::t('craft-attendees', 'Data Export'),
-//            'url' => 'craft-attendees/data-export'
-//        ];
+
+        $nav['subnav']['export'] = [
+            'label' => Craft::t('craft-attendees', 'Export'),
+            'url' => 'craft-attendees/export'
+        ];
 
         $nav['subnav']['trainings'] = [
             'label' => Craft::t('craft-attendees', 'Trainings'),
@@ -226,7 +225,7 @@ class Attendees extends Plugin
                 $event->rules['craft-attendees/trainings/attendees/<eventId:\d+>/<order\w+>/<limit:\d+>/<offset:\d+>'] = 'craft-attendees/training/attendees';
                 $event->rules['craft-attendees/trainings/logs/<eventId:\d+>'] = 'craft-attendees/log/logs';
                 $event->rules['craft-attendees/trainings/fetch-support-options/<eventId:\d+>'] = 'craft-attendees/training/fetch-support-options';
-                $event->rules['craft-attendees/dashboard/events/<site\w+>/<period:\w+>'] = 'craft-attendees/dashboard/fetch-events';
+//                $event->rules['craft-attendees/export/export'] = 'craft-attendees/csv/export';
             }
         );
     }
@@ -234,7 +233,9 @@ class Attendees extends Plugin
     private function _registerServices()
     {
         $this->setComponents([
-            'metaseed' => Metaseed::class
+            'metaseed' => Metaseed::class,
+            'export' => Export::class,
+            'nameparser' => FullNameParser::class
         ]);
 
     }

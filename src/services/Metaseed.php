@@ -10,8 +10,6 @@ class Metaseed extends Component
 {
     public function school(String $query): \stdClass
     {
-        //$this->metaseed->school()
-
         try {
             $endpoint = 'https://api.v2.metaseed.io/schools/?mode=legacy&query='.$query;
             $client = new Client();
@@ -21,6 +19,28 @@ class Metaseed extends Component
 
             return json_decode($result);
 
+        } catch(\Exception $e) {
+            Craft::error("Something went wrong: {$e->getMessage()}", __METHOD__);
+        }
+    }
+
+    public function attendeeSchools($urns): array
+    {
+
+        try {
+            $endpoint = 'https://api.v2.metaseed.io/urns';
+            $client = new Client();
+
+            $response = $client->post(
+                $endpoint,
+                [
+                    'form_params' => array(
+                        'orgUrn' => implode(', ', $urns)
+                    )
+                ]
+            );
+
+            return json_decode($response->getBody()->getContents(), true);
         } catch(\Exception $e) {
             Craft::error("Something went wrong: {$e->getMessage()}", __METHOD__);
         }

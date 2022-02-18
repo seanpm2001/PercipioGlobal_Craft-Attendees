@@ -12,10 +12,10 @@ use craft\web\Controller;
 use League\Csv\Statement;
 use percipiolondon\attendees\Attendees;
 use percipiolondon\attendees\jobs\CreateAttendeeJob;
+use percipiolondon\attendees\models\Export as ExportModel;
 use craft\helpers\Queue;
 use yii\web\Response;
 use yii\web\UploadedFile;
-use percipiolondon\attendees\helpers\Version as VersionHelper;
 
 class CsvController extends Controller
 {
@@ -30,6 +30,25 @@ class CsvController extends Controller
         'newsletter',
         'eventId'
     ];
+
+    public function actionExport()
+    {
+        $this->requireLogin();
+
+        $request = Craft::$app->getRequest();
+
+        $exportModel = new ExportModel();
+        $exportModel->type = $request->getBodyParam('type');
+        $exportModel->school = $request->getBodyParam('school');
+        $exportModel->start = $request->getBodyParam('start');
+        $exportModel->end = $request->getBodyParam('end');
+        $exportModel->site = $request->getBodyParam('site');
+        $exportModel->tag = $request->getBodyParam('tag');
+
+        $exporter = Attendees::getInstance()->export->export($exportModel);
+
+        return $exporter->export()->send('data-engagement-'.date("dmY-His").'.zip');
+    }
 
     public function actionImport(): Response
     {
@@ -189,7 +208,6 @@ class CsvController extends Controller
             ]));
 //            Retour::$plugin->redirects->saveRedirect($redirectConfig);
         }
-
 
     }
 

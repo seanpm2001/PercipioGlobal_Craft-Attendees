@@ -15,6 +15,7 @@ export default ({ command }) => ({
                 attendees: '/src/js/attendees.ts',
                 trainings: '/src/js/trainings.ts',
                 dashboard: '/src/js/dashboard.ts',
+                export: '/src/js/export.ts',
             },
             output: {
                 sourcemap: true
