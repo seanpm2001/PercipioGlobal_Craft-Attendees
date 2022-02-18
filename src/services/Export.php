@@ -16,10 +16,10 @@ class Export extends Component
     {
         switch($exportModel->type){
             case 'event':
-                $exporter = $this->_buildEventExport($exportModel->start, $exportModel->end, $exportModel->site, $exportModel->tag);
+                $exporter = $this->_buildEventExport($exportModel->start, $exportModel->end, $exportModel->site, $exportModel->school, $exportModel->tag);
                 break;
             case 'subscriptions':
-                $exporter = $this->_buildSubscriptionsExport($exportModel->start, $exportModel->end, $exportModel->site, $exportModel->tag);
+                $exporter = $this->_buildSubscriptionsExport($exportModel->start, $exportModel->end, $exportModel->site, $exportModel->school, $exportModel->tag);
                 break;
             case 'school-attendee':
                 $exporter = $this->_buildSchoolAttendeeExport($exportModel->start, $exportModel->end, $exportModel->site, $exportModel->tag);
@@ -28,16 +28,16 @@ class Export extends Component
                 $exporter = $this->_buildSchoolUniqueExport($exportModel->start, $exportModel->end, $exportModel->site, $exportModel->tag);
                 break;
             default:
-                $exporter = $this->_buildAttendeesExport($exportModel->start, $exportModel->end, $exportModel->site, $exportModel->tag);
+                $exporter = $this->_buildAttendeesExport($exportModel->start, $exportModel->end, $exportModel->site, $exportModel->school, $exportModel->tag);
         }
 
         return $exporter;
     }
 
-    private function _buildAttendeesExport(string $start, string $end, string $site, string $tag): CsvGrid
+    private function _buildAttendeesExport(string $start, string $end, string $site, string $priority, string $tag): CsvGrid
     {
         $connection = \Yii::$app->getDb();
-        $sql = $this->attendeesQuery($site, $start, $end, $tag);
+        $sql = $this->attendeesQuery($site, $start, $end, $priority, $tag);
         $command = $connection->createCommand($sql);
         $results = $command->queryAll();
 
@@ -67,10 +67,10 @@ class Export extends Component
         ]);
     }
 
-    private function _buildEventExport(string $start, string $end, string $site, string $tag): CsvGrid
+    private function _buildEventExport(string $start, string $end, string $site, string $priority, string $tag): CsvGrid
     {
         $connection = \Yii::$app->getDb();
-        $sql = $this->eventsQuery($site, $start, $end, $tag);
+        $sql = $this->eventsQuery($site, $start, $end, $priority, $tag);
         $command = $connection->createCommand($sql);
         $results = $command->queryAll();
 
@@ -91,10 +91,10 @@ class Export extends Component
         ]);
     }
 
-    private function _buildSubscriptionsExport(string $start, string $end, string $site, string $tag): CsvGrid
+    private function _buildSubscriptionsExport(string $start, string $end, string $site, string $priority, string $tag): CsvGrid
     {
         $connection = \Yii::$app->getDb();
-        $sql = $this->attendeesQuery($site, $start, $end, $tag);
+        $sql = $this->attendeesQuery($site, $start, $end, $priority, $tag);
         $command = $connection->createCommand($sql);
         $results = $command->queryAll();
 
@@ -252,7 +252,7 @@ class Export extends Component
         ]);
     }
 
-    protected function attendeesQuery(string $site, string $start, string $end, string $tag): string
+    protected function attendeesQuery(string $site, string $start, string $end, string $priority, string $tag): string
     {
         $siteWhere = $site != '*' ? 'AND s.id = '.$site : '';
         $siteTag = strlen($tag) > 0 ? 'AND e.id IN(
@@ -264,6 +264,7 @@ class Export extends Component
                 ON c.elementId = r.targetId
                 WHERE c.title = "'.$tag.'"
         )' : '';
+        $prior = $priority == 'prior' ? 'AND priority = "1"' : '';
 
         return '
             SELECT handle AS RSN, elementId as eventID, title AS training, orgName, priority, orgUrn, postCode, a.name as name, email, jobRole, days AS modulesAttended, newsletter, anonymous
@@ -346,6 +347,7 @@ class Export extends Component
                         ORDER BY RSN ASC, lastTrainingDate DESC
                     ) as export
                 )
+                '.$prior.'
                 ORDER BY RSN ASC, eventID ASC
         ';
     }

@@ -22,10 +22,10 @@
 
         <div class="grid grid-cols-5">
             <label class="pr-4">
-                <span class="text-xs font-bold text-gray-400 block mb-1">Select a school</span>
+                <span class="text-xs font-bold text-gray-400 block mb-1">Which schools?</span>
                 <select name="school" class="block h-10 px-1 rounded-md bg-gray-100 w-full border-none">
                     <option default value="all">All schools</option>
-                    <option default value="prior">Prior schools</option>
+                    <option default value="prior">Priority schools</option>
                 </select>
             </label>
             <label class="pr-4">
@@ -71,7 +71,7 @@
                 </p>
             </label>
             <label>
-                <span class="text-xs font-bold text-gray-400 block mb-1">Tag</span>
+                <span class="text-xs font-bold text-gray-400 block mb-1">Filter by tag</span>
                 <!--input v-model="tag" name="tag" :class="[
                     'px-2 w-full py-2 text-sm text-gray-600 appearance-none box-border bg-gray-100 rounded-lg border-solid',
                     errors?.startDate ? 'border-red-300' : 'border-gray-100'

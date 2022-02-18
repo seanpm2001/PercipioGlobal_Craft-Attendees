@@ -14,7 +14,7 @@
                 'block peer w-full px-2 py-2 text-sm text-gray-600 box-border bg-gray-100 rounded-lg pr-7',
                 errors?.tags ? 'border-solid border-red-300' : 'border-solid border-gray-100'
             ]"
-            placeholder="Search for a tag"
+            placeholder="Search for a tag (optional)"
             :aria-owns="`metaseed-list-${uniqueId}`"
             aria-autocomplete="list"
             role="combobox"
