@@ -35,7 +35,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Fix
 - Fixed the date not updating after selecting a different period
 
-## 1.0.7 - 2022-02-18
+## 1.0.7 - 2022-02-01
+### Changed
+- Composer update
+
+## 1.0.8 - 2022-02-18
 ### Fix
 - Fixed the dashboard calculations
 
