@@ -4,7 +4,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## 1.0.10 - 2022-02-21
+## 1.0.8.13 - 2022-02-21
+### Fixed
+- Fixed the school data export bug
+
+## 1.0.8.12 - 2022-02-21
+### Changed
+- Bumped version for packagist
+
+## 1.0.8.11 - 2022-02-21
 ### Changed
 - Updated the schoole export CSV
 

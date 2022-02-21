@@ -157,10 +157,10 @@ class Export extends Component
             if($school){
 
                 $urn = $school['urn'];
-                $rsn = $attendee['RSN'];
+                $training = $attendee['training'];
 
-                $existingSchoolInExport = array_filter($exports, function ($item) use ($urn, $rsn) {
-                    if (stripos($item['urn'], $urn) !== false && stripos($item['RSN'], $rsn) !== false) {
+                $existingSchoolInExport = array_filter($exports, function ($item) use ($urn, $training) {
+                    if (stripos($item['urn'], $urn) !== false && stripos($item['training'], $training) !== false) {
                         return true;
                     }
                     return false;
