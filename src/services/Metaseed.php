@@ -28,43 +28,37 @@ class Metaseed extends Component
     {
 
         try {
-//            $endpoint = 'https://api.v2.metaseed.io/urns';
-//            $client = new Client();
-//
-//            $response = $client->post(
-//                $endpoint,
-//                [
-//                    'form_params' => array(
-//                        'orgUrn' => implode(', ', $urns)
-//                    )
-//                ]
-//            );
-//
-//            Craft::dd([
-//                'form_params' => array(
-//                    'orgUrn' => implode(', ', $urns)
-//                )
-//            ]);
-//
-//            return json_decode($response->getBody()->getContents(), true);
+            $endpoint = 'https://api.v2.metaseed.io/urns';
+            $client = new Client();
 
-            $curl = curl_init();
+            $response = $client->post(
+                $endpoint,
+                [
+                    'form_params' => array(
+                        'orgUrn' => implode(', ', array_filter($urns))
+                    )
+                ]
+            );
 
-            curl_setopt_array($curl, array(
-                CURLOPT_URL => 'https://api.v2.metaseed.io/urns',
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_ENCODING => '',
-                CURLOPT_MAXREDIRS => 10,
-                CURLOPT_TIMEOUT => 0,
-                CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                CURLOPT_CUSTOMREQUEST => 'POST',
-                CURLOPT_POSTFIELDS => array('orgUrn' => implode(', ', $urns)),
-            ));
+            return json_decode($response->getBody()->getContents(), true);
 
-            $response = curl_exec($curl);
+            // $curl = curl_init();
 
-            return json_decode($response, true);
+            // curl_setopt_array($curl, array(
+            //     CURLOPT_URL => 'https://api.v2.metaseed.io/urns',
+            //     CURLOPT_RETURNTRANSFER => true,
+            //     CURLOPT_ENCODING => '',
+            //     CURLOPT_MAXREDIRS => 10,
+            //     CURLOPT_TIMEOUT => 0,
+            //     CURLOPT_FOLLOWLOCATION => true,
+            //     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            //     CURLOPT_CUSTOMREQUEST => 'POST',
+            //     CURLOPT_POSTFIELDS => array('orgUrn' => implode(', ', array_filter($urns))),
+            // ));
+
+            // $response = curl_exec($curl);
+
+            // return json_decode($response, true);
         } catch(\Exception $e) {
             Craft::error("Something went wrong: {$e->getMessage()}", __METHOD__);
         }
