@@ -135,23 +135,70 @@ class Export extends Component
     private function _buildSchoolAttendeeExport(string $start, string $end, string $site, string $priority, string $tag): CsvGrid
     {
         $connection = \Yii::$app->getDb();
-        $sql = $this->attendeeSchoolsQuery($site, $start, $end, $priority, $tag);
+        $sql = $this->attendeesQuery($site, $start, $end, $priority, $tag);
         $command = $connection->createCommand($sql);
         $results = $command->queryAll();
 
-        $urns = [];
-
-        foreach($results as $result){
-            $urns[] = $result['orgUrn'];
-        }
+        $urns = array_column($results, 'orgUrn');
 
         $response = Attendees::getInstance()->metaseed->attendeeSchools($urns);
 
+        $exports = [];
+
+        foreach($results as $attendee){
+
+            $school = null;
+            foreach($response['data'] as $resSchool){
+                if($attendee['orgUrn'] === $resSchool['urn'] && $school === null){
+                    $school = $resSchool;
+                }
+            }
+
+            if($school){
+
+                $urn = $school['urn'];
+                $rsn = $attendee['RSN'];
+
+                $existingSchoolInExport = array_filter($exports, function ($item) use ($urn, $rsn) {
+                    if (stripos($item['urn'], $urn) !== false && stripos($item['RSN'], $rsn) !== false) {
+                        return true;
+                    }
+                    return false;
+                });
+
+                if($existingSchoolInExport){
+
+                    $ex = $existingSchoolInExport[key($existingSchoolInExport)];
+
+                    if($attendee['modulesAttended'] > $ex['modulesAttended']){
+                        $ex['modulesAttended'] = $attendee['modulesAttended'];
+                    }
+
+                    $exports[key($existingSchoolInExport)] = $ex;
+
+                }else{
+                    $attendeeExp = [
+                        'RSN' => $attendee['RSN'],
+                        'eventID' => $attendee['eventID'],
+                        'training' => $attendee['training'],
+                        'modulesAttended' => $attendee['modulesAttended'],
+                    ];
+
+                    $exports[] = array_merge($attendeeExp, $school);
+                }
+            }
+
+        }
+
         return new CsvGrid([
             'dataProvider' => new ArrayDataProvider([
-                'allModels' => isset($response['data'][0]['urn']) ? $response['data'] : []
+                'allModels' => $exports
             ]),
             'columns' => [
+                ['attribute' => 'RSN'],
+                ['attribute' => 'eventID'],
+                ['attribute' => 'training'],
+                ['attribute' => 'modulesAttended'],
                 ['attribute' => 'urn'],
                 ['attribute' => 'la'],
                 ['attribute' => 'laNum'],
@@ -536,5 +583,13 @@ class Export extends Component
             GROUP BY eventId, RSN, Training
             ORDER BY RSN ASC, lastTrainingDate DESC
         ';
+    }
+
+    private function _group_by($array, $key) {
+        $return = array();
+        foreach($array as $val) {
+            $return[$val[$key]][] = $val;
+        }
+        return $return;
     }
 }

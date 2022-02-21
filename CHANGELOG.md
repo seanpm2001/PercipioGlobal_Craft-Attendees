@@ -4,40 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## 1.0.0 - 2021-12-09
-### Added
-- Initial release to create and import attendees for a specific training.
-
-## 1.0.1 - 2022-01-14
-### Added
-- Migration to add a priority school
-
-## 1.0.2 - 2022-01-21
-### Added
-- Migration to add a priority school
-
-## 1.0.3 - 2022-01-21
-### Added
-- Added the dashboard view
-
-## 1.0.4 - 2022-01-28
-### Fix
-- Fixed the events query
-
-## 1.0.5 - 2022-01-28
-### Fix
-- Update dashboard event fetching and sorting through Twig
-  
+## 1.0.10 - 2022-02-21
 ### Changed
-- Composer update
+- Updated the schoole export CSV
 
-## 1.0.6 - 2022-01-31
+## 1.0.9 - 2022-02-21
 ### Fix
-- Fixed the date not updating after selecting a different period
-
-## 1.0.7 - 2022-02-01
-### Changed
-- Composer update
+- Metaseed urn removed NULL
 
 ## 1.0.8 - 2022-02-18
 ### Fix
@@ -48,3 +21,42 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Changed
 - Updated the speed of the dashboard
+
+## 1.0.7 - 2022-02-01
+### Changed
+- Composer update
+
+## 1.0.6 - 2022-01-31
+### Fix
+- Fixed the date not updating after selecting a different period
+
+### Changed
+- Composer update
+
+## 1.0.5 - 2022-01-28
+### Fix
+- Update dashboard event fetching and sorting through Twig
+
+## 1.0.4 - 2022-01-28
+### Fix
+- Fixed the events query
+
+## 1.0.3 - 2022-01-21
+### Added
+- Added the dashboard view
+
+## 1.0.2 - 2022-01-21
+### Added
+- Migration to add a priority school
+
+## 1.0.1 - 2022-01-14
+### Added
+- Migration to add a priority school
+
+## 1.0.0 - 2021-12-09
+### Added
+- Initial release to create and import attendees for a specific training.
+
+
+
+
