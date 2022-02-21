@@ -4,11 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## 1.0.10 - 2022-02-21
+## 1.0.8.11 - 2022-02-21
 ### Changed
 - Updated the schoole export CSV
 
-## 1.0.9 - 2022-02-21
+## 1.0.8.0 - 2022-02-21
 ### Fix
 - Metaseed urn removed NULL
 
