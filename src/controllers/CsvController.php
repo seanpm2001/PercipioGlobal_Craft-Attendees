@@ -47,7 +47,22 @@ class CsvController extends Controller
 
         $exporter = Attendees::getInstance()->export->export($exportModel);
 
-        return $exporter->export()->send('data-engagement-'.date("dmY-His").'.zip');
+        switch($exportModel->type){
+            case 'event':
+                $filename = 'export_events_'.date("Y_m_d_H_i").'.zip';
+                break;
+            case 'subscriptions':
+                $filename = 'export_subscriptions_'.date("Y_m_d_H_i").'.zip';
+                break;
+            case 'school-unique':
+            case 'school-attendee':
+                $filename = 'export_schools_'.date("Y_m_d_H_i").'.zip';
+                break;
+            default:
+                $filename = 'export_attendees_'.date("Y_m_d_H_i").'.zip';
+        }
+
+        return $exporter->export()->send($filename);
     }
 
     public function actionImport(): Response
