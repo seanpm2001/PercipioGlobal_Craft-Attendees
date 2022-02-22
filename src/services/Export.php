@@ -2,6 +2,7 @@
 namespace percipiolondon\attendees\services;
 
 use percipiolondon\attendees\Attendees;
+use percipiolondon\attendees\records\Attendee;
 use yii\base\Component;
 use yii\data\ArrayDataProvider;
 use yii2tech\csvgrid\CsvGrid;
@@ -135,11 +136,11 @@ class Export extends Component
     private function _buildSchoolAttendeeExport(string $start, string $end, string $site, string $priority, string $tag): CsvGrid
     {
         $connection = \Yii::$app->getDb();
-        $sql = $this->attendeesQuery($site, $start, $end, $priority, $tag);
+        $sql = $this->attendeeSchoolsQuery($site, $start, $end, $priority, $tag);
         $command = $connection->createCommand($sql);
         $results = $command->queryAll();
 
-        $urns = array_column($results, 'orgUrn');
+        $urns = array_column($results, 'urn');
 
         $response = Attendees::getInstance()->metaseed->attendeeSchools($urns);
 
@@ -148,46 +149,24 @@ class Export extends Component
         foreach($results as $attendee){
 
             $school = null;
+
             foreach($response['data'] as $resSchool){
-                if($attendee['orgUrn'] === $resSchool['urn'] && $school === null){
+                if($attendee['urn'] === $resSchool['urn'] && $school === null){
                     $school = $resSchool;
+                    break;
                 }
             }
 
             if($school){
+                $attendeeExp = [
+                    'RSN' => $attendee['rsn'],
+                    'eventID' => $attendee['eventId'],
+                    'training' => $attendee['training'],
+                    'modulesAttended' => $attendee['days'],
+                ];
 
-                $urn = $school['urn'];
-                $training = $attendee['training'];
-
-                $existingSchoolInExport = array_filter($exports, function ($item) use ($urn, $training) {
-                    if (stripos($item['urn'], $urn) !== false && stripos($item['training'], $training) !== false) {
-                        return true;
-                    }
-                    return false;
-                });
-
-                if($existingSchoolInExport){
-
-                    $ex = $existingSchoolInExport[key($existingSchoolInExport)];
-
-                    if($attendee['modulesAttended'] > $ex['modulesAttended']){
-                        $ex['modulesAttended'] = $attendee['modulesAttended'];
-                    }
-
-                    $exports[key($existingSchoolInExport)] = $ex;
-
-                }else{
-                    $attendeeExp = [
-                        'RSN' => $attendee['RSN'],
-                        'eventID' => $attendee['eventID'],
-                        'training' => $attendee['training'],
-                        'modulesAttended' => $attendee['modulesAttended'],
-                    ];
-
-                    $exports[] = array_merge($attendeeExp, $school);
-                }
+                $exports[] = array_merge($attendeeExp, $school);
             }
-
         }
 
         return new CsvGrid([
@@ -411,27 +390,29 @@ class Export extends Component
                 ON c.elementId = r.targetId
                 WHERE c.title = "'.$tag.'"
         )' : '';
-        $prior = $priority == 'prior' ? 'AND a.priority = "1"' : '';
+        $prior = $priority == 'prior' ? 'AND priority = "1"' : '';
 
         return '
-            SELECT orgUrn
-                FROM entries e
-                INNER JOIN content c ON e.id = c.elementId
-                INNER JOIN sites s ON c.siteId = s.id
-                INNER JOIN attendees_attendees a ON e.id = a.eventId
-
-                WHERE e.`id` IN (
-
-                    SELECT eventId FROM
+            SELECT distinct(urn), eventId, rsn, training, days FROM
+            (
+                SELECT
+                    distinct(a.eventId) AS eventId,
+                    s.name AS rsn,
+                    c.title AS training,
+                    a.days AS days,
+                    a.orgUrn AS urn
+                        FROM attendees_attendees a
+                    INNER JOIN content c ON a.eventId = c.elementId
+                    INNER JOIN sites s on s.id = c.siteId
+                    WHERE
+                    eventId IN
                     (
-                        SELECT eventId, Training, MAX(lastTraingingDate) AS lastTrainingDate FROM
+                        SELECT
+                        DISTINCT(eventId) AS ids
+                        FROM
                         (
-                            SELECT e.id AS eventId, s.handle AS RSN, c.title AS training,
-                            CASE
-                            WHEN d1.field_eventDate_startDateTime IS NOT NULL THEN DATE_FORMAT(d1.field_eventDate_startDateTime, "%d-%m-%Y")
-                            WHEN d2.field_eventDate_startDateTime IS NOT NULL THEN DATE_FORMAT(d2.field_eventDate_startDateTime, "%d-%m-%Y")
-                            ELSE DATE_FORMAT(d3.field_eventDate_startDateTime, "%d-%m-%Y") END AS lastTraingingDate
-                            FROM entries e
+                            SELECT e.id AS eventId
+                                FROM entries e
                                 INNER JOIN matrixblocks m ON m.ownerId = e.id
                                 INNER JOIN content c ON e.id = c.elementId
                                 INNER JOIN elements em ON e.id = em.id
@@ -439,63 +420,67 @@ class Export extends Component
                                 LEFT JOIN matrixcontent_eventdatestime d1 ON d1.elementId = m.id
                                 LEFT JOIN matrixcontent_eventdatestimeonline d2 ON d2.elementId = m.id
                                 LEFT JOIN matrixcontent_eventdatestime d3 ON d3.elementId = m.id
-                            WHERE e.sectionId = 15
-                            '.$siteWhere.'
-                            AND em.revisionId IS NULL
-                            AND em.draftId IS NULL
-                            AND e.authorId IS NOT NULL
-                            AND e.postDate IS NOT NULL
-                            '.$siteTag.'
-                            AND m.id IN
-                            (
-                                SELECT distinct(elementId) FROM
-                                (
-                                    SELECT elementId, field_eventDate_startDateTime AS eventDate FROM
+                                    WHERE e.sectionId = 15
+                                    '.$siteWhere.'
+                                    AND em.revisionId IS NULL
+                                    AND em.draftId IS NULL
+                                    AND e.authorId IS NOT NULL
+                                    AND e.postDate IS NOT NULL
+                                    '.$siteTag.'
+                                    AND m.id NOT IN
                                     (
-                                        SELECT elementId, field_eventDate_startDateTime FROM matrixcontent_eventdatestime m
-                                            INNER JOIN elements e ON e.id = m.elementId
-                                            WHERE e.enabled = 1
-                                            ORDER BY field_eventDate_startDateTime DESC
-                                    ) AS a
-                                    GROUP BY a.elementId, field_eventDate_startDateTime
-                                ) AS af
-                                WHERE eventDate BETWEEN "' . $start . '" AND  "' . $end . '"
-                                UNION
-                                    SELECT  elementId FROM
-                                    (
-                                        SELECT elementId, field_eventDate_startDateTime AS eventDate FROM
+                                        SELECT distinct(elementId) FROM
                                         (
-                                            SELECT elementId, field_eventDate_startDateTime
-                                                FROM matrixcontent_eventdatestimeonline m
-                                                INNER JOIN elements e ON e.id = m.elementId
-                                                WHERE e.enabled = 1
-                                                    ORDER BY field_eventDate_startDateTime DESC
-                                        )AS b
-                                        GROUP BY b.elementId, field_eventDate_startDateTime
-                                    ) AS bf
-                                    WHERE eventDate BETWEEN "' . $start . '" AND  "' . $end . '"
-                                UNION
-                                    SELECT elementId FROM
-                                    (
-                                        SELECT elementId, field_eventDate_startDateTime AS eventDate FROM
-                                        (
-                                            SELECT elementId, field_eventDate_startDateTime FROM matrixcontent_eventhybriddatestime m
-                                                INNER JOIN elements e ON e.id = m.elementId
+                                            SELECT elementId, field_eventDate_startDateTime AS eventDate FROM
+                                            (
+                                                SELECT elementId, field_eventDate_startDateTime FROM matrixcontent_eventdatestime m
+                                                    INNER JOIN elements e ON e.id = m.elementId
                                                     WHERE e.enabled = 1
                                                         ORDER BY field_eventDate_startDateTime DESC
-                                        ) AS c
-                                        GROUP BY c.elementId, field_eventDate_startDateTime
-                                    ) AS cf
-                                    WHERE eventDate BETWEEN "' . $start . '" AND  "' . $end . '"
-                            )
-                            ORDER BY RSN ASC, lastTraingingDate DESC
-                        ) as results
-                        GROUP BY eventId, Training
-                        ORDER BY lastTrainingDate DESC
-                    ) as export
-                )
-                '. $prior .'
-                ORDER BY eventID ASC
+                                            )
+                                            AS a
+                                            GROUP BY a.elementId, field_eventDate_startDateTime
+                                        )
+                                        AS af
+                                        WHERE eventDate BETWEEN "' . $start . '" AND  "' . $end . '"
+                                        UNION
+                                            SELECT  elementId FROM
+                                            (
+                                                SELECT elementId, field_eventDate_startDateTime AS eventDate FROM
+                                                (
+                                                    SELECT elementId, field_eventDate_startDateTime FROM matrixcontent_eventdatestimeonline m
+                                                    INNER JOIN elements e ON e.id = m.elementId
+                                                        WHERE e.enabled = 1
+                                                            ORDER BY field_eventDate_startDateTime DESC
+                                                )
+                                                AS b
+                                                GROUP BY b.elementId, field_eventDate_startDateTime
+                                            )
+                                            AS bf
+                                            WHERE eventDate BETWEEN "' . $start . '" AND  "' . $end . '"
+                                            UNION
+                                                SELECT elementId FROM
+                                                (
+                                                    SELECT elementId, field_eventDate_startDateTime AS eventDate FROM
+                                                    (
+                                                        SELECT elementId, field_eventDate_startDateTime FROM matrixcontent_eventhybriddatestime m
+                                                            INNER JOIN elements e ON e.id = m.elementId
+                                                            WHERE e.enabled = 1
+                                                                ORDER BY field_eventDate_startDateTime DESC
+                                                    )
+                                                    AS c
+                                                    GROUP BY c.elementId, field_eventDate_startDateTime
+                                                ) AS cf
+                                                WHERE eventDate BETWEEN "' . $start . '" AND  "' . $end . '"
+                                    )
+
+
+                        )
+                        AS res
+                    )
+                    '.$prior.'
+                    ORDER BY RSN ASC, training ASC, days DESC, URN ASC)
+                    AS sortedRes
         ';
     }
 
