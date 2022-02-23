@@ -427,7 +427,7 @@ class Export extends Component
                                     AND e.authorId IS NOT NULL
                                     AND e.postDate IS NOT NULL
                                     '.$siteTag.'
-                                    AND m.id NOT IN
+                                    AND m.id IN
                                     (
                                         SELECT distinct(elementId) FROM
                                         (
