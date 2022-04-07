@@ -11,10 +11,10 @@
 <script lang="ts">
 
     // Async load the Vue 3 APIs we need from the Vue ESM
-    import {defineComponent, ref, watchEffect} from 'vue';
+    import { defineComponent, ref, watchEffect } from 'vue';
     import Dropdown from '@/vue/dashboard/atoms/inputs/Dropdown.vue';
-    import {useDashboardStore} from "@/store/dashboard";
-    import {storeToRefs} from "pinia";
+    import { useDashboardStore } from "@/store/dashboard";
+    import { storeToRefs } from "pinia";
 
     export default defineComponent({
         components: {
@@ -28,6 +28,10 @@
             end: {
                 type: String,
                 required: true
+            },
+            types: {
+                type: Object,
+                required: true,
             }
         },
         setup(){
@@ -39,13 +43,13 @@
             watchEffect(() => {
                 if(period.value){
 
-                    if(period.value < 12){
+                    if (period.value < 12) {
                         let today = new Date()
                         end.value = today.getDate() + ' ' + today.toLocaleString('default', { month: 'long' }) + ' ' + today.getFullYear()
 
                         today.setMonth(today.getMonth() - period.value)
                         start.value = today.getDate() + ' ' + today.toLocaleString('default', { month: 'long' }) + ' ' + today.getFullYear()
-                    }else{
+                    } else {
                         let endOfSchool = new Date(`31 july ${period.value}`)
                         let startOfSchool = new Date(`01 september ${period.value - 1}`)
 
