@@ -1,15 +1,14 @@
 {
   "src/js/attendees.ts": {
-    "file": "assets/attendees.b50d34c4.js",
+    "file": "assets/attendees.756ffb2f.js",
     "src": "src/js/attendees.ts",
     "isEntry": true,
     "imports": [
-      "_vendor.bd85c310.js",
-      "_trainings.96c469cc.js",
-      "_plugin-vue_export-helper.21dcd24c.js"
+      "_plugin-vue_export-helper.31108d73.js",
+      "_trainings.b60237e0.js"
     ],
     "css": [
-      "assets/app.9b9c10d7.css"
+      "assets/app.c67b0606.css"
     ]
   },
   "src/js/trainings.ts": {
@@ -17,44 +16,39 @@
     "src": "src/js/trainings.ts",
     "isEntry": true,
     "css": [
-      "assets/app.9b9c10d7.css"
+      "assets/app.c67b0606.css"
     ]
   },
   "src/js/dashboard.ts": {
-    "file": "assets/dashboard.b3522a42.js",
+    "file": "assets/dashboard.6edbab5a.js",
     "src": "src/js/dashboard.ts",
     "isEntry": true,
     "imports": [
-      "_vendor.bd85c310.js",
-      "_plugin-vue_export-helper.21dcd24c.js",
-      "_trainings.96c469cc.js"
+      "_plugin-vue_export-helper.31108d73.js",
+      "_trainings.b60237e0.js"
     ],
     "css": [
-      "assets/app.9b9c10d7.css"
+      "assets/app.c67b0606.css"
     ]
   },
   "src/js/export.ts": {
-    "file": "assets/export.b2413a03.js",
+    "file": "assets/export.33af13c9.js",
     "src": "src/js/export.ts",
     "isEntry": true,
     "imports": [
-      "_vendor.bd85c310.js",
-      "_plugin-vue_export-helper.21dcd24c.js"
+      "_plugin-vue_export-helper.31108d73.js"
     ],
     "css": [
-      "assets/app.9b9c10d7.css"
+      "assets/app.c67b0606.css"
     ]
   },
-  "_vendor.bd85c310.js": {
-    "file": "assets/vendor.bd85c310.js"
+  "_plugin-vue_export-helper.31108d73.js": {
+    "file": "assets/plugin-vue_export-helper.31108d73.js"
   },
-  "_plugin-vue_export-helper.21dcd24c.js": {
-    "file": "assets/plugin-vue_export-helper.21dcd24c.js"
-  },
-  "_trainings.96c469cc.js": {
-    "file": "assets/trainings.96c469cc.js",
+  "_trainings.b60237e0.js": {
+    "file": "assets/trainings.b60237e0.js",
     "imports": [
-      "_vendor.bd85c310.js"
+      "_plugin-vue_export-helper.31108d73.js"
     ]
   }
 }

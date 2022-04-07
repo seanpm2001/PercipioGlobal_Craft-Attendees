@@ -13,11 +13,12 @@ export const useDashboardStore = defineStore('trainings', {
         followOnSupportOptions: null,
         totals: [],
         period: 3,
+        type: 'all',
         site: 'main',
         loading: false
     }),
     actions: {
-        fetchEvents(ids){
+        fetchEvents(){
             const self = this;
             this.loading = true;
 

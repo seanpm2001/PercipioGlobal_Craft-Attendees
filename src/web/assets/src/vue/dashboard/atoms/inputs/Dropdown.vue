@@ -16,8 +16,8 @@
 
 <script lang="ts">
     import { defineComponent } from "vue"
-    import {useDashboardStore} from "@/store/dashboard";
-    import {storeToRefs} from "pinia";
+    import { useDashboardStore } from "@/store/dashboard"
+    import { storeToRefs } from "pinia"
 
     export default defineComponent({
         setup(){

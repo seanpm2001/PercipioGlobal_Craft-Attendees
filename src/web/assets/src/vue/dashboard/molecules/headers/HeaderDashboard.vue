@@ -1,7 +1,8 @@
 <template>
     <div class="flex w-full sticky z-20 bg-gray-100 bg-opacity-70 py-4 backdrop-blur" style="top:50px;">
         <p class="text-xl font-bold inline-block flex-grow" style="margin-bottom:0!important">Showing data from <strong>{{ start }}</strong> to <strong>{{ end }}</strong></p>
-        <div style="margin-top:0!important">
+        <div class="flex space-x-4" style="margin-top:0!important">
+            <dropdown-type :types="types"></dropdown-type>
             <dropdown></dropdown>
             <slot></slot>
         </div>
@@ -13,12 +14,14 @@
     // Async load the Vue 3 APIs we need from the Vue ESM
     import { defineComponent, ref, watchEffect } from 'vue';
     import Dropdown from '@/vue/dashboard/atoms/inputs/Dropdown.vue';
+    import DropdownType from '@/vue/dashboard/atoms/inputs/DropdownType.vue';
     import { useDashboardStore } from "@/store/dashboard";
     import { storeToRefs } from "pinia";
 
     export default defineComponent({
         components: {
             'dropdown': Dropdown,
+            'dropdown-type': DropdownType,
         },
         props: {
             start: {
