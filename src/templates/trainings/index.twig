@@ -89,7 +89,7 @@
                 <tr>
                     <th scope="col" data-attribute="title" style="width:35%">Training</th>
                     <th scope="col" data-attribute="category">Type</th>
-                    <th scope="col" data-attribute="eventDate" class="relative">
+                    <th scope="col" data-attribute="eventDate" class="relative orderable">
                         Upcoming Event Dates
 
                         {{ orderQuery == 'desc' ? '&#9650;' : '&#9660;' -}}
@@ -129,12 +129,13 @@
                         <tr data-id="{{ event.id }}" tabindex="0">
                             <td data-title="{{event.slug }} " data-titlecell="">
                                 <div class="element small hasstatus"
-                                     data-type="craft\elements\Entry"
-                                     data-id="{{ event.id }}"
-                                     data-status="{{  event.enabled ? 'enabled' : 'disabled' }}"
-                                     data-label="{{ event.title }}"
-                                     data-url="{{ event.url }}"
-                                     title="{{ event.title }}">
+                                    data-type="craft\elements\Entry"
+                                    data-id="{{ event.id }}"
+                                    data-status="{{  event.enabled ? 'enabled' : 'disabled' }}"
+                                    data-label="{{ event.title }}"
+                                    data-url="{{ event.url }}"
+                                    title="{{ event.title }}"
+                                >
                                     <span class="status {{ event.enabled ? 'enabled' : 'disabled' }}"></span>
                                     <div class="label">
                                         <span class="title">
@@ -149,7 +150,7 @@
                                 <span>{{- categoryName -}}</span>
                             </td>
                             <td data-title="date" data-attr="date">
-                                <span>{{ event.nextUpcomingEvent ?? 'Unknown' }} </span>
+                                <span>{{ event.nextUpcomingEvent ? (date(event.nextUpcomingEvent) > date() ? 'Upcoming: ' ~ event.nextUpcomingEvent : 'Passed: ' ~ event.nextUpcomingEvent)  : 'Unknown' }} </span>
                             </td>
                             <td data-title="Attendees">
                                 <span>{{ craft.attendees(event.id).count() }} </span>
