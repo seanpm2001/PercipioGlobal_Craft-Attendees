@@ -21,14 +21,14 @@
             'dropdown': Dropdown,
         },
         props: {
-          start: {
-              type: String,
-              required: true
-          },
-        end: {
-          type: String,
-            required: true
-        }
+            start: {
+                type: String,
+                required: true
+            },
+            end: {
+                type: String,
+                required: true
+            }
         },
         setup(){
             const store = useDashboardStore()

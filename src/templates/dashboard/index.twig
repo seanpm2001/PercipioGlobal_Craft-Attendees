@@ -44,6 +44,7 @@
 
 {% set selectedSite = craft.app.request.getQueryParam('site')|default(permittedSites[0].id ?? '*') %}
 {% set selectedTime = craft.app.request.getQueryParam('time')|default('3') %}
+{% set selectedType = craft.app.request.getQueryParam('type')|default('all') %}
 {% set settings = craft.app.getPlugins().getPlugin('craft-attendees').getSettings() %}
 
 {# The URL to this plugin's base CP section #}
@@ -111,15 +112,23 @@
     {% endif %}
 
     {% set ids = sort(events, selectedTime) %}
+    {% set eventTypes = craft.app.getSections().getSectionByHandle(settings.eventSection).getEntryTypes() %}
 
     <div id="dashboard" class="bg-gray-100 p-6 pt-2 -mt-6 -ml-6 relative">
 
         <header-dashboard start="{{ start|date('d F, Y ') }}" end="{{ end|date('d F, Y ') }}">
-            {%- include "craft-attendees/_includes/time-menu.twig" with {
-                baseUrl: pluginCpUrl ~ '/dashboard',
-                parameter: 'id'
-            } -%}
+            <div class="space-x-4">
+                {%- include "craft-attendees/_includes/types-menu.twig" with {
+                    baseUrl: pluginCpUrl ~ '/dashboard',
+                    eventTypes: eventTypes
+                } -%}
+
+                {%- include "craft-attendees/_includes/time-menu.twig" with {
+                    baseUrl: pluginCpUrl ~ '/dashboard',
+                } -%}
+            </div>
         </header-dashboard>
+
         <stats-dashboard site="{{ selectedSite }}" ids="{{ ids|json_encode }}"></stats-dashboard>
 
         <div class="block bg-gray-100 w-6 left-full pb-6 top-0 h-full absolute"></div>
