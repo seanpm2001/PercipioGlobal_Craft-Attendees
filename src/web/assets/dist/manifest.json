@@ -20,7 +20,7 @@
     ]
   },
   "src/js/dashboard.ts": {
-    "file": "assets/dashboard.6edbab5a.js",
+    "file": "assets/dashboard.2e4f8bad.js",
     "src": "src/js/dashboard.ts",
     "isEntry": true,
     "imports": [

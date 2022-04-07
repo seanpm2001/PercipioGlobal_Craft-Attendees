@@ -13,7 +13,7 @@ export const useDashboardStore = defineStore('trainings', {
         followOnSupportOptions: null,
         totals: [],
         period: 3,
-        type: 'all',
+        type: '16,17,25',
         site: 'main',
         loading: false
     }),

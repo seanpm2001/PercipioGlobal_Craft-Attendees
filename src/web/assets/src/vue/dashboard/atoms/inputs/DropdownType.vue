@@ -2,7 +2,6 @@
     <select
         name="type"
         class="block h-10 px-1 rounded-md bg-gray-300 border-gray-300"
-        v-model="types"
         :disabled="loading"
         @change="handleTypeChanged"
     >
@@ -29,6 +28,10 @@
             types: {
                 type: Object,
                 required: true,
+            },
+            selected: {
+                type: String,
+                required: true,
             }
         },
 
@@ -36,7 +39,7 @@
             const store = useDashboardStore()
             const { loading, type } = storeToRefs(store)
 
-            const handleTypeChanged = (evt) => {
+            const handleTypeChanged = (evt) => {                
                 store.type = parseInt(evt.currentTarget.value)
                 store.fetchEvents()
             }
