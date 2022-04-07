@@ -20,7 +20,6 @@
         components: {
             'dropdown': Dropdown,
         },
-<<<<<<< HEAD
         props: {
             start: {
                 type: String,
@@ -31,18 +30,6 @@
                 required: true
             }
         },
-=======
-        // props: {
-        //     start: {
-        //           type: String,
-        //           required: true
-        //     },
-        //     end: {
-        //         type: String,
-        //         required: true
-        //     }
-        // },
->>>>>>> 2dc83875de400fa9ec27f22097ea5a6af9d81984
         setup(){
             const store = useDashboardStore()
             const { loading, period } = storeToRefs(store)
