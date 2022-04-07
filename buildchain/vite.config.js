@@ -12,10 +12,10 @@ export default ({ command }) => ({
         outDir: '../src/web/assets/dist',
         rollupOptions: {
             input: {
-                attendees: '/src/js/attendees.ts',
-                trainings: '/src/js/trainings.ts',
-                dashboard: '/src/js/dashboard.ts',
-                export: '/src/js/export.ts',
+                attendees: './src/js/attendees.ts',
+                trainings: './src/js/trainings.ts',
+                dashboard: './src/js/dashboard.ts',
+                export: './src/js/export.ts',
             },
             output: {
                 sourcemap: true
