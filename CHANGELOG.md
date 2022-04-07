@@ -87,18 +87,3 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## 1.0.0 - 2021-12-09
 ### Added
 - Initial release to create and import attendees for a specific training.
-
-
-
-
-<<<<<<< HEAD
-
-
-
-
-
-
-
-
-=======
->>>>>>> 2dc83875de400fa9ec27f22097ea5a6af9d81984
