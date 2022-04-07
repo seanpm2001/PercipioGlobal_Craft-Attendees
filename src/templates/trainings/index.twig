@@ -90,11 +90,13 @@
                     <th scope="col" data-attribute="title" style="width:35%">Training</th>
                     <th scope="col" data-attribute="category">Type</th>
                     <th scope="col" data-attribute="eventDate" class="relative">
-                        Upcoming Event Date
+                        Upcoming Event Dates
+
+                        {{ orderQuery == 'desc' ? '&#9650;' : '&#9660;' -}}
 
                         {%- set newOrder = orderQuery == 'desc' ? 'asc' : 'desc' -%}
                         {%- set orderUrl = '?' ~ craft.app.request.queryString|replace( ('order=' ~ orderQuery), ('order=' ~ newOrder) ) -%}
-                        {%- set orderUrl = 'order' in orderUrl ? orderUrl : (craft.app.request.queryString|length > 0 ? '?' ~ craft.app.request.queryString ~ '&order=' ~ orderQuery : '?order=' ~ orderQuery) -%}
+                        {%- set orderUrl = 'order' in orderUrl ? orderUrl : (craft.app.request.queryString|length > 0 ? '?' ~ craft.app.request.queryString ~ '&order=' ~ newOrder : '?order=' ~ newOrder) -%}
 
                         <a href="{{ url(pluginCpUrl ~ '/trainings') }}{{ orderUrl }}" class="block absolute left-0 top-0 w-full h-full z-10"></a>
                     </th>
@@ -147,7 +149,7 @@
                                 <span>{{- categoryName -}}</span>
                             </td>
                             <td data-title="date" data-attr="date">
-                                <span>{{ event.nextUpcomingEvent ?? eventDate }} </span>
+                                <span>{{ event.nextUpcomingEvent ?? 'Unknown' }} </span>
                             </td>
                             <td data-title="Attendees">
                                 <span>{{ craft.attendees(event.id).count() }} </span>
