@@ -96,32 +96,10 @@
 {% set content %}
     {{ craft.viteattendees.register('/src/js/dashboard.ts', false, scriptTagOptions) }}
 
-{#    {% if selectedSite == '2' %}#}
-{#        {% set events = craft.entries.section(settings.eventSection)#}
-{#            .site('*')#}
-{#            .anyStatus()#}
-{#            .all()#}
-{#        %}#}
-{#    {% else %}#}
-{#        {% set events = craft.entries.section(settings.eventSection)#}
-{#            .siteId(selectedSite)#}
-{#            .anyStatus()#}
-{#            .all()#}
-{#        %}#}
-{#    {% endif %}#}
-
-{#    {% set ids = sort(events, selectedTime) %}#}
-
-    {#            {%- include "craft-attendees/_includes/time-menu.twig" with {#}
-    {#                baseUrl: pluginCpUrl ~ '/dashboard',#}
-    {#                parameter: 'id'#}
-    {#            } -%}#}
-
     <div id="dashboard" class="bg-gray-100 p-6 pt-2 -mt-6 -ml-6 relative">
 
         <header-dashboard start="{{ start|date('d F, Y ') }}" end="{{ end|date('d F, Y ') }}"></header-dashboard>
 
-{#        ids="{{ ids|json_encode }}"#}
         <stats-dashboard site="{{ selectedSite }}"></stats-dashboard>
 
         <div class="block bg-gray-100 w-6 left-full pb-6 top-0 h-full absolute"></div>
