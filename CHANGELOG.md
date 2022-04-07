@@ -30,6 +30,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## 1.0.8 - 2022-02-18
 ### Fix
+- Update dashboard event fetching and sorting through Twig
+
 - Fixed the dashboard calculations
 
 ### Added
@@ -38,11 +40,24 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Changed
 - Updated the speed of the dashboard
 
-## 1.0.7 - 2022-02-01
+## 1.0.7 - 2022-02-04
+
+### Added
+- Added data sanitation
+- Added functionality to remove whitespace on emails
+
 ### Changed
-- Composer update
+- Average count formula for priority schools
+- Logs now need to be reloaded manually
+
+### Fix
+- Fixed import migrations
 
 ## 1.0.6 - 2022-01-31
+### Fix
+- Fixed the date not updating after selecting a different period
+
+## 1.0.4 - 2022-01-28
 ### Fix
 - Fixed the date not updating after selecting a different period
 
@@ -72,7 +87,3 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## 1.0.0 - 2021-12-09
 ### Added
 - Initial release to create and import attendees for a specific training.
-
-
-
-

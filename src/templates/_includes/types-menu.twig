@@ -1,0 +1,28 @@
+{% set activeTime = 0 %}
+{% for type in eventTypes %}
+    {%  if type.handle == selectedType %}
+        {%  set activeTime = 1 %}
+        <div id="type-btn" class="btn menubtn" data-icon="time" data-time="{{ type.name }}">{{ type.name }}</div>
+    {%  endif %}
+{% endfor %}
+{%  if activeTime == 0 %}
+    <div id="type-btn" class="btn menubtn" data-icon="time">All Types</div>
+{%  endif %}
+<div class="menu mr-4">
+    <ul class="padded">
+        {% set url = baseUrl ~ '?site=' ~ selectedSite ~ '&type=all' %}
+        <li>
+            <a href="{{ url }}" title="All Types">
+                <div class="status {% if selectedType == 'all' %} enabled{%  endif %}"></div>All Types
+            </a>
+        </li>
+        {% for type in eventTypes %}
+            {% set url = baseUrl ~ '?site=' ~ selectedSite ~ '&type=' ~ type.handle %}
+            <li>
+                <a href="{{ url }}" title="{{ type.handle }}">
+                    <div class="status {% if type.handle == selectedType %} enabled{%  endif %}"></div>{{ type.name }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
