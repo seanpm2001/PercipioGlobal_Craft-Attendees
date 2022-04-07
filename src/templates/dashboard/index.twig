@@ -82,6 +82,8 @@
         {%- set start = date('-3 months')|atom -%}
 {%- endswitch -%}
 
+{% set eventTypes = craft.app.getSections().getSectionByHandle(settings.eventSection).getEntryTypes() %}
+
 {# Content that should appear in the page header#}
 {% block actionButton %}
 
@@ -98,7 +100,7 @@
 
     <div id="dashboard" class="bg-gray-100 p-6 pt-2 -mt-6 -ml-6 relative">
 
-        <header-dashboard start="{{ start|date('d F, Y ') }}" end="{{ end|date('d F, Y ') }}"></header-dashboard>
+        <header-dashboard start="{{ start|date('d F, Y ') }}" end="{{ end|date('d F, Y ') }}" :types="{{ eventTypes | json_encode }}"></header-dashboard>
 
         <stats-dashboard site="{{ selectedSite }}"></stats-dashboard>
 

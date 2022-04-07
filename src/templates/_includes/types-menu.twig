@@ -1,7 +1,7 @@
 {% set activeTime = 0 %}
 {% for type in eventTypes %}
     {%  if type.handle == selectedType %}
-        {%  set activeTime = 1 %}
+        {% set activeTime = 1 %}
         <div id="type-btn" class="btn menubtn" data-icon="time" data-time="{{ type.name }}">{{ type.name }}</div>
     {%  endif %}
 {% endfor %}
