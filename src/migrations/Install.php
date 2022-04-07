@@ -37,9 +37,9 @@ class Install extends Migration
      */
     public function safeDown()
     {
-        $this->driver = Craft::$app->getConfig()->getDb()->driver;
-        $this->dropForeignKeys();
-        $this->removeTables();
+//        $this->driver = Craft::$app->getConfig()->getDb()->driver;
+//        $this->dropForeignKeys();
+//        $this->removeTables();
 
         return true;
     }

@@ -51,6 +51,7 @@
 
 {% set events = craft.entries.section(settings.eventSection)
     .search(searchQuery)
+    .orderBy('nextUpcomingEvent ' ~ orderQuery)
     .site(selectedSite)
     .anyStatus()
     .limit(20)
@@ -89,8 +90,13 @@
                     <th scope="col" data-attribute="title" style="width:35%">Training</th>
                     <th scope="col" data-attribute="category">Type</th>
                     <th scope="col" data-attribute="eventDate" class="relative">
-                        Event Date
-{#                        <a href="{{ url(pluginCpUrl ~ '/trainings') }}{{ craft.app.request.queryString|length > 0 ? '?' ~ craft.app.request.queryString ~ '&order=desc' : '?order=desc' }}" class="block absolute left-0 top-0 w-full h-full z-10"></a>#}
+                        Upcoming Event Date
+
+                        {%- set newOrder = orderQuery == 'desc' ? 'asc' : 'desc' -%}
+                        {%- set orderUrl = '?' ~ craft.app.request.queryString|replace( ('order=' ~ orderQuery), ('order=' ~ newOrder) ) -%}
+                        {%- set orderUrl = 'order' in orderUrl ? orderUrl : (craft.app.request.queryString|length > 0 ? '?' ~ craft.app.request.queryString ~ '&order=' ~ orderQuery : '?order=' ~ orderQuery) -%}
+
+                        <a href="{{ url(pluginCpUrl ~ '/trainings') }}{{ orderUrl }}" class="block absolute left-0 top-0 w-full h-full z-10"></a>
                     </th>
                     <th scope="col" data-attribute="attendees">Attendees</th>
                     <th scope="col" data-attribute="engagement">Engagement</th> <!--  class="orderable" -->
@@ -141,7 +147,7 @@
                                 <span>{{- categoryName -}}</span>
                             </td>
                             <td data-title="date" data-attr="date">
-                                <span>{{ eventDate }} </span>
+                                <span>{{ event.nextUpcomingEvent ?? eventDate }} </span>
                             </td>
                             <td data-title="Attendees">
                                 <span>{{ craft.attendees(event.id).count() }} </span>

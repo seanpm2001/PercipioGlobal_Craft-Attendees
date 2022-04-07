@@ -94,12 +94,28 @@
                         r[a.days].push(a);
                         return r;
                     }, Object.create(null));
-
                     for(const key in Object.keys(attendeeDays)){
                         const index = key < 3 ? key : 2
                         series.value[index]['data'][0] = parseInt(series.value[index]['data'][0]) + Object.values(attendeeDays)[key].length
                     }
                 }
+
+                // if(attendees.value){
+                //
+                //     let levels = []
+                //
+                //     for(const key in attendees.value){
+                //         for(const l in attendees.value[key]){
+                //             levels[''+attendees.value[key][l].days] = (levels[''+attendees.value[key][l].days] ?? 0) + 1
+                //         }
+                //     }
+                //
+                //     for(const key in Object.keys(levels)){
+                //         const index = parseInt(Object.keys(levels)[key]) < 3 ? parseInt(Object.keys(levels)[key]) : 2
+                //
+                //         series.value[index]['data'][0] = parseInt(series.value[index]['data'][0]) + parseInt(levels[Object.keys(levels)[key]])
+                //     }
+                // }
             })
 
 

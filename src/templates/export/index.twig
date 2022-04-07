@@ -13,8 +13,14 @@
  */
 #}
 
-{% extends "_layouts/cp" %}
+{% extends "craft-attendees/_layouts/_cp" %}
 {% import "_includes/forms" as forms %}
+
+{% set scriptTagOptions = {
+    'depends': [
+        'percipiolondon\\attendees\\assetbundles\\craftattendees\\AttendeesAsset'
+    ],
+} %}
 
 {#{% do view.registerAssetBundle("percipiolondon\\attendees\\assetbundles\\craftattendees\\AttendeesAsset") %}#}
 {#{% do view.registerAssetBundle("percipiolondon\\craftattendees\\assetbundles\\dataexportcpsection\\DataExportCPSectionAsset") %}#}
@@ -23,7 +29,19 @@
 {% set docsUrl = "https://github.com/percipioglobal/craft-attendees/blob/master/README.md" %}
 
 {# The title of this CP section #}
-{% set title = "Attendees | DataExport" %}
+{% set title = "Export" %}
+
+{%- set permittedSites = [] %}
+
+{% for site in craft.app.sites.getAllSites() %}
+    {%- set permitted = currentUser.can('editSite:'~site.uid) -%}
+
+    {%- if permitted -%}
+        {% set permittedSites = permittedSites|merge([site]) %}
+    {% endif %}
+{% endfor %}
+
+{% set selectedSite = craft.app.request.getQueryParam('site')|default(permittedSites[0].id ?? '*') %}
 
 {# The URL to this plugin's base CP section #}
 {% set pluginCpUrl = url('craft-attendees') %}
@@ -34,24 +52,32 @@
 {% set subnav = {
     "dashboard": { label: "Dashboard"|t('craft-attendees'), url: url(pluginCpUrl ~ '/dashboard') },
     "trainings": { label: "Trainings"|t('craft-attendees'), url: url(pluginCpUrl ~ '/trainings') },
-    "data-export": { label: "DataExport"|t('craft-attendees'), url: url(pluginCpUrl ~ '/data-export') },
+    "export": { label: "Export"|t('craft-attendees'), url: url(pluginCpUrl ~ '/export') },
 
 } %}
-{% set selectedSubnavItem = 'data-export' %}
+{% set selectedSubnavItem = 'export' %}
 
 {% set crumbs = [
     { label: "craft-attendees", url: url(pluginCpUrl) },
-    { label: "DataExport"|t('craft-attendees'), url: url(pluginCpUrl ~ '/data-export') },
+    { label: "Export"|t('craft-attendees'), url: url(pluginCpUrl ~ '/export') },
 ] %}
 
 {# Content that should appear in the page header#}
 {% block actionButton %}
-    <a href="{{ pluginCpUrl }}" class="btn submit add icon">{{ "Click Me!"|t('craft-attendees') }}</a>
+    {%- include "craft-attendees/_includes/sites-menu.twig" with {
+        baseUrl: pluginCpUrl ~ '/export',
+        parameter: 'id'
+    } -%}
 {% endblock %}
 
 {# The content of the CP Section#}
 {% set content %}
-    <h2>{{ "DataExport CP Section body goes here"|t('craft-attendees') }}</h2>
-{#    <img src="{{ iconUrl }}" height="64" width="64" />#}
-    <p class="textline"></p>
+    {{ craft.viteattendees.register('/src/js/export.ts', false, scriptTagOptions) }}
+
+    <div id="export">
+        <form-export
+            csrf="{{ craft.app.request.csrfToken }}"
+            site="{{ selectedSite == '2' ? '*' : selectedSite }}"
+        ></form-export>
+    </div>
 {% endset %}

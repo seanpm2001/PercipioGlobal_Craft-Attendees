@@ -4,6 +4,42 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.0.8.13 - 2022-02-21
+### Fixed
+- Fixed the school data SQL export bug
+
+## 1.0.8.14 - 2022-02-22
+### Feature
+- Performance updates on school data export
+
+## 1.0.8.13 - 2022-02-21
+### Fixed
+- Fixed the school data export bug
+
+## 1.0.8.12 - 2022-02-21
+### Changed
+- Bumped version for packagist
+
+## 1.0.8.11 - 2022-02-21
+### Changed
+- Updated the schoole export CSV
+
+## 1.0.9 - 2022-02-21
+### Fix
+- Metaseed urn removed NULL
+
+## 1.0.8 - 2022-02-18
+### Fix
+- Update dashboard event fetching and sorting through Twig
+
+- Fixed the dashboard calculations
+
+### Added
+- Export functionality
+
+### Changed
+- Updated the speed of the dashboard
+
 ## 1.0.7 - 2022-02-04
 
 ### Added
@@ -21,12 +57,16 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Fix
 - Fixed the date not updating after selecting a different period
 
-## 1.0.5 - 2022-01-28
+## 1.0.4 - 2022-01-28
 ### Fix
-- Update dashboard event fetching and sorting through Twig
+- Fixed the date not updating after selecting a different period
 
 ### Changed
 - Composer update
+
+## 1.0.5 - 2022-01-28
+### Fix
+- Update dashboard event fetching and sorting through Twig
 
 ## 1.0.4 - 2022-01-28
 ### Fix
@@ -51,6 +91,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 
 
+<<<<<<< HEAD
 
 
 
@@ -59,3 +100,5 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 
 
+=======
+>>>>>>> 2dc83875de400fa9ec27f22097ea5a6af9d81984
