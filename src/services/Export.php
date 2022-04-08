@@ -269,7 +269,7 @@ class Export extends Component
         ]);
     }
 
-    protected function attendeesQuery(string $site, string $start, string $end, string $priority, string $tag): string
+    protected function attendeesQuery(string $eventType, string $site, string $start, string $end, string $priority, string $tag): string
     {
         $siteWhere = $site != '*' ? 'AND s.id = '.$site : '';
         $siteTag = strlen($tag) > 0 ? 'AND e.id IN(
