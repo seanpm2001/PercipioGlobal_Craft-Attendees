@@ -478,7 +478,7 @@ class Export extends Component
     protected function eventsQuery(string $eventType, string $site, string $start, string $end, string $priority, string $tag): string
     {
         $siteWhere = $site != '*' ? 'AND s.id = '.$site : '';
-        $siteTag = strlen($tag) > 0 ? 'AND e.id IN(
+        $siteTag = $tag !== '' ? 'AND e.id IN(
             SELECT distinct(sourceId)
                 FROM content c
                 INNER JOIN elements em
