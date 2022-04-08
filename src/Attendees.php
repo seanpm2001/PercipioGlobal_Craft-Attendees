@@ -223,6 +223,7 @@ class Attendees extends Plugin
             function (RegisterUrlRulesEvent $event) {
                 $event->rules['craft-attendees/trainings/<eventId:\d+>'] = 'craft-attendees/training/detail';
                 $event->rules['craft-attendees/trainings/attendees/<eventId:\d+>/<order\w+>/<limit:\d+>/<offset:\d+>'] = 'craft-attendees/training/attendees';
+                $event->rules['craft-attendees/trainings/engagement-data/<eventId:\d+>'] = 'craft-attendees/training/engagement-data';
                 $event->rules['craft-attendees/trainings/logs/<eventId:\d+>'] = 'craft-attendees/log/logs';
                 $event->rules['craft-attendees/trainings/fetch-support-options/<eventId:\d+>'] = 'craft-attendees/training/fetch-support-options';
 //                $event->rules['craft-attendees/export/export'] = 'craft-attendees/csv/export';

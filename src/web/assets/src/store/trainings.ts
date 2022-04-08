@@ -8,6 +8,7 @@ export const useTrainingsStore = defineStore('trainings', {
         attendees: null,
         totalAttendees: null,
         attendeeInput: null,
+        dataEngagement: null,
         attendeeFormErrors: false,
         attendeeSuccess: false,
         showForm: false,
@@ -161,6 +162,18 @@ export const useTrainingsStore = defineStore('trainings', {
                 self.totalAttendees = parseInt(response?.data?.meta?.total)
                 self.attendees = offset !== 0 ? self.attendees.concat(response?.data?.attendees) : response?.data?.attendees
             });
+        },
+        fetchEngagementData(event) {
+
+            axios({
+                method: 'get',
+                url: `${ENDPOINT}/craft-attendees/trainings/engagement-data/${event}`,
+            })
+            .then(function (response) {
+                self.loading = false
+                self.dataEngagement = response?.data?.engagement
+            });
+
         },
         setShowFrom(value){
             this.attendeeFormErrors = false
