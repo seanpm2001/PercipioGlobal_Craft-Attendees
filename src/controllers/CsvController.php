@@ -48,7 +48,7 @@ class CsvController extends Controller
 
         $exporter = Attendees::getInstance()->export->export($exportModel);
 
-        $filename = match ($exportModel->type) {
+        $filename = match ($exportModel->exportType) {
             'event' => 'export_events_' . date("Y_m_d_H_i") . '.zip',
             'subscriptions' => 'export_subscriptions_' . date("Y_m_d_H_i") . '.zip',
             'school-unique', 'school-attendee' => 'export_schools_' . date("Y_m_d_H_i") . '.zip',
