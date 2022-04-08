@@ -15,7 +15,7 @@ class Export extends Component
 
     public function export(ExportModel $exportModel): CsvGrid
     {
-        $exporter = match ($exportModel->type) {
+        $exporter = match ($exportModel->exportType) {
             'event' => $this->_buildEventExport($exportModel->start, $exportModel->end, $exportModel->site, $exportModel->school, $exportModel->tag),
             'subscriptions' => $this->_buildSubscriptionsExport($exportModel->start, $exportModel->end, $exportModel->site, $exportModel->school, $exportModel->tag),
             'school-attendee' => $this->_buildSchoolAttendeeExport($exportModel->start, $exportModel->end, $exportModel->site, $exportModel->school, $exportModel->tag),
