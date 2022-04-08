@@ -24,6 +24,7 @@ export const useDashboardStore = defineStore('trainings', {
 
             const site = this.site
             const period = this.period
+            const eventType = this.type
 
             // const obj = {
             //     CRAFT_CSRF_TOKEN : CSRF,
@@ -47,6 +48,7 @@ export const useDashboardStore = defineStore('trainings', {
                 CRAFT_CSRF_TOKEN : CSRF,
                 site: site,
                 period: period,
+                eventType: eventType,
             }
 
             axios({
