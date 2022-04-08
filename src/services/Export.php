@@ -294,13 +294,13 @@ class Export extends Component
 
                     SELECT eventId FROM
                     (
-                        SELECT eventId, RSN, Training, MAX(lastTraingingDate) AS lastTrainingDate FROM
+                        SELECT eventId, RSN, Training, MAX(lastTrainingDate) AS lastTrainingDate FROM
                         (
                             SELECT e.id AS eventId, s.handle AS RSN, c.title AS training,
                             CASE
                             WHEN d1.field_eventDate_startDateTime IS NOT NULL THEN DATE_FORMAT(d1.field_eventDate_startDateTime, "%d-%m-%Y")
                             WHEN d2.field_eventDate_startDateTime IS NOT NULL THEN DATE_FORMAT(d2.field_eventDate_startDateTime, "%d-%m-%Y")
-                            ELSE DATE_FORMAT(d3.field_eventDate_startDateTime, "%d-%m-%Y") END AS lastTraingingDate
+                            ELSE DATE_FORMAT(d3.field_eventDate_startDateTime, "%d-%m-%Y") END AS lastTrainingDate
                             FROM entries e
                                 INNER JOIN matrixblocks m ON m.ownerId = e.id
                                 INNER JOIN content c ON e.id = c.elementId
@@ -358,7 +358,7 @@ class Export extends Component
                                     ) AS cf
                                     WHERE eventDate BETWEEN "' . $start . '" AND  "' . $end . '"
                             )
-                            ORDER BY RSN ASC, lastTraingingDate DESC
+                            ORDER BY RSN ASC, lastTrainingDate DESC
                         ) as results
                         GROUP BY eventId, RSN, Training
                         ORDER BY RSN ASC, lastTrainingDate DESC
@@ -490,14 +490,14 @@ class Export extends Component
         $prior = $priority == 'prior' ? 'WHERE a.priority = "1"' : '';
 
         return '
-            SELECT eventId, RSN, Training, MAX(lastTraingingDate) AS lastTrainingDate FROM
+            SELECT eventId, RSN, Training, MAX(lastTrainingDate) AS lastTrainingDate FROM
             (
                 SELECT e.id AS eventId, s.handle AS RSN, c.title AS training,
                     CASE
                     WHEN d1.field_eventDate_startDateTime IS NOT NULL THEN DATE_FORMAT(d1.field_eventDate_startDateTime, "%d-%m-%Y")
                     WHEN d2.field_eventDate_startDateTime IS NOT NULL THEN DATE_FORMAT(d2.field_eventDate_startDateTime, "%d-%m-%Y")
                         ELSE DATE_FORMAT(d3.field_eventDate_startDateTime, "%d-%m-%Y") END
-                    AS lastTraingingDate
+                    AS lastTrainingDate
                     FROM entries e
                         INNER JOIN matrixblocks m ON m.ownerId = e.id
                         INNER JOIN content c ON e.id = c.elementId
@@ -554,7 +554,7 @@ class Export extends Component
                                     ) AS cf
                                 WHERE eventDate BETWEEN "' . $start . '" AND  "' . $end . '"
                             )
-                            ORDER BY RSN ASC, lastTraingingDate DESC
+                            ORDER BY RSN ASC, lastTrainingDate DESC
             ) as results
             GROUP BY eventId, RSN, Training
             ORDER BY RSN ASC, lastTrainingDate DESC
