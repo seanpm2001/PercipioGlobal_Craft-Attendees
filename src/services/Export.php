@@ -15,22 +15,13 @@ class Export extends Component
 
     public function export(ExportModel $exportModel): CsvGrid
     {
-        switch($exportModel->type){
-            case 'event':
-                $exporter = $this->_buildEventExport($exportModel->start, $exportModel->end, $exportModel->site, $exportModel->school, $exportModel->tag);
-                break;
-            case 'subscriptions':
-                $exporter = $this->_buildSubscriptionsExport($exportModel->start, $exportModel->end, $exportModel->site, $exportModel->school, $exportModel->tag);
-                break;
-            case 'school-attendee':
-                $exporter = $this->_buildSchoolAttendeeExport($exportModel->start, $exportModel->end, $exportModel->site, $exportModel->school, $exportModel->tag);
-                break;
-            case 'school-unique':
-                $exporter = $this->_buildSchoolUniqueExport($exportModel->start, $exportModel->end, $exportModel->site, $exportModel->school, $exportModel->tag);
-                break;
-            default:
-                $exporter = $this->_buildAttendeesExport($exportModel->start, $exportModel->end, $exportModel->site, $exportModel->school, $exportModel->tag);
-        }
+        $exporter = match ($exportModel->type) {
+            'event' => $this->_buildEventExport($exportModel->start, $exportModel->end, $exportModel->site, $exportModel->school, $exportModel->tag),
+            'subscriptions' => $this->_buildSubscriptionsExport($exportModel->start, $exportModel->end, $exportModel->site, $exportModel->school, $exportModel->tag),
+            'school-attendee' => $this->_buildSchoolAttendeeExport($exportModel->start, $exportModel->end, $exportModel->site, $exportModel->school, $exportModel->tag),
+            'school-unique' => $this->_buildSchoolUniqueExport($exportModel->start, $exportModel->end, $exportModel->site, $exportModel->school, $exportModel->tag),
+            default => $this->_buildAttendeesExport($exportModel->start, $exportModel->end, $exportModel->site, $exportModel->school, $exportModel->tag),
+        };
 
         return $exporter;
     }
