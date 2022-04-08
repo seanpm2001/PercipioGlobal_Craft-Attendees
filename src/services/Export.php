@@ -41,6 +41,7 @@ class Export extends Component
                 ['attribute' => 'RSN'],
                 ['attribute' => 'eventID'],
                 ['attribute' => 'training'],
+                ['attribute' => 'eventType'],
                 ['attribute' => 'orgName'],
                 ['attribute' => 'priority'],
                 ['attribute' => 'orgUrn'],
@@ -284,7 +285,11 @@ class Export extends Component
         $prior = $priority == 'prior' ? 'AND priority = "1"' : '';
 
         return '
-            SELECT handle AS RSN, elementId as eventID, title AS training, orgName, priority, orgUrn, postCode, a.name as name, email, jobRole, days AS modulesAttended, newsletter, anonymous
+            SELECT handle AS RSN, elementId as eventID, title AS training, orgName, priority, orgUrn, postCode, a.name as name, email, jobRole, days AS modulesAttended, newsletter, anonymous,
+                (case WHEN e.typeId = 16 then "online"
+                    WHEN e.typeId = 17 then "location"
+                    ELSE "hybrid"
+                    END) AS eventType
                 FROM entries e
                 INNER JOIN content c ON e.id = c.elementId
                 INNER JOIN sites s ON c.siteId = s.id
