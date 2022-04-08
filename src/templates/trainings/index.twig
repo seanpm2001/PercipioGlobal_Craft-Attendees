@@ -83,7 +83,7 @@
 
         {% paginate events as pageInfo, pageEntries %}
 
-        <div class="tableview tablepane">
+        <div id="trainings" class="tableview tablepane">
             <table class="data fullwidth">
                 <thead>
                 <tr>
@@ -101,8 +101,7 @@
                         <a href="{{ url(pluginCpUrl ~ '/trainings') }}{{ orderUrl }}" class="block absolute left-0 top-0 w-full h-full z-10"></a>
                     </th>
                     <th scope="col" data-attribute="attendees">Attendees</th>
-                    <th scope="col" data-attribute="engagement">Engagement</th> <!--  class="orderable" -->
-                </tr>
+                    <th scope="col" data-attribute="engagement">Engagement</tr>
                 </thead>
                 <tbody>
 
@@ -120,11 +119,6 @@
                         {% if eventDate %}
                             {% set eventDate = eventTimetable.startDateTime|date('d/n/Y') %}
                         {% endif %}
-
-                        {% set dataEngagement = null %}
-                        {% set dataEnganged = 0 %}
-                        {% set dataSustained = 0 %}
-                        {% set dataEmbedded = 0 %}
 
                         <tr data-id="{{ event.id }}" tabindex="0">
                             <td data-title="{{event.slug }} " data-titlecell="">
@@ -156,17 +150,7 @@
                                 <span>{{ craft.attendees(event.id).count() }} </span>
                             </td>
                             <td>
-                                <div class="progress">
-                                    <div class="meter bg-red" title="Engaged {{ dataEnganged }}%">
-                                        <span style="width: {{ dataEnganged }}%"></span>
-                                    </div>
-                                    <div class="meter bg-orange" title="Sustained {{ dataSustained }}%">
-                                        <span style="width: {{ dataSustained }}%"></span>
-                                    </div>
-                                    <div class="meter bg-blue" title="Embedded {{ dataEmbedded }}%">
-                                        <span style="width: {{ dataEmbedded }}%"></span>
-                                    </div>
-                                </div>
+                                <status-engagement :event="{{ event.id }}"></status-engagement>
                             </td>
                         </tr>
                     {% endfor %}

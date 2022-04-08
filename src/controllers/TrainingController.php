@@ -51,6 +51,30 @@ class TrainingController extends Controller
         ]);
     }
 
+    public function actionEngagementData(int $eventId)
+    {
+//        $attendees = AttendeeRecord::find()
+//            ->where(['eventId' => $eventId])
+//            ->groupBy(["days"])
+//            ->all();
+
+        $connection = \Yii::$app->getDb();
+
+        $sql = "SELECT
+	        count(case WHEN days = 1 THEN days end) as engaged,
+  	        count(case WHEN days = 2 THEN days end) as sustained,
+  	        count(case WHEN days >2  THEN days end) as embedded
+            FROM `attendees_attendees`
+            WHERE `eventId`=".$eventId;
+
+        $command = $connection->createCommand($sql);
+        $results = $command->queryAll();
+
+        return $this->asJson([
+            "engagement" => $results
+        ]);
+    }
+
     public function actionAttendees(int $eventId, string $order = 'date', int $limit = 0, int $offset = 0)
     {
         $limit = $limit === 0 ? "*" : $limit;
