@@ -18,6 +18,7 @@ class DashboardController extends Controller
 
         $site = $request->getBodyParam('site');
         $period = $request->getBodyParam('period');
+        $eventType = $request->getBodyParam('eventType');
 
         $site = $site === '2' ? '' : $site;
 
@@ -51,6 +52,7 @@ class DashboardController extends Controller
                     LEFT JOIN matrixcontent_eventdatestimeonline d2 ON d2.elementId = m.id
                     LEFT JOIN matrixcontent_eventdatestime d3 ON d3.elementId = m.id
                         WHERE e.sectionId = 15
+                        AND e.typeId IN ('.$eventType.')
                         AND a.approved = 1
                         " . $whereSiteId . "
                         AND em.revisionId IS NULL
@@ -138,9 +140,9 @@ class DashboardController extends Controller
                 ->where(['eventId' => $event['id']])
                 ->all();
 
-            $totals['events'] = $totals['events'] + 1;
-            $totals['attendees'] = $totals['attendees'] + $event['totalAttendees'];
-            $totals['schools'] = $totals['schools'] + $event['totalSchools'];
+            ++$totals['events'];
+            $totals['attendees'] += $event['totalAttendees'];
+            $totals['schools'] += $event['totalSchools'];
 //            $totals['priority'] = $totals['priority'] + $event['totalPriority'];
 
             array_push($attendees,...$evtAttendees);

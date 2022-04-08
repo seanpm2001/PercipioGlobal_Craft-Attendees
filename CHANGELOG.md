@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.1.0 - 2022-02-21
+
+### Added
+- Added the feature to show events based on event type
+- Added the feature to export events based on event type
+- Engagement data overview on dashboard
+
+### Fixed
+- Fixed an issue where the dates wouldn't order correctly
+- Fixed an issue where the last event date wouldn't always display correctly
+
 ## 1.0.8.13 - 2022-02-21
 ### Fixed
 - Fixed the school data SQL export bug

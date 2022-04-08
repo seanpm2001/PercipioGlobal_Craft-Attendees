@@ -38,7 +38,8 @@ class CsvController extends Controller
         $request = Craft::$app->getRequest();
 
         $exportModel = new ExportModel();
-        $exportModel->type = $request->getBodyParam('type');
+        $exportModel->exportType = $request->getBodyParam('exportType');
+        $exportModel->eventType = $request->getBodyParam('eventType');
         $exportModel->school = $request->getBodyParam('school');
         $exportModel->start = $request->getBodyParam('start');
         $exportModel->end = $request->getBodyParam('end');
@@ -47,20 +48,12 @@ class CsvController extends Controller
 
         $exporter = Attendees::getInstance()->export->export($exportModel);
 
-        switch($exportModel->type){
-            case 'event':
-                $filename = 'export_events_'.date("Y_m_d_H_i").'.zip';
-                break;
-            case 'subscriptions':
-                $filename = 'export_subscriptions_'.date("Y_m_d_H_i").'.zip';
-                break;
-            case 'school-unique':
-            case 'school-attendee':
-                $filename = 'export_schools_'.date("Y_m_d_H_i").'.zip';
-                break;
-            default:
-                $filename = 'export_attendees_'.date("Y_m_d_H_i").'.zip';
-        }
+        $filename = match ($exportModel->exportType) {
+            'event' => 'export_events_' . date("Y_m_d_H_i") . '.zip',
+            'subscriptions' => 'export_subscriptions_' . date("Y_m_d_H_i") . '.zip',
+            'school-unique', 'school-attendee' => 'export_schools_' . date("Y_m_d_H_i") . '.zip',
+            default => 'export_attendees_' . date("Y_m_d_H_i") . '.zip',
+        };
 
         return $exporter->export()->send($filename);
     }

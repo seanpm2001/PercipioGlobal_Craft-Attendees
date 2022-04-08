@@ -15,30 +15,21 @@ class Export extends Component
 
     public function export(ExportModel $exportModel): CsvGrid
     {
-        switch($exportModel->type){
-            case 'event':
-                $exporter = $this->_buildEventExport($exportModel->start, $exportModel->end, $exportModel->site, $exportModel->school, $exportModel->tag);
-                break;
-            case 'subscriptions':
-                $exporter = $this->_buildSubscriptionsExport($exportModel->start, $exportModel->end, $exportModel->site, $exportModel->school, $exportModel->tag);
-                break;
-            case 'school-attendee':
-                $exporter = $this->_buildSchoolAttendeeExport($exportModel->start, $exportModel->end, $exportModel->site, $exportModel->school, $exportModel->tag);
-                break;
-            case 'school-unique':
-                $exporter = $this->_buildSchoolUniqueExport($exportModel->start, $exportModel->end, $exportModel->site, $exportModel->school, $exportModel->tag);
-                break;
-            default:
-                $exporter = $this->_buildAttendeesExport($exportModel->start, $exportModel->end, $exportModel->site, $exportModel->school, $exportModel->tag);
-        }
+        $exporter = match ($exportModel->exportType) {
+            'event' => $this->_buildEventExport($exportModel->eventType, $exportModel->start, $exportModel->end, $exportModel->site, $exportModel->school, $exportModel->tag),
+            'subscriptions' => $this->_buildSubscriptionsExport($exportModel->eventType, $exportModel->start, $exportModel->end, $exportModel->site, $exportModel->school, $exportModel->tag),
+            'school-attendee' => $this->_buildSchoolAttendeeExport($exportModel->eventType, $exportModel->start, $exportModel->end, $exportModel->site, $exportModel->school, $exportModel->tag),
+            'school-unique' => $this->_buildSchoolUniqueExport($exportModel->eventType, $exportModel->start, $exportModel->end, $exportModel->site, $exportModel->school, $exportModel->tag),
+            default => $this->_buildAttendeesExport($exportModel->eventType, $exportModel->start, $exportModel->end, $exportModel->site, $exportModel->school, $exportModel->tag),
+        };
 
         return $exporter;
     }
 
-    private function _buildAttendeesExport(string $start, string $end, string $site, string $priority, string $tag): CsvGrid
+    private function _buildAttendeesExport(string $eventType, string $start, string $end, string $site, string $priority, string $tag): CsvGrid
     {
         $connection = \Yii::$app->getDb();
-        $sql = $this->attendeesQuery($site, $start, $end, $priority, $tag);
+        $sql = $this->attendeesQuery($eventType, $site, $start, $end, $priority, $tag);
         $command = $connection->createCommand($sql);
         $results = $command->queryAll();
 
@@ -68,10 +59,10 @@ class Export extends Component
         ]);
     }
 
-    private function _buildEventExport(string $start, string $end, string $site, string $priority, string $tag): CsvGrid
+    private function _buildEventExport(string $eventType, string $start, string $end, string $site, string $priority, string $tag): CsvGrid
     {
         $connection = \Yii::$app->getDb();
-        $sql = $this->eventsQuery($site, $start, $end, $priority, $tag);
+        $sql = $this->eventsQuery($eventType, $site, $start, $end, $priority, $tag);
         $command = $connection->createCommand($sql);
         $results = $command->queryAll();
 
@@ -92,10 +83,10 @@ class Export extends Component
         ]);
     }
 
-    private function _buildSubscriptionsExport(string $start, string $end, string $site, string $priority, string $tag): CsvGrid
+    private function _buildSubscriptionsExport(string $eventType, string $start, string $end, string $site, string $priority, string $tag): CsvGrid
     {
         $connection = \Yii::$app->getDb();
-        $sql = $this->attendeesQuery($site, $start, $end, $priority, $tag);
+        $sql = $this->attendeesQuery($eventType, $site, $start, $end, $priority, $tag);
         $command = $connection->createCommand($sql);
         $results = $command->queryAll();
 
@@ -133,10 +124,10 @@ class Export extends Component
         ]);
     }
 
-    private function _buildSchoolAttendeeExport(string $start, string $end, string $site, string $priority, string $tag): CsvGrid
+    private function _buildSchoolAttendeeExport(string $eventType, string $start, string $end, string $site, string $priority, string $tag): CsvGrid
     {
         $connection = \Yii::$app->getDb();
-        $sql = $this->attendeeSchoolsQuery($site, $start, $end, $priority, $tag);
+        $sql = $this->attendeeSchoolsQuery($eventType, $site, $start, $end, $priority, $tag);
         $command = $connection->createCommand($sql);
         $results = $command->queryAll();
 
@@ -217,10 +208,10 @@ class Export extends Component
         ]);
     }
 
-    private function _buildSchoolUniqueExport(string $start, string $end, string $site, string $priority, string $tag): CsvGrid
+    private function _buildSchoolUniqueExport(string $eventType, string $start, string $end, string $site, string $priority, string $tag): CsvGrid
     {
         $connection = \Yii::$app->getDb();
-        $sql = $this->attendeeSchoolsQuery($site, $start, $end, $priority, $tag);
+        $sql = $this->attendeeSchoolsQuery($eventType, $site, $start, $end, $priority, $tag);
         $command = $connection->createCommand($sql);
         $results = $command->queryAll();
 
@@ -278,7 +269,7 @@ class Export extends Component
         ]);
     }
 
-    protected function attendeesQuery(string $site, string $start, string $end, string $priority, string $tag): string
+    protected function attendeesQuery(string $eventType, string $site, string $start, string $end, string $priority, string $tag): string
     {
         $siteWhere = $site != '*' ? 'AND s.id = '.$site : '';
         $siteTag = strlen($tag) > 0 ? 'AND e.id IN(
@@ -303,13 +294,13 @@ class Export extends Component
 
                     SELECT eventId FROM
                     (
-                        SELECT eventId, RSN, Training, MAX(lastTraingingDate) AS lastTrainingDate FROM
+                        SELECT eventId, RSN, Training, MAX(lastTrainingDate) AS lastTrainingDate FROM
                         (
                             SELECT e.id AS eventId, s.handle AS RSN, c.title AS training,
                             CASE
                             WHEN d1.field_eventDate_startDateTime IS NOT NULL THEN DATE_FORMAT(d1.field_eventDate_startDateTime, "%d-%m-%Y")
                             WHEN d2.field_eventDate_startDateTime IS NOT NULL THEN DATE_FORMAT(d2.field_eventDate_startDateTime, "%d-%m-%Y")
-                            ELSE DATE_FORMAT(d3.field_eventDate_startDateTime, "%d-%m-%Y") END AS lastTraingingDate
+                            ELSE DATE_FORMAT(d3.field_eventDate_startDateTime, "%d-%m-%Y") END AS lastTrainingDate
                             FROM entries e
                                 INNER JOIN matrixblocks m ON m.ownerId = e.id
                                 INNER JOIN content c ON e.id = c.elementId
@@ -319,6 +310,7 @@ class Export extends Component
                                 LEFT JOIN matrixcontent_eventdatestimeonline d2 ON d2.elementId = m.id
                                 LEFT JOIN matrixcontent_eventdatestime d3 ON d3.elementId = m.id
                             WHERE e.sectionId = 15
+                            AND e.typeId IN ('.$eventType.')
                             '.$siteWhere.'
                             AND em.revisionId IS NULL
                             AND em.draftId IS NULL
@@ -367,7 +359,7 @@ class Export extends Component
                                     ) AS cf
                                     WHERE eventDate BETWEEN "' . $start . '" AND  "' . $end . '"
                             )
-                            ORDER BY RSN ASC, lastTraingingDate DESC
+                            ORDER BY RSN ASC, lastTrainingDate DESC
                         ) as results
                         GROUP BY eventId, RSN, Training
                         ORDER BY RSN ASC, lastTrainingDate DESC
@@ -378,10 +370,10 @@ class Export extends Component
         ';
     }
 
-    protected function attendeeSchoolsQuery(string $site, string $start, string $end, string $priority, string $tag): string
+    protected function attendeeSchoolsQuery(string $eventType, string $site, string $start, string $end, string $priority, string $tag): string
     {
         $siteWhere = $site != '*' ? 'AND s.id = '.$site : '';
-        $siteTag = strlen($tag) > 0 ? 'AND e.id IN(
+        $siteTag = $tag !== '' ? 'AND e.id IN(
             SELECT distinct(sourceId)
                 FROM content c
                 INNER JOIN elements em
@@ -421,6 +413,7 @@ class Export extends Component
                                 LEFT JOIN matrixcontent_eventdatestimeonline d2 ON d2.elementId = m.id
                                 LEFT JOIN matrixcontent_eventdatestime d3 ON d3.elementId = m.id
                                     WHERE e.sectionId = 15
+                                    AND e.typeId IN ('.$eventType.')
                                     '.$siteWhere.'
                                     AND em.revisionId IS NULL
                                     AND em.draftId IS NULL
@@ -484,10 +477,10 @@ class Export extends Component
         ';
     }
 
-    protected function eventsQuery(string $site, string $start, string $end, string $priority, string $tag): string
+    protected function eventsQuery(string $eventType, string $site, string $start, string $end, string $priority, string $tag): string
     {
         $siteWhere = $site != '*' ? 'AND s.id = '.$site : '';
-        $siteTag = strlen($tag) > 0 ? 'AND e.id IN(
+        $siteTag = $tag !== '' ? 'AND e.id IN(
             SELECT distinct(sourceId)
                 FROM content c
                 INNER JOIN elements em
@@ -499,14 +492,14 @@ class Export extends Component
         $prior = $priority == 'prior' ? 'WHERE a.priority = "1"' : '';
 
         return '
-            SELECT eventId, RSN, Training, MAX(lastTraingingDate) AS lastTrainingDate FROM
+            SELECT eventId, RSN, Training, MAX(lastTrainingDate) AS lastTrainingDate FROM
             (
                 SELECT e.id AS eventId, s.handle AS RSN, c.title AS training,
                     CASE
                     WHEN d1.field_eventDate_startDateTime IS NOT NULL THEN DATE_FORMAT(d1.field_eventDate_startDateTime, "%d-%m-%Y")
                     WHEN d2.field_eventDate_startDateTime IS NOT NULL THEN DATE_FORMAT(d2.field_eventDate_startDateTime, "%d-%m-%Y")
                         ELSE DATE_FORMAT(d3.field_eventDate_startDateTime, "%d-%m-%Y") END
-                    AS lastTraingingDate
+                    AS lastTrainingDate
                     FROM entries e
                         INNER JOIN matrixblocks m ON m.ownerId = e.id
                         INNER JOIN content c ON e.id = c.elementId
@@ -516,6 +509,7 @@ class Export extends Component
                         LEFT JOIN matrixcontent_eventdatestimeonline d2 ON d2.elementId = m.id
                         LEFT JOIN matrixcontent_eventdatestime d3 ON d3.elementId = m.id
                             WHERE e.sectionId = 15
+                            AND e.typeId IN ('.$eventType.')
                             AND em.revisionId IS NULL
                             AND em.draftId IS NULL
                             AND e.authorId IS NOT NULL
@@ -563,7 +557,7 @@ class Export extends Component
                                     ) AS cf
                                 WHERE eventDate BETWEEN "' . $start . '" AND  "' . $end . '"
                             )
-                            ORDER BY RSN ASC, lastTraingingDate DESC
+                            ORDER BY RSN ASC, lastTrainingDate DESC
             ) as results
             GROUP BY eventId, RSN, Training
             ORDER BY RSN ASC, lastTrainingDate DESC

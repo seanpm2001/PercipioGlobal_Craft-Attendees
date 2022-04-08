@@ -13,16 +13,18 @@ export const useDashboardStore = defineStore('trainings', {
         followOnSupportOptions: null,
         totals: [],
         period: 3,
+        type: '16,17,25',
         site: 'main',
         loading: false
     }),
     actions: {
-        fetchEvents(ids){
+        fetchEvents(){
             const self = this;
             this.loading = true;
 
             const site = this.site
             const period = this.period
+            const eventType = this.type
 
             // const obj = {
             //     CRAFT_CSRF_TOKEN : CSRF,
@@ -46,6 +48,7 @@ export const useDashboardStore = defineStore('trainings', {
                 CRAFT_CSRF_TOKEN : CSRF,
                 site: site,
                 period: period,
+                eventType: eventType,
             }
 
             axios({
