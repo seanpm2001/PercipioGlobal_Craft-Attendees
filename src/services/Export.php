@@ -310,6 +310,7 @@ class Export extends Component
                                 LEFT JOIN matrixcontent_eventdatestimeonline d2 ON d2.elementId = m.id
                                 LEFT JOIN matrixcontent_eventdatestime d3 ON d3.elementId = m.id
                             WHERE e.sectionId = 15
+                            AND e.typeId IN ('.$eventType.')
                             '.$siteWhere.'
                             AND em.revisionId IS NULL
                             AND em.draftId IS NULL
@@ -412,6 +413,7 @@ class Export extends Component
                                 LEFT JOIN matrixcontent_eventdatestimeonline d2 ON d2.elementId = m.id
                                 LEFT JOIN matrixcontent_eventdatestime d3 ON d3.elementId = m.id
                                     WHERE e.sectionId = 15
+                                    AND e.typeId IN ('.$eventType.')
                                     '.$siteWhere.'
                                     AND em.revisionId IS NULL
                                     AND em.draftId IS NULL
@@ -507,6 +509,7 @@ class Export extends Component
                         LEFT JOIN matrixcontent_eventdatestimeonline d2 ON d2.elementId = m.id
                         LEFT JOIN matrixcontent_eventdatestime d3 ON d3.elementId = m.id
                             WHERE e.sectionId = 15
+                            AND e.typeId IN ('.$eventType.')
                             AND em.revisionId IS NULL
                             AND em.draftId IS NULL
                             AND e.authorId IS NOT NULL
