@@ -16,20 +16,20 @@ class Export extends Component
     public function export(ExportModel $exportModel): CsvGrid
     {
         $exporter = match ($exportModel->exportType) {
-            'event' => $this->_buildEventExport($exportModel->start, $exportModel->end, $exportModel->site, $exportModel->school, $exportModel->tag),
-            'subscriptions' => $this->_buildSubscriptionsExport($exportModel->start, $exportModel->end, $exportModel->site, $exportModel->school, $exportModel->tag),
-            'school-attendee' => $this->_buildSchoolAttendeeExport($exportModel->start, $exportModel->end, $exportModel->site, $exportModel->school, $exportModel->tag),
-            'school-unique' => $this->_buildSchoolUniqueExport($exportModel->start, $exportModel->end, $exportModel->site, $exportModel->school, $exportModel->tag),
-            default => $this->_buildAttendeesExport($exportModel->start, $exportModel->end, $exportModel->site, $exportModel->school, $exportModel->tag),
+            'event' => $this->_buildEventExport($exportModel->eventType, $exportModel->start, $exportModel->end, $exportModel->site, $exportModel->school, $exportModel->tag),
+            'subscriptions' => $this->_buildSubscriptionsExport($exportModel->eventType, $exportModel->start, $exportModel->end, $exportModel->site, $exportModel->school, $exportModel->tag),
+            'school-attendee' => $this->_buildSchoolAttendeeExport($exportModel->eventType, $exportModel->start, $exportModel->end, $exportModel->site, $exportModel->school, $exportModel->tag),
+            'school-unique' => $this->_buildSchoolUniqueExport($exportModel->eventType, $exportModel->start, $exportModel->end, $exportModel->site, $exportModel->school, $exportModel->tag),
+            default => $this->_buildAttendeesExport($exportModel->eventType, $exportModel->start, $exportModel->end, $exportModel->site, $exportModel->school, $exportModel->tag),
         };
 
         return $exporter;
     }
 
-    private function _buildAttendeesExport(string $start, string $end, string $site, string $priority, string $tag): CsvGrid
+    private function _buildAttendeesExport(string $eventType, string $start, string $end, string $site, string $priority, string $tag): CsvGrid
     {
         $connection = \Yii::$app->getDb();
-        $sql = $this->attendeesQuery($site, $start, $end, $priority, $tag);
+        $sql = $this->attendeesQuery($eventType, $site, $start, $end, $priority, $tag);
         $command = $connection->createCommand($sql);
         $results = $command->queryAll();
 
@@ -59,10 +59,10 @@ class Export extends Component
         ]);
     }
 
-    private function _buildEventExport(string $start, string $end, string $site, string $priority, string $tag): CsvGrid
+    private function _buildEventExport(string $eventType, string $start, string $end, string $site, string $priority, string $tag): CsvGrid
     {
         $connection = \Yii::$app->getDb();
-        $sql = $this->eventsQuery($site, $start, $end, $priority, $tag);
+        $sql = $this->eventsQuery($eventType, $site, $start, $end, $priority, $tag);
         $command = $connection->createCommand($sql);
         $results = $command->queryAll();
 
@@ -83,10 +83,10 @@ class Export extends Component
         ]);
     }
 
-    private function _buildSubscriptionsExport(string $start, string $end, string $site, string $priority, string $tag): CsvGrid
+    private function _buildSubscriptionsExport(string $eventType, string $start, string $end, string $site, string $priority, string $tag): CsvGrid
     {
         $connection = \Yii::$app->getDb();
-        $sql = $this->attendeesQuery($site, $start, $end, $priority, $tag);
+        $sql = $this->attendeesQuery($eventType, $site, $start, $end, $priority, $tag);
         $command = $connection->createCommand($sql);
         $results = $command->queryAll();
 
@@ -124,10 +124,10 @@ class Export extends Component
         ]);
     }
 
-    private function _buildSchoolAttendeeExport(string $start, string $end, string $site, string $priority, string $tag): CsvGrid
+    private function _buildSchoolAttendeeExport(string $eventType, string $start, string $end, string $site, string $priority, string $tag): CsvGrid
     {
         $connection = \Yii::$app->getDb();
-        $sql = $this->attendeeSchoolsQuery($site, $start, $end, $priority, $tag);
+        $sql = $this->attendeeSchoolsQuery($eventType, $site, $start, $end, $priority, $tag);
         $command = $connection->createCommand($sql);
         $results = $command->queryAll();
 
@@ -208,10 +208,10 @@ class Export extends Component
         ]);
     }
 
-    private function _buildSchoolUniqueExport(string $start, string $end, string $site, string $priority, string $tag): CsvGrid
+    private function _buildSchoolUniqueExport(string $eventType, string $start, string $end, string $site, string $priority, string $tag): CsvGrid
     {
         $connection = \Yii::$app->getDb();
-        $sql = $this->attendeeSchoolsQuery($site, $start, $end, $priority, $tag);
+        $sql = $this->attendeeSchoolsQuery($eventType, $site, $start, $end, $priority, $tag);
         $command = $connection->createCommand($sql);
         $results = $command->queryAll();
 
@@ -369,10 +369,10 @@ class Export extends Component
         ';
     }
 
-    protected function attendeeSchoolsQuery(string $site, string $start, string $end, string $priority, string $tag): string
+    protected function attendeeSchoolsQuery(string $eventType, string $site, string $start, string $end, string $priority, string $tag): string
     {
         $siteWhere = $site != '*' ? 'AND s.id = '.$site : '';
-        $siteTag = strlen($tag) > 0 ? 'AND e.id IN(
+        $siteTag = $tag !== '' ? 'AND e.id IN(
             SELECT distinct(sourceId)
                 FROM content c
                 INNER JOIN elements em
