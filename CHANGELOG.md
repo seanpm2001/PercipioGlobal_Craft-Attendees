@@ -4,26 +4,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## 1.2.0 - 2022-03-11
-
-### Added
-- Added the event type to the export
-- Added the event type in the csv export
-- Added the event type to the dashboard
-
-### Changed
-- Updated the dependencies
-- Provided code clean up
-
-### Fixed
-- Fixed the dates and sorting on the trainings overview
-
-## 1.1.0 - 2022-02-21
+## 1.1.0 - 2022-03-11
 
 ### Added
 - Added the feature to show events based on event type
 - Added the feature to export events based on event type
-- Engagement data overview on dashboard
+- Engagement data on the trainings
+
+### Changed
+- Updated the dependencies
+- Provided code clean up
 
 ### Fixed
 - Fixed an issue where the dates wouldn't order correctly
