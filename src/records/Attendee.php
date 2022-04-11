@@ -37,22 +37,15 @@ class Attendee extends ActiveRecord
         $rules = parent::rules();
 
         $rules[] = [['days','eventId', 'priority'], 'required'];
+        $rules[] = [['name', 'email'], 'trim'];
+        $rules[] = [['orgName', 'name', 'jobRole'], 'trim'];
+        $rules[] = [['orgName', 'name', 'jobRole', 'email'], 'filter', 'filter' => function ($value) {
+            return filter_var(htmlspecialchars($value, ENT_QUOTES), FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW | FILTER_FLAG_NO_ENCODE_QUOTES);
+        }];
         $rules[] = [['orgName','name','jobRole'], 'required', 'when' => function($model){
             return $model->anonymous === 0;
         }];
-        $rules[] = ['email', function($attribute, $params, Validator $validator){
-            $preg = "/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,})$/i";
-
-            // Valid email
-            if (!preg_match($preg, $this->$attribute)) {
-                $error = Craft::t('craft-attendees', '"{value}" is not a valid email address.', [
-                    'attribute' => $attribute,
-                    'value' => $this->$attribute,
-                ]);
-
-                $validator->addError($this, $attribute, $error);
-            }
-        }];
+        $rules[] = ['email', 'email'];
 
         return $rules;
     }

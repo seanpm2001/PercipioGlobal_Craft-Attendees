@@ -29,12 +29,12 @@ class Attendee
             }
         }
 
-        $attendee->orgName = utf8_encode(htmlspecialchars($request->getBodyParam('orgName')));
-        $attendee->orgUrn = utf8_encode(htmlspecialchars($request->getBodyParam('orgUrn')));
-        $attendee->postCode = utf8_encode(htmlspecialchars($request->getBodyParam('postCode')));
-        $attendee->name = utf8_encode(htmlspecialchars(trim($request->getBodyParam('name'))));
-        $attendee->email = utf8_encode(htmlspecialchars(trim($request->getBodyParam('email'))));
-        $attendee->jobRole = utf8_encode(htmlspecialchars($request->getBodyParam('jobRole') ?? 'na'));
+        $attendee->orgName = $request->getBodyParam('orgName');
+        $attendee->orgUrn = $request->getBodyParam('orgUrn');
+        $attendee->postCode = $request->getBodyParam('postCode');
+        $attendee->name = $request->getBodyParam('name');
+        $attendee->email = $request->getBodyParam('email');
+        $attendee->jobRole = $request->getBodyParam('jobRole') ?? 'na';
         $attendee->days = $request->getBodyParam('days') ?? 1;
         $attendee->newsletter = $request->getBodyParam('newsletter') ?? 0;
         $attendee->approved = $request->getBodyParam('approved') ?? 0;
@@ -55,27 +55,27 @@ class Attendee
             $result = Attendees::getInstance()->metaseed->school($csvOrgUrn);
 
             if($result->suggestions[0]->data ?? null){
-                $attendee->orgName = utf8_encode(htmlspecialchars($result->suggestions[0]->value ?? $entry['orgName'] ?? ''));
-                $attendee->postCode = utf8_encode(htmlspecialchars($result->suggestions[0]->data->postcode ?? $entry['postCode'] ?? ''));
-                $attendee->priority = utf8_encode(htmlspecialchars($result->suggestions[0]->data->priority ?? $entry['priority'] ?? 0));
+                $attendee->orgName = $result->suggestions[0]->value ?? $entry['orgName'] ?? '';
+                $attendee->postCode = $result->suggestions[0]->data->postcode ?? $entry['postCode'] ?? '';
+                $attendee->priority = $result->suggestions[0]->data->priority ?? $entry['priority'] ?? 0;
                 $attendee->approved = 1;
-            }else{
-                $attendee->orgName = utf8_encode(htmlspecialchars($entry['orgName'] ?? ''));
-                $attendee->postCode = utf8_encode(htmlspecialchars($entry['postCode'] ?? ''));
-                $attendee->priority = utf8_encode(htmlspecialchars($entry['priority'] ?? 0));
+            } else {
+                $attendee->orgName = $entry['orgName'] ?? ''));
+                $attendee->postCode = $entry['postCode'] ?? ''));
+                $attendee->priority = $entry['priority'] ?? 0));
                 $attendee->approved = 0;
             }
         } else {
-            $attendee->orgName = utf8_encode(htmlspecialchars($entry['orgName'] ?? ''));
-            $attendee->postCode = utf8_encode(htmlspecialchars($entry['postCode'] ?? ''));
-            $attendee->priority = utf8_encode(htmlspecialchars($entry['priority'] ?? 0));
+            $attendee->orgName = $entry['orgName'] ?? '';
+            $attendee->postCode = $entry['postCode'] ?? '';
+            $attendee->priority = $entry['priority'] ?? 0;
             $attendee->approved = 0;
         }
 
         $attendee->orgUrn = $entry['orgUrn'] ?? '';
-        $attendee->name = utf8_encode(htmlspecialchars(trim($entry['name']) ?? ''));
-        $attendee->email = utf8_encode(htmlspecialchars(trim($entry['email']) ?? ''));
-        $attendee->jobRole = utf8_encode(htmlspecialchars($entry['jobRole'] ?? 'na'));
+        $attendee->name = $entry['name']) ?? '';
+        $attendee->email = $entry['email']) ?? '';
+        $attendee->jobRole = $entry['jobRole'] ?? 'na';
         $attendee->days = $entry['days'] ?? 1;
         $attendee->newsletter = str_contains($entry['newsletter'] ?? 'n', 'y');
         $attendee->eventId = $entry['event'] ?? '';
