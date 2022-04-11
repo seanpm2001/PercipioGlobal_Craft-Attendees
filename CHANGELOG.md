@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.2.0 - 2022-03-11
+
+### Added
+- Added the event type to the export
+- Added the event type in the csv export
+- Added the event type to the dashboard
+
+### Changed
+- Updated the dependencies
+- Provided code clean up
+
+### Fixed
+- Fixed the dates and sorting on the trainings overview
+
 ## 1.1.0 - 2022-02-21
 
 ### Added

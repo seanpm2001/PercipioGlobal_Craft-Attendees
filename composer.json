@@ -2,7 +2,7 @@
     "name": "percipiolondon/craft-attendees",
     "description": "A plugin to manage attendees to an event",
     "type": "craft-plugin",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "keywords": [
         "craft",
         "cms",
