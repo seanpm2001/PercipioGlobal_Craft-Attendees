@@ -33,15 +33,15 @@ class Attendee
         $attendee->orgUrn = utf8_encode(htmlspecialchars($request->getBodyParam('orgUrn')));
         $attendee->postCode = utf8_encode(htmlspecialchars($request->getBodyParam('postCode')));
         $attendee->name = utf8_encode(htmlspecialchars(trim($request->getBodyParam('name'))));
-        $attendee->email = utf8_encode(htmlspecialchars(trim($request->getBodyParam('email')));
-        $attendee->jobRole = utf8_encode(htmlspecialchars($request->getBodyParam('jobRole')));
+        $attendee->email = utf8_encode(htmlspecialchars(trim($request->getBodyParam('email'))));
+        $attendee->jobRole = utf8_encode(htmlspecialchars($request->getBodyParam('jobRole') ?? 'na'));
         $attendee->days = $request->getBodyParam('days') ?? 1;
         $attendee->newsletter = $request->getBodyParam('newsletter') ?? 0;
         $attendee->approved = $request->getBodyParam('approved') ?? 0;
         $attendee->anonymous = $request->getBodyParam('anonymous') ?? 0;
         $attendee->priority = $request->getBodyParam('priority') ?? 0;
-        $attendee->eventId = $request->getBodyParam('event'));
-        $attendee->siteId = $request->getBodyParam('siteId'));
+        $attendee->eventId = $request->getBodyParam('event');
+        $attendee->siteId = $request->getBodyParam('siteId');
 
         return $attendee;
     }
@@ -75,7 +75,7 @@ class Attendee
         $attendee->orgUrn = $entry['orgUrn'] ?? '';
         $attendee->name = utf8_encode(htmlspecialchars(trim($entry['name']) ?? ''));
         $attendee->email = utf8_encode(htmlspecialchars(trim($entry['email']) ?? ''));
-        $attendee->jobRole = utf8_encode(htmlspecialchars($entry['jobRole'] ?? ''));
+        $attendee->jobRole = utf8_encode(htmlspecialchars($entry['jobRole'] ?? 'na'));
         $attendee->days = $entry['days'] ?? 1;
         $attendee->newsletter = str_contains($entry['newsletter'] ?? 'n', 'y');
         $attendee->eventId = $entry['event'] ?? '';

@@ -114,12 +114,16 @@ class TrainingController extends Controller
         $this->requireAcceptsJson();
         $request = Craft::$app->getRequest();
         $attendee = AttendeeHelper::populateAttendeeFromPost($request);
+        $savedAttendee = null;
+        $success = false;
 
-        $success = $attendee->save(true);
-        $savedAttendee = AttendeeRecord::find()
-            ->where(['eventId' => $attendee->eventId, 'name' => $attendee->name, 'orgName' => $attendee->orgName, 'email' => $attendee->email])
-            ->orderBy('dateCreated DESC')
-            ->one();
+        if ($attendee->validate()){
+            $success = $attendee->save(true);
+            $savedAttendee = AttendeeRecord::find()
+                ->where(['eventId' => $attendee->eventId, 'name' => $attendee->name, 'orgName' => $attendee->orgName, 'email' => $attendee->email])
+                ->orderBy('dateCreated DESC')
+                ->one();
+        }
 
         $response = (object)[
             "success" => $success,
