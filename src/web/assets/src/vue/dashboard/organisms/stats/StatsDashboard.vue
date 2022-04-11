@@ -36,8 +36,7 @@
             const store = useDashboardStore();
 
             store.site = props.site == '*' ? 2 : props.site
-
-            store.fetchEvents(props.ids)
+            store.fetchEvents()
         }
     });
 

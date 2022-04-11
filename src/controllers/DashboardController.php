@@ -52,7 +52,7 @@ class DashboardController extends Controller
                     LEFT JOIN matrixcontent_eventdatestimeonline d2 ON d2.elementId = m.id
                     LEFT JOIN matrixcontent_eventdatestime d3 ON d3.elementId = m.id
                         WHERE e.sectionId = 15
-                        AND e.typeId IN ('.$eventType.')
+                        AND e.typeId IN (".$eventType.")
                         AND a.approved = 1
                         " . $whereSiteId . "
                         AND em.revisionId IS NULL
@@ -111,6 +111,7 @@ class DashboardController extends Controller
             AS res
             GROUP BY id
         ";
+
         $command = $connection->createCommand($sql);
         $events = $command->queryAll();
 

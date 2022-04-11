@@ -1,54 +1,55 @@
 {
   "src/js/attendees.ts": {
-    "file": "assets/attendees.756ffb2f.js",
+    "file": "assets/attendees.bd238400.js",
     "src": "src/js/attendees.ts",
     "isEntry": true,
     "imports": [
-      "_plugin-vue_export-helper.31108d73.js",
-      "_trainings.b60237e0.js"
-    ],
-    "css": [
-      "assets/app.c67b0606.css"
+      "_plugin-vue_export-helper.f99a0d42.js",
+      "_trainings.868ee365.js",
+      "_index.a482147f.js"
     ]
   },
   "src/js/trainings.ts": {
-    "file": "assets/trainings.1a9e8f97.js",
+    "file": "assets/trainings.eba342db.js",
     "src": "src/js/trainings.ts",
     "isEntry": true,
-    "css": [
-      "assets/app.c67b0606.css"
+    "imports": [
+      "_plugin-vue_export-helper.f99a0d42.js"
     ]
   },
   "src/js/dashboard.ts": {
-    "file": "assets/dashboard.2e4f8bad.js",
+    "file": "assets/dashboard.b613cdb3.js",
     "src": "src/js/dashboard.ts",
     "isEntry": true,
     "imports": [
-      "_plugin-vue_export-helper.31108d73.js",
-      "_trainings.b60237e0.js"
-    ],
-    "css": [
-      "assets/app.c67b0606.css"
+      "_plugin-vue_export-helper.f99a0d42.js",
+      "_index.a482147f.js",
+      "_trainings.868ee365.js"
     ]
   },
   "src/js/export.ts": {
-    "file": "assets/export.33af13c9.js",
+    "file": "assets/export.488e6b5b.js",
     "src": "src/js/export.ts",
     "isEntry": true,
     "imports": [
-      "_plugin-vue_export-helper.31108d73.js"
-    ],
+      "_plugin-vue_export-helper.f99a0d42.js",
+      "_index.a482147f.js"
+    ]
+  },
+  "_plugin-vue_export-helper.f99a0d42.js": {
+    "file": "assets/plugin-vue_export-helper.f99a0d42.js",
     "css": [
-      "assets/app.c67b0606.css"
+      "assets/plugin-vue_export-helper.764fd108.css"
     ]
   },
-  "_plugin-vue_export-helper.31108d73.js": {
-    "file": "assets/plugin-vue_export-helper.31108d73.js"
-  },
-  "_trainings.b60237e0.js": {
-    "file": "assets/trainings.b60237e0.js",
+  "_trainings.868ee365.js": {
+    "file": "assets/trainings.868ee365.js",
     "imports": [
-      "_plugin-vue_export-helper.31108d73.js"
+      "_plugin-vue_export-helper.f99a0d42.js",
+      "_index.a482147f.js"
     ]
+  },
+  "_index.a482147f.js": {
+    "file": "assets/index.a482147f.js"
   }
 }
