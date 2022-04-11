@@ -15,9 +15,9 @@ class CreateAttendeeJob extends BaseJob
 
     public function execute($queue)
     {
-        $orgName = htmlspecialchars($this->config['orgName'], ENT_QUOTES) ?? '';
-        $name = htmlspecialchars($this->config['name'], ENT_QUOTES) ?? '';
-        $jobRole = htmlspecialchars($this->config['jobRole'], ENT_QUOTES) ?? '';
+        $orgName = utf8_encode(htmlspecialchars($this->config['orgName'], ENT_QUOTES)) ?? '';
+        $name = utf8_encode(htmlspecialchars($this->config['name'], ENT_QUOTES)) ?? '';
+        $jobRole = utf8_encode(htmlspecialchars($this->config['jobRole'], ENT_QUOTES)) ?? '';
         $days = $this->config['days'] ?? '';
         $eventId = $this->config['event'] ?? '';
         $file = $this->config['file'] ?? '';
