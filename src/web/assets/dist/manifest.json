@@ -1,6 +1,6 @@
 {
   "src/js/attendees.ts": {
-    "file": "assets/attendees.bd238400.js",
+    "file": "assets/attendees.4a05b03c.js",
     "src": "src/js/attendees.ts",
     "isEntry": true,
     "imports": [
@@ -39,7 +39,7 @@
   "_plugin-vue_export-helper.f99a0d42.js": {
     "file": "assets/plugin-vue_export-helper.f99a0d42.js",
     "css": [
-      "assets/plugin-vue_export-helper.764fd108.css"
+      "assets/plugin-vue_export-helper.a07ba956.css"
     ]
   },
   "_trainings.868ee365.js": {
