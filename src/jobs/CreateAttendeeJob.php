@@ -15,10 +15,10 @@ class CreateAttendeeJob extends BaseJob
 
     public function execute($queue)
     {
-        $orgName = $this->config['orgName'] ?? '';
-        $name = $this->config['name'] ?? '';
-        $jobRole = $this->config['jobRole'] ?? '';
-        $days = $this->config['days'] ?? '';
+        $orgName = utf8_encode($this->config['orgName'] ?? '');
+        $name = utf8_encode($this->config['name'] ?? '');
+        $jobRole = utf8_encode($this->config['jobRole'] ?? '');
+        $days = utf8_encode($this->config['days'] ?? '');
         $eventId = $this->config['event'] ?? '';
         $file = $this->config['file'] ?? '';
         $filepath = $this->config['filepath'] ?? '';
@@ -101,7 +101,7 @@ class CreateAttendeeJob extends BaseJob
      */
     protected function defaultDescription(): string
     {
-        return \Craft::t('craft-attendees', 'Save attendee - {name} ({org})', ['name' => $this->config['name'], 'org' => $this->config['orgName']]);
+        return \Craft::t('craft-attendees', 'Save attendee - {name} ({org})', ['name' => utf8_encode($this->config['name']), 'org' => utf8_encode($this->config['orgName'])]);
     }
 }
 
