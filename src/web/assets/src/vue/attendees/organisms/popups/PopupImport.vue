@@ -3,7 +3,7 @@
         'transition-all duration-500 delay-50 ease-in-out fixed left-0 top-0 w-screen h-screen',
         show ? 'z-[100] opacity-100 bg-gray-900 bg-opacity-50' : 'z-0 opacity-0 pointer-events-none'
     ]">
-        <div class="max-h-screen overflow-auto fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-80">
+        <div class="max-h-screen overflow-auto fixed left-1/2 top-1/2 translate-center w-80">
             <div class="bg-white p-6 rounded-xl mb-10 relative">
 
                 <div class="w-full" v-if="info === 1">
