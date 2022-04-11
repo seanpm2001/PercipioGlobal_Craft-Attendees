@@ -29,19 +29,19 @@ class Attendee
             }
         }
 
-        $attendee->orgName = $request->getBodyParam('orgName');
-        $attendee->orgUrn = $request->getBodyParam('orgUrn');
-        $attendee->postCode = $request->getBodyParam('postCode');
-        $attendee->name = trim($request->getBodyParam('name'));
-        $attendee->email = trim($request->getBodyParam('email'));
-        $attendee->jobRole = $request->getBodyParam('jobRole');
+        $attendee->orgName = htmlspecialchars($request->getBodyParam('orgName'));
+        $attendee->orgUrn = htmlspecialchars($request->getBodyParam('orgUrn'));
+        $attendee->postCode = htmlspecialchars($request->getBodyParam('postCode'));
+        $attendee->name = htmlspecialchars(trim($request->getBodyParam('name')));
+        $attendee->email = htmlspecialchars(trim($request->getBodyParam('email')));
+        $attendee->jobRole = htmlspecialchars($request->getBodyParam('jobRole'));
         $attendee->days = $request->getBodyParam('days') ?? 1;
         $attendee->newsletter = $request->getBodyParam('newsletter') ?? 0;
         $attendee->approved = $request->getBodyParam('approved') ?? 0;
         $attendee->anonymous = $request->getBodyParam('anonymous') ?? 0;
         $attendee->priority = $request->getBodyParam('priority') ?? 0;
-        $attendee->eventId = $request->getBodyParam('event');
-        $attendee->siteId = $request->getBodyParam('siteId');
+        $attendee->eventId = htmlspecialchars($request->getBodyParam('event'));
+        $attendee->siteId = htmlspecialchars($request->getBodyParam('siteId'));
 
         return $attendee;
     }

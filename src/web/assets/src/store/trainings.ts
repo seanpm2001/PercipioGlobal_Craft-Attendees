@@ -84,6 +84,7 @@ export const useTrainingsStore = defineStore('trainings', {
 
             });
         },
+
         submitAttendee(formValues) {
 
             let formObj = {};
@@ -92,7 +93,7 @@ export const useTrainingsStore = defineStore('trainings', {
                 for (var pair of formValues.entries()) {
                     formObj[pair[0]] = pair[1]
                 }
-            }else{
+            } else {
                 formObj = formValues
             }
 
@@ -108,12 +109,11 @@ export const useTrainingsStore = defineStore('trainings', {
                 data: formValues
             })
             .then(function (response) {
-
                 if(!response.data.success){
                     self.attendeeFormErrors = response.data.errors
                     self.loading = false
                     self.attendeeSuccess = false
-                }else{
+                } else {
                     let updatedAttendee = self.attendees.filter(a => a.id == response?.data?.attendee?.id)
                     const attendeeIndex = self.attendees.findIndex(a => a.id == response?.data?.attendee?.id)
 
@@ -132,7 +132,7 @@ export const useTrainingsStore = defineStore('trainings', {
                         updatedAttendee.anonymous = formObj?.anonymous
 
                         self.attendees[attendeeIndex] = updatedAttendee
-                    }else{
+                    } else {
                         self.attendees.unshift(response?.data?.attendee)
                     }
 
@@ -144,6 +144,7 @@ export const useTrainingsStore = defineStore('trainings', {
             });
 
         },
+        
         fetchAttendees(event, order, limit, offset, init = false){
             const self = this;
             this.loading = true;
