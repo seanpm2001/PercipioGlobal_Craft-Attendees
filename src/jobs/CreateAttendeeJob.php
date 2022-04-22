@@ -101,7 +101,7 @@ class CreateAttendeeJob extends BaseJob
      */
     protected function defaultDescription(): string
     {
-        return \Craft::t('craft-attendees', 'Save attendee - {name} ({org})', ['name' => utf8_encode($this->config['name']), 'org' => utf8_encode($this->config['orgName'])]);
+        return Craft::t('craft-attendees', 'Save attendee - {name} ({org})', ['name' => utf8_encode($this->config['name']), 'org' => utf8_encode($this->config['orgName'])]);
     }
 }
 

@@ -38,8 +38,8 @@
                         <h3 class="text-lg">Attendee Name</h3>
                     </div>
 
-                    <p>Input expected: Text (Required)</p>
-                    <p>The full name of the participant attending the event.<br/><br/>If the cell in the corresponding CSV row exceeds more than 256 characters in length, incorrect formatting will be assumed and null data will be entered. </p>
+                    <p>Input expected: Text</p>
+                    <p>The full name of the participant attending the event.<br/><br/>If no name has been added this attendee will be registered as anonymous.<br/><br/>If the cell in the corresponding CSV row exceeds more than 256 characters in length, incorrect formatting will be assumed and null data will be entered. </p>
                 </div>
 
                 <div class="w-full" v-if="info === 5">
@@ -56,7 +56,7 @@
                         <h3 class="text-lg">Job Role</h3>
                     </div>
 
-                    <p>Input expected: Text from a predefined list (Required)</p>
+                    <p>Input expected: Text from a predefined list</p>
 
                     <ul class="text-left">
                         <li><strong>na</strong>: Not Applicable</li>
@@ -66,7 +66,7 @@
                         <li><strong>teacher</strong>: Teacher</li>
                     </ul>
 
-                    <p>If the cell in the corresponding CSV row does not match one of the list items above, Not Appicable or NA will be selected. </p>
+                    <p>If the cell in the corresponding CSV row does not match one of the list items above, Not Appicable or NA will be selected.</p>
                 </div>
 
                 <div class="w-full" v-if="info === 7">

@@ -161,7 +161,7 @@
                 {
                     id: 4,
                     name: 'Attendee Name',
-                    required: true,
+                    required: false,
                     info: 'Text'
                 },
                 {
@@ -173,7 +173,7 @@
                 {
                     id: 6,
                     name: 'Job Role',
-                    required: true,
+                    required: false,
                     info: 'Text exact match [na, support, leader-middle, leader, teacher]',
                 },
                 {
