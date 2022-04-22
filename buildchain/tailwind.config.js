@@ -25,5 +25,6 @@ module.exports = {
                 '3/7': '42.855%',
             }
         }
-    }
+    },
+    important: true,
 };

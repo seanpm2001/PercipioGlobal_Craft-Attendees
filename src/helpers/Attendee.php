@@ -60,9 +60,9 @@ class Attendee
                 $attendee->priority = $result->suggestions[0]->data->priority ?? $entry['priority'] ?? 0;
                 $attendee->approved = 1;
             } else {
-                $attendee->orgName = $entry['orgName'] ?? ''));
-                $attendee->postCode = $entry['postCode'] ?? ''));
-                $attendee->priority = $entry['priority'] ?? 0));
+                $attendee->orgName = $entry['orgName'] ?? '';
+                $attendee->postCode = $entry['postCode'] ?? '';
+                $attendee->priority = $entry['priority'] ?? 0;
                 $attendee->approved = 0;
             }
         } else {
@@ -73,8 +73,8 @@ class Attendee
         }
 
         $attendee->orgUrn = $entry['orgUrn'] ?? '';
-        $attendee->name = $entry['name']) ?? '';
-        $attendee->email = $entry['email']) ?? '';
+        $attendee->name = $entry['name'] ?? '';
+        $attendee->email = $entry['email'] ?? '';
         $attendee->jobRole = $entry['jobRole'] ?? 'na';
         $attendee->days = $entry['days'] ?? 1;
         $attendee->newsletter = str_contains($entry['newsletter'] ?? 'n', 'y');

@@ -48,7 +48,7 @@
                     ]"
                 >
                     <div class="rounded-md border border-gray-400 border-solid w-4 h-4 bg-white flex-grow-0 flex-shrink-0 relative text-blue-600">
-                        <span v-if="school == option.value && urn === option?.data?.urn" class="font-bold absolute left-1/2 top-1/2 transform -translate-y-1/2 -translate-x-1/2">✓</span>
+                        <span v-if="school == option.value && urn === option?.data?.urn" class="font-bold absolute left-1/2 top-1/2 translate-center">✓</span>
                     </div>
                     <div class="pl-2">
                         <span :class="[

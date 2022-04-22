@@ -18,7 +18,7 @@
 
             <div :class="[
                 'absolute w-4 h-4 transition rounded-full left-1 top-1 flex items-center not-sr-only',
-                checkedValue == 1 ? 'bg-emerald-700 transform translate-x-full' : 'bg-gray-400'
+                checkedValue == 1 ? 'bg-emerald-700 translate-x-full' : 'bg-gray-400'
             ]">
             </div>
         </div>
