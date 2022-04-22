@@ -214,7 +214,6 @@ class CsvController extends Controller
             Queue::push(new CreateAttendeeJob([
                 'config' => $config
             ]));
-//            Retour::$plugin->redirects->saveRedirect($redirectConfig);
         }
 
     }

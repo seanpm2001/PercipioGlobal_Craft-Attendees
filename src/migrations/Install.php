@@ -74,7 +74,7 @@ class Install extends Migration
                     'orgName' => $this->string(255)->notNull(),
                     'orgUrn' => $this->integer(),
                     'postCode' => $this->string(10),
-                    'name' => $this->string(255)->notNull(),
+                    'name' => $this->string(255),
                     'email' => $this->string(255)->notNull(),
                     'jobRole' => $this->string(255)->notNull(),
                     'days' => $this->integer()->notNull(),

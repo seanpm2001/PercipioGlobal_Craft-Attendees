@@ -37,12 +37,11 @@ class Attendee extends ActiveRecord
         $rules = parent::rules();
 
         $rules[] = [['days','eventId', 'priority'], 'required'];
-        $rules[] = [['name', 'email'], 'trim'];
-        $rules[] = [['orgName', 'name', 'jobRole'], 'trim'];
+        $rules[] = [['orgName', 'name', 'jobRole', 'email'], 'trim'];
         $rules[] = [['orgName', 'name', 'jobRole', 'email'], 'filter', 'filter' => function ($value) {
             return filter_var(htmlspecialchars($value, ENT_QUOTES), FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW | FILTER_FLAG_NO_ENCODE_QUOTES);
         }];
-        $rules[] = [['orgName','name','jobRole'], 'required', 'when' => function($model){
+        $rules[] = [['orgName', 'name', 'jobRole'], 'required', 'when' => function($model){
             return $model->anonymous === 0;
         }];
         $rules[] = ['email', 'email'];

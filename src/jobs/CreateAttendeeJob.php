@@ -5,6 +5,7 @@ namespace percipiolondon\attendees\jobs;
 use Craft;
 
 use craft\queue\BaseJob;
+use craft\helpers\Json;
 use percipiolondon\attendees\helpers\Log;
 use percipiolondon\attendees\records\Attendee;
 use percipiolondon\attendees\helpers\Attendee as AttendeeHelper;
@@ -39,7 +40,7 @@ class CreateAttendeeJob extends BaseJob
 
             $log = [
                 'status' => 'error',
-                'message' => json_encode($errors),
+                'message' => Json::encode($errors),
                 'name' => $name,
                 'eventId' => $eventId,
                 'file' => $file,
@@ -49,7 +50,7 @@ class CreateAttendeeJob extends BaseJob
             ];
 
             Log::log($log);
-        }else{
+        } else {
             // save the attendee
             $attendee = AttendeeHelper::populateAttendeeFromArray($this->config, $identifier);
 
@@ -60,7 +61,7 @@ class CreateAttendeeJob extends BaseJob
 
                 $log = [
                     'status' => 'error',
-                    'message' => json_encode($attendee->errors),
+                    'message' => Json::encode($attendee->errors),
                     'name' => $name,
                     'eventId' => $eventId,
                     'file' => $file,
@@ -79,7 +80,7 @@ class CreateAttendeeJob extends BaseJob
 
                 $log = [
                     'status' => 'success',
-                    'message' => json_encode($success),
+                    'message' => Json::encode($success),
                     'name' => $name,
                     'eventId' => $eventId,
                     'file' => $file,

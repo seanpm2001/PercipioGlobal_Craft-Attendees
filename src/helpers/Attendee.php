@@ -46,7 +46,7 @@ class Attendee
         return $attendee;
     }
 
-    public static function populateAttendeeFromArray( array $entry, string $identifier): AttendeeModel
+    public static function populateAttendeeFromArray(array $entry, string $identifier): AttendeeModel
     {
         $attendee = new AttendeeModel();
         $csvOrgUrn = is_numeric($entry['orgUrn'] ?? null) ? (int)$entry['orgUrn'] : null;
@@ -80,7 +80,7 @@ class Attendee
         $attendee->newsletter = str_contains($entry['newsletter'] ?? 'n', 'y');
         $attendee->eventId = $entry['event'] ?? '';
         $attendee->siteId = $entry['site'] ?? '';
-        $attendee->anonymous = 0;
+        $attendee->anonymous = is_null($entry['name']) ? 1 : 0;
         $attendee->identifier = $identifier ?? '';
 
         return $attendee;
