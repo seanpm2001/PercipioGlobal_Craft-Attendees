@@ -28,7 +28,7 @@
 
         <div class="grid grid-cols-3 gap-x-4">
             <label class="block mb-6">
-                <span class="text-xs font-bold text-gray-400 block mb-1">Name of attendee <span class="text-blue-500">*</span></span>
+                <span class="text-xs font-bold text-gray-400 block mb-1">Name of attendee <span v-if="!anonymous" class="text-blue-500">*</span></span>
                 <div class="relative">
                     <input
                         name="name"
@@ -71,7 +71,7 @@
 
         <div class="grid grid-cols-3 gap-x-4">
             <label class="block mb-6">
-                <span class="text-xs font-bold text-gray-400 block mb-1">Attendee's job role <span class="text-blue-500">*</span></span>
+                <span class="text-xs font-bold text-gray-400 block mb-1">Attendee's job role</span>
 
                 <select
                     name="jobRole"
