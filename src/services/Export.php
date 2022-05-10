@@ -94,7 +94,7 @@ class Export extends Component
         $subscriptionResults = [];
 
         foreach($results as $result){
-            if(strlen($result['email']) > 0 && $result['newsletter'] == '1') {
+            if(strlen($result['email']) > 0 && $result['mailingList'] == '1') {
                 $name = Attendees::getInstance()->nameparser->parse_name($result['name']);
 
                 $subscriptionResults[] = [
@@ -285,7 +285,7 @@ class Export extends Component
         $prior = $priority == 'prior' ? 'AND priority = "1"' : '';
 
         return '
-            SELECT handle AS RSN, elementId as eventID, title AS training, orgName, priority, orgUrn, postCode, a.name as name, email, jobRole, days AS modulesAttended, newsletter, anonymous,
+            SELECT handle AS RSN, elementId as eventID, title AS training, orgName, priority, orgUrn, postCode, a.name as name, email, jobRole, days AS modulesAttended, newsletter AS mailingList, anonymous,
                 (case WHEN e.typeId = 16 then "online"
                     WHEN e.typeId = 17 then "location"
                     ELSE "hybrid"
