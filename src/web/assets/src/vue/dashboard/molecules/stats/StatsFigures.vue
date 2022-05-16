@@ -57,7 +57,8 @@
 
             watchEffect(() => {
                 if(attendees.value){
-                    priority.value = attendees.value.filter(a => a.priority == 1).length
+                    const schools = attendees.value.filter((e, i) => attendees.value.findIndex(a => a['orgName'] === e['orgName']) === i)
+                    priority.value = schools.filter(a => a.priority == 1).length
                 }
             })
 
