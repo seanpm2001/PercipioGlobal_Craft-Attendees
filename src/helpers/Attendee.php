@@ -80,7 +80,7 @@ class Attendee
         $attendee->newsletter = str_contains($entry['newsletter'] ?? 'n', 'y');
         $attendee->eventId = $entry['event'] ?? '';
         $attendee->siteId = $entry['site'] ?? '';
-        $attendee->anonymous = is_null($entry['name']) ? 1 : 0;
+        $attendee->anonymous = is_null($entry['name'] ?? null) ? 1 : 0;
         $attendee->identifier = $identifier ?? '';
 
         return $attendee;
