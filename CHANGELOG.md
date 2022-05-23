@@ -4,11 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.1.5 - 2022-05-23
+
+### Fixed
+- Fixed the `is_null` check on anonymous in the Attendees helper
+
+### Changed
+- Added null check on the title creation of the queue job
+
 ## 1.1.4 - 2022-05-16
 
 ### Fixed
-- Fixed the priority schools filtearr d
-- Fixed the exprt newsletter
+- Fixed the priority schools filter on dashboard
+  Fixed the export newsletter
 
 ## 1.1.3 - 2022-04-22
 
