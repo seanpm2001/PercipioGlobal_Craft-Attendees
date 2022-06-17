@@ -8,7 +8,7 @@ use yii\base\Component;
 
 class Metaseed extends Component
 {
-    public function school(String $query): \stdClass
+    public function school(String $query): ?\stdClass
     {
         try {
             $endpoint = 'https://api.v2.metaseed.io/schools/?mode=legacy&query='.$query;
@@ -22,11 +22,12 @@ class Metaseed extends Component
         } catch(\Exception $e) {
             Craft::error("Something went wrong: {$e->getMessage()}", __METHOD__);
         }
+
+        return null;
     }
 
-    public function attendeeSchools($urns): array
+    public function attendeeSchools($urns): ?array
     {
-
         try {
             $endpoint = 'https://api.v2.metaseed.io/urns';
             $client = new Client();
@@ -62,5 +63,7 @@ class Metaseed extends Component
         } catch(\Exception $e) {
             Craft::error("Something went wrong: {$e->getMessage()}", __METHOD__);
         }
+
+        return null;
     }
 }
