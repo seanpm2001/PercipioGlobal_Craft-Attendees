@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.1.6 - 2022-06-17
+
+### Fixed
+- Return `null` when the URN couldn't be found on the Metaseed api
+
 ## 1.1.5 - 2022-05-23
 
 ### Fixed
