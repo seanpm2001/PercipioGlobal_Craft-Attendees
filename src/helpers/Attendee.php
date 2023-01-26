@@ -2,6 +2,7 @@
 
 namespace percipiolondon\attendees\helpers;
 
+use craft\helpers\StringHelper;
 use percipiolondon\attendees\Attendees;
 use yii\web\NotFoundHttpException;
 use yii\web\Request;
@@ -73,10 +74,10 @@ class Attendee
         }
 
         $attendee->orgUrn = $entry['orgUrn'] ?? '';
-        $attendee->name = $entry['name'] ?? '';
-        $attendee->email = $entry['email'] ?? '';
-        $attendee->jobRole = $entry['jobRole'] ?? 'na';
-        $attendee->days = $entry['days'] ?? 1;
+        $attendee->name = utf8_encode(preg_replace('/[^(\x20-\x7F)]*/','', $entry['name'] ?? ''));
+        $attendee->email = utf8_encode(preg_replace('/[^(\x20-\x7F)]*/','', $entry['email'] ?? ''));
+        $attendee->jobRole = utf8_encode(preg_replace('/[^(\x20-\x7F)]*/','', $entry['jobRole'] ?? 'na'));
+        $attendee->days = utf8_encode(preg_replace('/[^(\x20-\x7F)]*/','', $entry['days'] ?? 1));
         $attendee->newsletter = str_contains($entry['newsletter'] ?? 'n', 'y');
         $attendee->eventId = $entry['event'] ?? '';
         $attendee->siteId = $entry['site'] ?? '';

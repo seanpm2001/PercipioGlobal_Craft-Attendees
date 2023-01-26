@@ -4,10 +4,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.1.8 - 2023-01-29
+
+### Fixed
+- Fixed utf-8 encoding issue when saving the attendee
+
 ## 1.1.7 - 2022-08-12
 
 ### Fixed
-- Fixed the html entiti the organisation name
+- Fixed the html entities the organisation name
 
 ## 1.1.6 - 2022-06-17
 
