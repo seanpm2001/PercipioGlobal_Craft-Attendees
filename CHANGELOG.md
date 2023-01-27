@@ -4,7 +4,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## 1.1.8 - 2023-01-29
+## 1.1.9 - 2023-01-27
+
+### Added
+- created a storage/logs/attendees.log file where all the data gets written to 
+- created a slack buzzer where all the errors gets send to (notifications plugin)
+- created a dedicated storage path for writing the CSV files
+- written a console command thats able to delete CSV files older than 60 days (or days set by the option)
+
+## 1.1.8 - 2023-01-26
 
 ### Fixed
 - Fixed utf-8 encoding issue when saving the attendee
