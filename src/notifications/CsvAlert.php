@@ -35,7 +35,6 @@ class CsvAlert extends Notification
     public function via()
     {
         return [
-//            'slack' => 'https://hooks.slack.com/services/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'
             'slack' => App::parseEnv(Attendees::$plugin->getSettings()->slackWebhook)
         ];
     }
