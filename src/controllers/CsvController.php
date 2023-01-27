@@ -5,11 +5,13 @@ namespace percipiolondon\attendees\controllers;
 use Craft;
 
 use craft\helpers\ArrayHelper;
+use craft\helpers\App;
 use League\Csv\AbstractCsv;
 use League\Csv\Exception;
 use League\Csv\Reader;
 use craft\web\Controller;
 use League\Csv\Statement;
+use percipioglobal\notifications\Notifications;
 use percipiolondon\attendees\Attendees;
 use percipiolondon\attendees\jobs\CreateAttendeeJob;
 use percipiolondon\attendees\models\Export as ExportModel;
@@ -77,8 +79,11 @@ class CsvController extends Controller
         // The CSV file
         $file = UploadedFile::getInstanceByName('file');
         if ($file !== null) {
-            $filename = uniqid($file->name, true);
-            $filePath = Craft::$app->getPath()->getTempPath().DIRECTORY_SEPARATOR.$filename;
+            $filename = uniqid(utf8_encode(preg_replace('/[^(\x20-\x7F)]*/','', $file->name)), true);
+//            $filePath = Craft::$app->getPath()->getTempPath().DIRECTORY_SEPARATOR.$filename;
+//            Craft::dd(App::parseEnv(Attendees::$plugin->getSettings()->csvStoragePath)); //'/var/www/project/cms/storage/csv'
+//            Craft::dd(Craft::$app->getPath()->getTempPath()); //'/var/www/project/cms/storage/runtime/temp'
+            $filePath = App::parseEnv(Attendees::$plugin->getSettings()->csvStoragePath).DIRECTORY_SEPARATOR.$filename;
             $file->saveAs($filePath, false);
             // Also save the file to the cache as a backup way to access it
             $cache = Craft::$app->getCache();
@@ -102,7 +107,7 @@ class CsvController extends Controller
             Craft::info(print_r($headers, true), __METHOD__);
             $variables['headers'] = $headers;
             $variables['filepath'] = $filePath;
-            $variables['filename'] = $file->name;
+            $variables['filename'] = utf8_encode(preg_replace('/[^(\x20-\x7F)]*/','', $file->name));
             $variables['event'] = $event;
         }
 
@@ -144,7 +149,7 @@ class CsvController extends Controller
                     Craft::error($e, __METHOD__);
                 }
                 $headers = array_flip($csv->fetchOne(0));
-                $cache->delete($filename);
+//                $cache->delete($filename);
             } else {
                 Craft::error("Could not import ${$filename} from the file system, or the cache.", __METHOD__);
             }
@@ -153,7 +158,7 @@ class CsvController extends Controller
         // If we have headers, then we have a file, so parse it
         if ($headers !== null) {
             $this->importCsvApi9($csv, $columns, $headers, $eventId, $siteId, $file, $filename);
-            @unlink($filename);
+//            @unlink($filename);
             Attendees::$plugin->clearAllCaches();
             Craft::$app->getSession()->setNotice(Craft::t('craft-attendees', 'Imports from CSV started.'));
         } else {

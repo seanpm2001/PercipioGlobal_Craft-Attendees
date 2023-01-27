@@ -27,6 +27,7 @@
         "craftcms/cms": "^3.6.0",
         "nystudio107/craft-plugin-vite": "^1.0.0",
         "league/csv": "^8.2 || ^9.0",
+        "percipioglobal/craft-notifications": "^1.2.3",
         "yii2tech/csv-grid": "^1.0.5"
     },
     "require-dev": {
@@ -35,7 +36,8 @@
     },
     "autoload": {
         "psr-4": {
-            "percipiolondon\\attendees\\": "src/"
+            "percipiolondon\\attendees\\": "src/",
+            "percipiolondon\\notifications\\": "src/notifications"
         }
     },
     "extra": {

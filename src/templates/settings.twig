@@ -46,3 +46,25 @@
     instructions: 'Select the section where the events are created'|t('craft-attendees'),
     toggle: true,
 }) }}
+
+{{ forms.autosuggestField({
+    label: 'CSV Storage Path',
+    instructions: 'Enter the path where to store the CSV files',
+    id: 'csvStoragePath',
+    name: 'csvStoragePath',
+    suggestEnvVars: true,
+    required: true,
+    value: settings['csvStoragePath']})
+}}
+
+{{ forms.autosuggestField({
+    label: 'Slack Webhook',
+    instructions: 'Enter the webhook URL for the notifications to send',
+    id: 'slackWebhook',
+    name: 'slackWebhook',
+    suggestEnvVars: true,
+    required: true,
+    value: settings['slackWebhook']})
+}}
+
+

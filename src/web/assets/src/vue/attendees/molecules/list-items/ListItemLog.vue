@@ -3,10 +3,10 @@
         tabindex="0"
         :class="[
             'w-full border-l-2 border-solid',
-            expanded ? 'bg-blue-100 bg-opacity-10 border-red-300' : 'border-white',
+            (expanded && errors.length > 0) ? 'bg-blue-100 bg-opacity-10 border-red-300' : 'border-white',
         ]"
     >
-        <div class="grid grid-cols-9 py-2 items-center w-full items-center">
+        <div class="grid grid-cols-9 py-2 items-center w-full">
             <div class="p-3 font-bold cursor-pointer" @click="toggle">
                 <span>{{ status }}</span>
             </div>
@@ -25,12 +25,17 @@
             <div class="col-span-2 p-3 cursor-pointer" @click="toggle">
                 {{ log[0].dateCreated }}
             </div>
-            <div class="p-3 text-blue-800 cursor-pointer" @click="toggle">
-                {{ expanded ? 'Hide' : 'Show' }} logs
+            <div
+                @click="toggle"
+                class="p-3 text-blue-800 cursor-pointer"
+            >
+                <span v-if="errors.length > 0">
+                    {{ expanded ? 'Hide' : 'Show' }} error logs
+                </span>
             </div>
         </div>
 
-        <div class="px-10 py-6 relative" v-if="expanded">
+        <div class="px-10 py-6 relative" v-if="expanded && errors.length > 0">
 
             <div class="flex items-center relative mb-4">
                 <h3 class="text-lg inline-block flex-grow">Error details</h3>
@@ -65,7 +70,7 @@
                 <div v-if="line.type === 'error'" class="w-full grid grid-cols-9 py-2 border-b border-solid border-gray-100" v-for="errorLine in JSON.parse(line.message)" :key="`${line.line}.${filename}.${line.line}`">
                     <div>{{ line.line }}</div>
                     <div class="col-span-2">{{ line.attendee }}</div>
-                    <div class="col-span-4">{{ errorLine[0] }}</div>
+                    <div class="col-span-4 pr-4">{{ errorLine[0] }}</div>
                     <div class="col-span-2">{{ line.dateCreated }}</div>
                 </div>
             </template>

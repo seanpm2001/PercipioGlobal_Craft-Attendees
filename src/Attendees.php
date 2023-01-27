@@ -11,8 +11,11 @@
 namespace percipiolondon\attendees;
 
 use craft\events\RegisterUrlRulesEvent;
+use craft\log\FileTarget;
 use craft\web\twig\variables\CraftVariable;
 use craft\web\UrlManager;
+use craft\console\Application as ConsoleApplication;
+use percipioglobal\notifications\Notifications;
 use percipiolondon\attendees\behaviors\AttendeeBehavior;
 
 use Craft;
@@ -104,6 +107,10 @@ class Attendees extends Plugin
             ]
         ];
 
+        if (is_null(Notifications::getInstance())) {
+            Craft::$app->getPlugins()->installPlugin('notifications');
+        }
+
         parent::__construct($id, $parent, $config);
     }
 
@@ -130,10 +137,21 @@ class Attendees extends Plugin
         $this->_registerCraftVariables();
         $this->_registerServices();
 
+        if (Craft::$app instanceof ConsoleApplication) {
+            $this->controllerNamespace = 'percipiolondon\attendees\console\controllers';
+        }
+
         if(Craft::$app->request->getIsCpRequest()){
             $eventSortExtension = new EventSortExtension();
             Craft::$app->view->registerTwigExtension($eventSortExtension);
         }
+
+        $fileTarget = new FileTarget([
+            'logFile' => '@storage/logs/attendees.log',
+            'categories' => ['attendees']
+        ]);
+
+        Craft::getLogger()->dispatcher->targets[] = $fileTarget;
 
         Craft::info(
             Craft::t(
