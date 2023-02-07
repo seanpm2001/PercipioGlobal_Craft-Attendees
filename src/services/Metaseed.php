@@ -36,30 +36,13 @@ class Metaseed extends Component
                 $endpoint,
                 [
                     'form_params' => array(
-                        'orgUrn' => implode(', ', array_filter($urns))
+//                        'orgUrn' => implode(', ', array_filter($urns))
+                        'orgUrn' => $urns
                     )
                 ]
             );
 
             return json_decode($response->getBody()->getContents(), true);
-
-            // $curl = curl_init();
-
-            // curl_setopt_array($curl, array(
-            //     CURLOPT_URL => 'https://api.v2.metaseed.io/urns',
-            //     CURLOPT_RETURNTRANSFER => true,
-            //     CURLOPT_ENCODING => '',
-            //     CURLOPT_MAXREDIRS => 10,
-            //     CURLOPT_TIMEOUT => 0,
-            //     CURLOPT_FOLLOWLOCATION => true,
-            //     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            //     CURLOPT_CUSTOMREQUEST => 'POST',
-            //     CURLOPT_POSTFIELDS => array('orgUrn' => implode(', ', array_filter($urns))),
-            // ));
-
-            // $response = curl_exec($curl);
-
-            // return json_decode($response, true);
         } catch(\Exception $e) {
             Craft::error("Something went wrong: {$e->getMessage()}", __METHOD__);
         }
