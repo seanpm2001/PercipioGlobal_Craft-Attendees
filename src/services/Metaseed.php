@@ -36,7 +36,6 @@ class Metaseed extends Component
                 $endpoint,
                 [
                     'form_params' => array(
-//                        'orgUrn' => implode(', ', array_filter($urns))
                         'orgUrn' => $urns
                     )
                 ]
